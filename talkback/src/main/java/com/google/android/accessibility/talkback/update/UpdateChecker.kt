@@ -56,7 +56,7 @@ data class UpdateInfo(
  */
 object UpdateChecker {
   private const val TAG = "UpdateChecker"
-  private const val RELEASES_URL = "https://api.github.com/repos/trypsynth/backtalk/releases/tags/"
+  private const val RELEASES_URL = "https://api.github.com/repos/volodymyrsh0412-bot/Nika/releases/tags/"
 
   /** The pre-release for the old app ID com.android.talkback. */
   const val OLD_CHANNEL = "latest"
@@ -152,7 +152,7 @@ object UpdateChecker {
       (network?.openConnection(target) ?: target.openConnection()) as HttpURLConnection
     connection.connectTimeout = TIMEOUT_MS
     connection.readTimeout = TIMEOUT_MS
-    connection.setRequestProperty("User-Agent", "Backtalk/${versionName(context)}")
+    connection.setRequestProperty("User-Agent", "Nika/${versionName(context)}")
     return connection
   }
 

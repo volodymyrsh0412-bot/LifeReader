@@ -21,6 +21,9 @@
     <string name="pref_direct_touch_key" translatable="false">pref_direct_touch</string>
     <!-- Must match SpeechControl.PREF_ENABLED. -->
     <string name="pref_speech_control_key" translatable="false">pref_speech_control</string>
+    <string name="pref_whats_new_key" translatable="false">pref_whats_new_key</string>
+    <string name="pref_send_feedback_key" translatable="false">pref_send_feedback_key</string>
+    <string name="feedback_email_address" translatable="false">volodymyrsh0412@gmail.com</string>
     <string name="pref_check_for_updates_key" translatable="false">pref_check_for_updates</string>
     <string name="pref_app_info_key" translatable="false">pref_app_info</string>
     <string name="pref_auto_update_check_key" translatable="false">pref_auto_update_check</string>

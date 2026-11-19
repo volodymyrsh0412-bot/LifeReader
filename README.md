@@ -1,3 +1,7 @@
+# Nika
+
+Nika is based on [Backtalk](https://github.com/trypsynth/backtalk) by trypsynth, which is a fork of Google's TalkBack. All are licensed under the Apache License 2.0. See NIKA-NOTICE.md.
+
 # Backtalk
 
 Backtalk is a fork of [Google's TalkBack](https://github.com/google/talkback), the screen reader for blind and visually-impaired users of Android. It adds fixes and features on top of Google's source releases. It is not affiliated with Google.

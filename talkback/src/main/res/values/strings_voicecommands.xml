@@ -183,9 +183,9 @@
   <!-- Voice-shortcut command word to input text to editable ui. [CHAR_LIMIT=20] -->
   <string name="voice_commands_Spell">Spell</string>
   <!-- Voice-shortcut command to launch TalkBack Settings. [CHAR_LIMIT=30] -->
-  <string name="voice_commands_talkback_settings">TalkBack settings</string>
+  <string name="voice_commands_talkback_settings">Nika settings</string>
   <!-- Voice-shortcut command to launch TalkBack Settings. [CHAR_LIMIT=30] -->
-  <string name="voice_commands_talkback_setting">TalkBack setting</string>
+  <string name="voice_commands_talkback_setting">Nika setting</string>
   <!-- Voice-shortcut command to start screen search UI. [CHAR_LIMIT=30] -->
   <string name="voice_commands_screen_search">Screen search</string>
   <!-- Voice-shortcut command to start screen search UI. [CHAR_LIMIT=30] -->
@@ -286,7 +286,7 @@
   <!-- The hint of triggering voice command. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_help_hint">For best results, say the exact wording listed on the following screens.</string>
   <!-- The hint of triggering voice command in lock screen mode. [CHAR_LIMIT=NONE] -->
-  <string name="voice_command_screen_locked_hint">Voice commands are not available while the screen is locked. To use the Backtalk menu instead, <xliff:g id="gesture" example="Swipe right then up">%1$s</xliff:g>.</string>
+  <string name="voice_command_screen_locked_hint">Voice commands are not available while the screen is locked. To use the Nika menu instead, <xliff:g id="gesture" example="Swipe right then up">%1$s</xliff:g>.</string>
   <!-- The hint of triggering voice command in setup wizard. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_during_setup_hint">Voice commands are not available during setup.</string>
 
@@ -339,15 +339,15 @@
   <!-- Voice command help: turning Do Not Disturb on. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_help_dnd">Turn on Do Not Disturb</string>
   <!-- Voice command help: explains the Do Not Disturb command and its permission. [CHAR_LIMIT=NONE] -->
-  <string name="voice_commands_help_dnd_description">Turn Do Not Disturb on or off. Backtalk asks for notification policy access the first time</string>
+  <string name="voice_commands_help_dnd_description">Turn Do Not Disturb on or off. Nika asks for notification policy access the first time</string>
   <!-- Voice command help: placing a call to a contact or phone number. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_help_call">Call [contact] or Call [phone number]</string>
   <!-- Voice command help: explains confirming a call, calling on speaker and choosing between contacts. [CHAR_LIMIT=NONE] -->
-  <string name="voice_commands_help_call_description">Backtalk repeats who it will call, and you say yes to confirm. Add \"on speaker\" to turn the speaker on. If several contacts match, you choose by number</string>
+  <string name="voice_commands_help_call_description">Nika repeats who it will call, and you say yes to confirm. Add \"on speaker\" to turn the speaker on. If several contacts match, you choose by number</string>
   <!-- Voice command help: answering, declining or ending a call. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_help_call_control">Answer the call, Decline, or Hang up</string>
   <!-- Voice command help: other phrases for call control, and the permissions it asks for. [CHAR_LIMIT=NONE] -->
-  <string name="voice_commands_help_call_control_description">Also \"pick up the call\", \"reject the call\" and \"end call\". Backtalk asks for the phone and contacts permissions the first time</string>
+  <string name="voice_commands_help_call_control_description">Also \"pick up the call\", \"reject the call\" and \"end call\". Nika asks for the phone and contacts permissions the first time</string>
 
   <!-- The description of voice command "Copy". [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_help_copy_description">Select text before copying</string>
@@ -369,7 +369,7 @@
   <!-- The page title of voice command - other commands. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_help_other_commands_title">Other commands</string>
   <!-- The description of voice command - other commands. [CHAR_LIMIT=NONE] -->
-  <string name="voice_commands_help_other_commands_description">Go to Backtalk settings, hide screen, see actions, add custom labels, and more</string>
+  <string name="voice_commands_help_other_commands_description">Go to Nika settings, hide screen, see actions, add custom labels, and more</string>
   <!-- The description of voice command - label commands. [CHAR_LIMIT=70] -->
   <string name="voice_commands_help_label">Label [submit]</string>
 
@@ -398,7 +398,7 @@
   <!-- One numbered entry in the list of matching contacts; %1$d is its number and %2$s is the contact name. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_call_choose_item">%1$d, %2$s.</string>
   <!-- Spoken before Android asks for the phone and contacts permissions that calling by voice needs. [CHAR_LIMIT=NONE] -->
-  <string name="voice_commands_call_permission_needed">To make and answer calls by voice, Backtalk needs permission. Allow the next screens, then say your command again.</string>
+  <string name="voice_commands_call_permission_needed">To make and answer calls by voice, Nika needs permission. Allow the next screens, then say your command again.</string>
   <!-- Spoken when the voice command answers a ringing call. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_call_answering">Answering the call</string>
   <!-- Spoken when the voice command declines a ringing call. [CHAR_LIMIT=NONE] -->
@@ -412,11 +412,11 @@
   <!-- Spoken when Android refuses to place, answer or end a call. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_call_failed">Could not complete the call</string>
   <!-- Voice-shortcut command to launch Backtalk Settings. [CHAR_LIMIT=30] -->
-  <string name="voice_commands_backtalk_settings">Backtalk settings</string>
+  <string name="voice_commands_backtalk_settings">Nika settings</string>
   <!-- Voice command: the singular form of "Backtalk settings", spoken to open Backtalk settings. [CHAR_LIMIT=30] -->
-  <string name="voice_commands_backtalk_setting">Backtalk setting</string>
+  <string name="voice_commands_backtalk_setting">Nika setting</string>
   <!-- Voice command spoken to open Backtalk settings. [CHAR_LIMIT=30] -->
-  <string name="voice_commands_open_backtalk_settings">Open Backtalk settings</string>
+  <string name="voice_commands_open_backtalk_settings">Open Nika settings</string>
   <!-- Feedback strings for system voice commands -->
   <string name="voice_commands_dnd_on">Do Not Disturb turned on</string>
   <!-- Spoken after the voice command turns Do Not Disturb off. [CHAR_LIMIT=NONE] -->
@@ -426,7 +426,7 @@
   <!-- Spoken when the voice command opens Android Settings. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_opening_settings">Opening Settings</string>
   <!-- Spoken when the voice command opens Backtalk settings. [CHAR_LIMIT=NONE] -->
-  <string name="voice_commands_opening_backtalk_settings">Opening Backtalk settings</string>
+  <string name="voice_commands_opening_backtalk_settings">Opening Nika settings</string>
   <!-- Spoken after the volume voice command; %1$d is the media volume as a percentage. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_volume_set">Volume %1$d percent</string>
   <!-- Spoken after the voice command mutes media volume. [CHAR_LIMIT=NONE] -->

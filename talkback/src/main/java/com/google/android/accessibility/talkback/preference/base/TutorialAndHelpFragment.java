@@ -17,9 +17,11 @@ package com.google.android.accessibility.talkback.preference.base;
 
 import static com.google.android.accessibility.talkback.preference.PreferencesActivityUtils.HELP_URL;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.preference.Preference;
 import com.google.android.accessibility.talkback.HelpAndFeedbackUtils;
 import com.google.android.accessibility.talkback.R;
@@ -55,6 +57,7 @@ public class TutorialAndHelpFragment extends TalkbackBaseFragment {
     assignTutorialIntent();
     assignPracticeGesturesIntent();
     assignFeedbackIntentToPreference();
+    assignSendFeedback();
   }
 
   private void assignTutorialIntent() {
@@ -107,5 +110,29 @@ public class TutorialAndHelpFragment extends TalkbackBaseFragment {
         RemoteIntentUtils.assignWebIntentToPreference(this, pref, HELP_URL);
       }
     }
+  }
+
+  /** Opens an email to the developer, and says where to write if there is no email app. */
+  private void assignSendFeedback() {
+    final Preference pref = findPreferenceByResId(R.string.pref_send_feedback_key);
+    if (pref == null) {
+      return;
+    }
+    final String address = getString(R.string.feedback_email_address);
+    pref.setOnPreferenceClickListener(
+        preference -> {
+          Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + address));
+          intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedback_email_subject));
+          try {
+            startActivity(intent);
+          } catch (ActivityNotFoundException e) {
+            Toast.makeText(
+                    getContext(),
+                    getString(R.string.feedback_no_email_app, address),
+                    Toast.LENGTH_LONG)
+                .show();
+          }
+          return true;
+        });
   }
 }
