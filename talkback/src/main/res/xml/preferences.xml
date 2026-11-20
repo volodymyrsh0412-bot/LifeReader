@@ -44,10 +44,10 @@
         android:key="@string/pref_category_manage_gestures_key"
         android:title="@string/title_pref_category_manage_gestures" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:fragment="com.google.android.accessibility.talkback.preference.base.ButtonPhoneFragment"
-        android:key="pref_nika_keys"
-        android:summary="@string/nika_keys_summary"
-        android:title="@string/nika_keys_title" />
+        android:fragment="com.google.android.accessibility.talkback.preference.base.EdgeSwipeFragment"
+        android:key="pref_nika_edge"
+        android:summary="@string/nika_edge_summary"
+        android:title="@string/nika_edge_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:fragment="com.google.android.accessibility.talkback.preference.base.ContextMenuFragment"
         android:key="@string/pref_category_manage_context_menu_key"
@@ -76,6 +76,16 @@
         android:key="@string/pref_category_manage_keyboard_shortcut_key"
         android:title="@string/title_pref_manage_keyboard_shortcuts"
         android:fragment="com.google.android.accessibility.talkback.preference.base.TalkBackKeyboardShortcutPreferenceFragment" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.ButtonPhoneFragment"
+        android:key="pref_nika_keys"
+        android:summary="@string/nika_keys_summary"
+        android:title="@string/nika_keys_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.VolumeKeysFragment"
+        android:key="pref_nika_volume"
+        android:summary="@string/nika_volume_summary"
+        android:title="@string/nika_volume_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:fragment="com.google.android.accessibility.talkback.preference.base.GeminiSettingsFragment"
         android:key="@string/pref_gemini_settings_key"
@@ -148,6 +158,14 @@
         android:key="pref_nika_feedback"
         android:summary="@string/nika_feedback_summary"
         android:title="@string/nika_feedback_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:key="pref_nika_telegram"
+        android:summary="@string/nika_telegram_summary"
+        android:title="@string/nika_telegram_title">
+      <intent
+          android:action="android.intent.action.VIEW"
+          android:data="https://t.me/Volodymyr0412sh" />
+    </com.google.android.accessibility.material.preference.AccessibilitySuitePreference>
     <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
         android:defaultValue="@bool/pref_auto_update_check_default"
         android:key="@string/pref_auto_update_check_key"

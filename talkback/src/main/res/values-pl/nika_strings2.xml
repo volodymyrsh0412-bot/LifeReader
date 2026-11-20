@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika to czytnik ekranu zbudowany na bazie Backtalk i Google TalkBack</string>
-    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Nowa sekcja \u201eDla telefon\u00f3w z przyciskami\u201d w ustawieniach g\u0142\u00f3wnych: akcje dla klawiszy g\u0142o\u015bno\u015bci, cyfr, gwiazdki, krzy\u017cyka, strza\u0142ek i dowolnego wybranego klawisza. Dla ka\u017cdego klawisza osobno: naci\u015bni\u0119cie, przytrzymanie, podw\u00f3jne i potr\u00f3jne naci\u015bni\u0119cie.\n\u2022 Mo\u017cna wybra\u0107 d\u0142ugo\u015b\u0107 przytrzymania i przerw\u0119 mi\u0119dzy naci\u015bni\u0119ciami.\n\u2022 Strza\u0142ki bez modyfikatora mo\u017cna w\u0142\u0105cza\u0107 i wy\u0142\u0105cza\u0107, a w polach tekstowych zostawi\u0107 w spokoju.</string>
+    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Gesty od krawędzi ekranu jednym palcem, jak na iPhonie (domyślnie wyłączone, włączane w ustawieniach głównych): od dołu krótkie = Ekran główny, dłuższe = Ostatnie; od góry krótkie = Powiadomienia, dłuższe = Szybkie ustawienia. Długość i szerokość krawędzi można zmieniać.\n\u2022 Gdy sprawdzanie aktualizacji się nie powiedzie, pokazywana jest prawdziwa przyczyna.</string>
     <string name="nika_update_available">Dost\u0119pna aktualizacja: kompilacja %1$d</string>
     <string name="nika_update_tap">Dotknij, aby pobra\u0107 i zainstalowa\u0107</string>
     <string name="nika_telegram_title">Nika na Telegramie</string>

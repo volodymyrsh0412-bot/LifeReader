@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_edge_title">Gesty od krawędzi ekranu</string>
+    <string name="nika_edge_summary">Przesunięcia jednym palcem od krawędzi ekranu, jak na iPhonie</string>
+    <string name="nika_edge_enabled_title">Gesty od krawędzi ekranu</string>
+    <string name="nika_edge_enabled_summary">Przesunięcie w górę od dolnej krawędzi: krótkie = Ekran główny, dłuższe = Ostatnie. Przesunięcie w dół od górnej krawędzi: krótkie = Powiadomienia, dłuższe = Szybkie ustawienia. Dotknięcia zaczynające się przy krawędzi nie są odczytywane.</string>
+    <string name="nika_edge_band_title">Szerokość pasa przy krawędzi (mm)</string>
+    <string name="nika_edge_home_title">Dół: długość przesunięcia dla Ekranu głównego (mm)</string>
+    <string name="nika_edge_recents_title">Dół: długość przesunięcia dla Ostatnich (mm)</string>
+    <string name="nika_edge_notif_title">Góra: długość przesunięcia dla Powiadomień (mm)</string>
+    <string name="nika_edge_qs_title">Góra: długość przesunięcia dla Szybkich ustawień (mm)</string>
+    <string name="nika_volume_title">Klawisze głośności</string>
+    <string name="nika_volume_summary">Akcje dla klawiszy głośności góra i dół</string>
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_edge_title">Edge swipes</string>
+    <string name="nika_edge_summary">One-finger swipes from the screen edges, like on an iPhone</string>
+    <string name="nika_edge_enabled_title">Edge swipes</string>
+    <string name="nika_edge_enabled_summary">Swipe up from the bottom edge: short = Home, long = Recents. Swipe down from the top edge: short = Notifications, long = Quick settings. Touches that start at an edge are not read aloud.</string>
+    <string name="nika_edge_band_title">Edge band width (mm)</string>
+    <string name="nika_edge_home_title">Bottom: swipe length for Home (mm)</string>
+    <string name="nika_edge_recents_title">Bottom: swipe length for Recents (mm)</string>
+    <string name="nika_edge_notif_title">Top: swipe length for Notifications (mm)</string>
+    <string name="nika_edge_qs_title">Top: swipe length for Quick settings (mm)</string>
+    <string name="nika_volume_title">Volume keys</string>
+    <string name="nika_volume_summary">Actions for the volume up and down keys</string>
+</resources>

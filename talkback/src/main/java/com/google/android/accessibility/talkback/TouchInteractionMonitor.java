@@ -234,6 +234,8 @@ public class TouchInteractionMonitor
   private int touchFocusUserIntentTimeout;
 
   private final RequestTouchExplorationDelayed requestTouchExplorationDelayed;
+
+  private com.google.android.accessibility.talkback.edgeswipe.NikaEdgeSwipe nikaEdgeSwipe;
   // A list of motion events that should be queued until a pending transition has taken place.
   private final Queue<MotionEvent> queuedMotionEvents = new LinkedList<>();
   // Whether this monitor is waiting for a state transition.
@@ -594,6 +596,14 @@ public class TouchInteractionMonitor
     }
     receivedPointerTracker.onMotionEvent(event);
     if (handleRotation(event)) {
+      return;
+    }
+    if (nikaEdgeSwipe == null) {
+      nikaEdgeSwipe =
+          new com.google.android.accessibility.talkback.edgeswipe.NikaEdgeSwipe(service, context);
+    }
+    if (nikaEdgeSwipe.onMotionEvent(event)) {
+      requestTouchExplorationDelayed.cancel();
       return;
     }
     if (shouldPerformGestureDetection()) {

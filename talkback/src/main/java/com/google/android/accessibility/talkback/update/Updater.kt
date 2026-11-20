@@ -188,7 +188,13 @@ object Updater {
           UpdateChecker.check(context)
         } catch (e: Exception) {
           LogUtils.w(TAG, "Update check failed: %s", e)
-          mainHandler.post { toast(context, R.string.update_check_failed) }
+          mainHandler.post { // nika-real-error
+            Toast.makeText(
+                context,
+                context.getString(R.string.update_check_failed) + ": " + e,
+                Toast.LENGTH_LONG,
+              ).show()
+          }
           return@execute
         }
       SharedPreferencesUtils.getSharedPreferences(context)

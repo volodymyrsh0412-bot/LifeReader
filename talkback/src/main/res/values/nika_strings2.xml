@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika is a screen reader built on Backtalk and Google TalkBack</string>
-    <string name="nika_whats_new_page_text">What\u2019s new:\n\u2022 New section \u201cFor button phones\u201d in the main settings: actions for the volume keys, number keys, star, pound, arrows and any other key you choose. Each key can have actions for a press, a hold, a double press and a triple press.\n\u2022 You can set how long a hold is and the pause between presses.\n\u2022 Arrow keys without a modifier can be turned on and off, and left alone in text fields.</string>
+    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 Edge swipes with one finger, like on an iPhone (off by default, enable in the main settings): from the bottom edge short = Home, long = Recents; from the top edge short = Notifications, long = Quick settings. Lengths and edge width are adjustable.\n\u2022 If checking for updates fails, the real reason is now shown.</string>
     <string name="nika_update_available">Update available: build %1$d</string>
     <string name="nika_update_tap">Tap to download and install</string>
     <string name="nika_telegram_title">Nika on Telegram</string>

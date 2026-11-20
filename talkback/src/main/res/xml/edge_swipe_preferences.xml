@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
+        android:key="nika_edge_enabled"
+        android:defaultValue="false"
+        android:title="@string/nika_edge_enabled_title"
+        android:summary="@string/nika_edge_enabled_summary" />
+  <ListPreference
+        android:key="nika_edge_band_mm"
+        android:defaultValue="6"
+        android:title="@string/nika_edge_band_title"
+        android:summary="%s"
+        android:entries="@array/nika_edge_band_values"
+        android:entryValues="@array/nika_edge_band_values" />
+  <ListPreference
+        android:key="nika_edge_home_mm"
+        android:defaultValue="10"
+        android:title="@string/nika_edge_home_title"
+        android:summary="%s"
+        android:entries="@array/nika_edge_home_values"
+        android:entryValues="@array/nika_edge_home_values" />
+  <ListPreference
+        android:key="nika_edge_recents_mm"
+        android:defaultValue="20"
+        android:title="@string/nika_edge_recents_title"
+        android:summary="%s"
+        android:entries="@array/nika_edge_recents_values"
+        android:entryValues="@array/nika_edge_recents_values" />
+  <ListPreference
+        android:key="nika_edge_notif_mm"
+        android:defaultValue="10"
+        android:title="@string/nika_edge_notif_title"
+        android:summary="%s"
+        android:entries="@array/nika_edge_notif_values"
+        android:entryValues="@array/nika_edge_notif_values" />
+  <ListPreference
+        android:key="nika_edge_qs_mm"
+        android:defaultValue="25"
+        android:title="@string/nika_edge_qs_title"
+        android:summary="%s"
+        android:entries="@array/nika_edge_qs_values"
+        android:entryValues="@array/nika_edge_qs_values" />
+</PreferenceScreen>

@@ -12,7 +12,9 @@ import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.accessibility.talkback.BuildConfig
+import com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
 import com.google.android.accessibility.talkback.R
+import com.google.android.accessibility.utils.FormFactorUtils
 import com.google.android.accessibility.utils.material.A11yAlertDialogWrapper
 
 /** Nika: the "What's new" and "Send feedback" items in the main settings. */
@@ -23,6 +25,19 @@ object NikaSettings {
 
   @JvmStatic
   fun setUpPreferences(fragment: PreferenceFragmentCompat) {
+    fragment
+      .findPreference<AccessibilitySuitePreferenceCategory>(
+        fragment.getString(R.string.pref_category_typing_key)
+      )
+      ?.setCollapsible(
+        fragment.getString(R.string.category_collapsed),
+        fragment.getString(R.string.category_expanded),
+      )
+    if (FormFactorUtils.isAndroidWear()) {
+      for (key in arrayOf("pref_nika_volume", "pref_nika_edge")) {
+        fragment.findPreference<Preference>(key)?.let { it.parent?.removePreference(it) }
+      }
+    }
     fragment.findPreference<Preference>(KEY_WHATS_NEW)?.setOnPreferenceClickListener {
       fragment.activity?.let { showWhatsNew(it) }
       true
