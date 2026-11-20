@@ -2,10 +2,6 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-  <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-      android:key="pref_nika_whats_new"
-      android:summary="@string/nika_whats_new_summary"
-      android:title="@string/nika_whats_new_title" />
 
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
       android:fragment="com.google.android.accessibility.talkback.preference.base.WhatsNewFragment"

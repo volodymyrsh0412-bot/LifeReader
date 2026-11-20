@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_whats_new_page_title">Nika \u2014 скрынрыдар, створаны на аснове Backtalk і Google TalkBack</string>
+    <string name="nika_whats_new_page_text">Што новага:\n\u2022 У спісах дзеянняў для жэстаў раздзелы цяпер можна згортваць і разгортваць.\n\u2022 Адзін пункт \u00abШто новага\u00bb і адзін пункт \u00abНапісаць водгук\u00bb замест двух.\n\u2022 Калі ёсць абнаўленне, яно паказваецца тут разам са спісам змен.</string>
+    <string name="nika_update_available">Ёсць абнаўленне: зборка %1$d</string>
+    <string name="nika_update_tap">Націсніце, каб спампаваць і ўстанавіць</string>
+</resources>

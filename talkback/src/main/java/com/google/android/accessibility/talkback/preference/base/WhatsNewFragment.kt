@@ -16,9 +16,49 @@
 
 package com.google.android.accessibility.talkback.preference.base
 
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import androidx.preference.Preference
 import com.google.android.accessibility.talkback.R
+import com.google.android.accessibility.talkback.update.UpdateChecker
+import com.google.android.accessibility.talkback.update.Updater
 
-/** Shows what is new in this version of Nika. The text is in the strings whats_new_*. */
+/**
+ * Shows what is new in this version of Nika. If a newer build is available, it is shown at the top
+ * with its changes, and a click installs it. The text is in the strings nika_whats_new_page_*.
+ */
 class WhatsNewFragment : TalkbackBaseFragment(R.xml.whats_new_preferences) {
   override fun getTitle(): CharSequence = getText(R.string.title_pref_whats_new)
+
+  override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+    super.onCreatePreferences(savedInstanceState, rootKey)
+    val appContext = context?.applicationContext ?: return
+    val updatePref = findPreference<Preference>("whats_new_update") ?: return
+    updatePref.isVisible = false
+    Thread {
+        val update =
+          try {
+            UpdateChecker.check(appContext)
+          } catch (e: Exception) {
+            null
+          }
+        if (update != null) {
+          Handler(Looper.getMainLooper()).post {
+            if (!isAdded) {
+              return@post
+            }
+            updatePref.title = getString(R.string.nika_update_available, update.build)
+            updatePref.summary =
+              update.changes.joinToString("\n").ifEmpty { getString(R.string.nika_update_tap) }
+            updatePref.setOnPreferenceClickListener {
+              Updater.install(appContext, update.downloadUrl)
+              true
+            }
+            updatePref.isVisible = true
+          }
+        }
+      }
+      .start()
+  }
 }

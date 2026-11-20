@@ -39,6 +39,7 @@ import androidx.preference.Preference.OnPreferenceClickListener;
 import androidx.preference.PreferenceScreen;
 import com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory;
 import com.google.android.accessibility.material.preference.AccessibilitySuiteRadioButtonPreference;
+import com.google.android.accessibility.talkback.R;
 import com.google.android.accessibility.talkback.preference.base.GestureListPreference.ActionItem;
 import com.google.android.accessibility.utils.PreferenceSettingsUtils;
 import com.google.android.accessibility.utils.SharedPreferencesUtils;
@@ -104,10 +105,7 @@ public class GesturePreferenceFragmentCompat extends TalkbackBaseFragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    if (savedInstanceState == null) {
-      // We post a runnable to scroll to the selected position in the 1st time.
-      scrollToSelectedPosition();
-    }
+    // Nika: the sections are collapsed, so the list is not scrolled to the selected action.
   }
 
   @NonNull
@@ -159,6 +157,7 @@ public class GesturePreferenceFragmentCompat extends TalkbackBaseFragment {
     Context context = getContext();
 
     AccessibilitySuitePreferenceCategory category = null;
+    AccessibilitySuitePreferenceCategory selectedCategory = null;
     ActionItem item;
     for (int order = 0; order < items.length; order++) {
       item = (ActionItem) items[order];
@@ -187,10 +186,26 @@ public class GesturePreferenceFragmentCompat extends TalkbackBaseFragment {
           category.addPreference(radioButtonPreference);
           if (checked) {
             selectedPosition = order;
+            selectedCategory = category;
           }
           radioButtonPreference.setRequestInitialAccessibilityFocus(checked);
         }
         default -> {}
+      }
+    }
+
+    // Nika: every titled section can be collapsed and expanded. The section with the selected
+    // action starts expanded.
+    String collapsedText = context.getString(R.string.category_collapsed);
+    String expandedText = context.getString(R.string.category_expanded);
+    for (int i = 0; i < preferenceScreen.getPreferenceCount(); i++) {
+      Preference child = preferenceScreen.getPreference(i);
+      if (child instanceof AccessibilitySuitePreferenceCategory && child.getTitle() != null) {
+        AccessibilitySuitePreferenceCategory section = (AccessibilitySuitePreferenceCategory) child;
+        section.setCollapsible(collapsedText, expandedText);
+        if (section == selectedCategory) {
+          section.setCollapsed(false);
+        }
       }
     }
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_whats_new_page_title">Nika \u2014 скрінрідер, створений на основі Backtalk і Google TalkBack</string>
+    <string name="nika_whats_new_page_text">Що нового:\n\u2022 У списках дій для жестів розділи тепер можна згортати й розгортати.\n\u2022 Один пункт \u00abЩо нового\u00bb і один пункт \u00abНаписати відгук\u00bb замість двох.\n\u2022 Якщо є оновлення, воно показується тут разом зі списком змін.</string>
+    <string name="nika_update_available">Є оновлення: збірка %1$d</string>
+    <string name="nika_update_tap">Натисніть, щоб завантажити й встановити</string>
+</resources>

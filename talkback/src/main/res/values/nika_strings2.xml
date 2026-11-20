@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_whats_new_page_title">Nika is a screen reader built on Backtalk and Google TalkBack</string>
+    <string name="nika_whats_new_page_text">What\u2019s new:\n\u2022 In the lists of actions for gestures, sections can now be collapsed and expanded.\n\u2022 One \u201cWhat\u2019s new\u201d item and one \u201cSend feedback\u201d item instead of two.\n\u2022 If an update is available, it is shown here with its changes.</string>
+    <string name="nika_update_available">Update available: build %1$d</string>
+    <string name="nika_update_tap">Tap to download and install</string>
+</resources>

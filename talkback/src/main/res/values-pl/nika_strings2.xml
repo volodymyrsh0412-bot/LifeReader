@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_whats_new_page_title">Nika to czytnik ekranu zbudowany na bazie Backtalk i Google TalkBack</string>
+    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Na listach akcji dla gest\u00f3w sekcje mo\u017cna teraz zwija\u0107 i rozwija\u0107.\n\u2022 Jedna pozycja \u201eCo nowego\u201d i jedna \u201eWy\u015blij opini\u0119\u201d zamiast dw\u00f3ch.\n\u2022 Je\u015bli jest aktualizacja, pokazuje si\u0119 tutaj razem z list\u0105 zmian.</string>
+    <string name="nika_update_available">Dost\u0119pna aktualizacja: kompilacja %1$d</string>
+    <string name="nika_update_tap">Dotknij, aby pobra\u0107 i zainstalowa\u0107</string>
+</resources>
