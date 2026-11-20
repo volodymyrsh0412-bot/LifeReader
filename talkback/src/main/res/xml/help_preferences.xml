@@ -7,4 +7,12 @@
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
       android:key="@string/pref_practice_gestures_entry_point_key"
       android:title="@string/practice_gestures_title" />
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+      android:key="pref_nika_telegram"
+      android:title="@string/nika_telegram_title"
+      android:summary="@string/nika_telegram_summary">
+    <intent
+        android:action="android.intent.action.VIEW"
+        android:data="https://t.me/Volodymyr0412sh" />
+  </com.google.android.accessibility.material.preference.AccessibilitySuitePreference>
 </PreferenceScreen>

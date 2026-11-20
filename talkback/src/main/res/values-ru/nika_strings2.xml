@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika \u2014 скринридер, созданный на основе Backtalk и Google TalkBack</string>
-    <string name="nika_whats_new_page_text">Что нового:\n\u2022 В списках действий для жестов разделы теперь можно сворачивать и разворачивать.\n\u2022 Один пункт \u00abЧто нового\u00bb и один пункт \u00abНаписать отзыв\u00bb вместо двух.\n\u2022 Если есть обновление, оно показывается здесь вместе со списком изменений.</string>
+    <string name="nika_whats_new_page_text">Что нового:\n\u2022 Telegram-канал Nika теперь в разделе \u00abОбучение и справка\u00bb.\n\u2022 В списках действий для жестов разделы можно сворачивать и разворачивать.\n\u2022 Если есть обновление, оно показывается здесь вместе со списком изменений.</string>
     <string name="nika_update_available">Есть обновление: сборка %1$d</string>
     <string name="nika_update_tap">Нажмите, чтобы скачать и установить</string>
+    <string name="nika_telegram_title">Nika в Telegram</string>
+    <string name="nika_telegram_summary">Канал разработчика: новости, вопросы, идеи</string>
 </resources>
