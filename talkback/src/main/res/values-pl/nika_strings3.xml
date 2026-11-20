@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_edge_title">Gesty od krawędzi ekranu</string>
-    <string name="nika_edge_summary">Przesunięcia jednym palcem od krawędzi ekranu, jak na iPhonie</string>
-    <string name="nika_edge_enabled_title">Gesty od krawędzi ekranu</string>
-    <string name="nika_edge_enabled_summary">Przesunięcie w górę od dolnej krawędzi: krótkie = Ekran główny, dłuższe = Ostatnie. Przesunięcie w dół od górnej krawędzi: krótkie = Powiadomienia, dłuższe = Szybkie ustawienia. Dotknięcia zaczynające się przy krawędzi nie są odczytywane.</string>
-    <string name="nika_edge_band_title">Szerokość pasa przy krawędzi (mm)</string>
-    <string name="nika_edge_home_title">Dół: długość przesunięcia dla Ekranu głównego (mm)</string>
-    <string name="nika_edge_recents_title">Dół: długość przesunięcia dla Ostatnich (mm)</string>
-    <string name="nika_edge_notif_title">Góra: długość przesunięcia dla Powiadomień (mm)</string>
-    <string name="nika_edge_qs_title">Góra: długość przesunięcia dla Szybkich ustawień (mm)</string>
     <string name="nika_volume_title">Klawisze głośności</string>
     <string name="nika_volume_summary">Akcje dla klawiszy głośności góra i dół</string>
+    <string name="nika_edge_summary">Przesunięcia jednym palcem od górnej i dolnej krawędzi ekranu, jak w iPhonie. Dla każdego można wybrać dowolną akcję.</string>
+    <string name="nika_edge_enabled_title">Gesty od krawędzi ekranu</string>
+    <string name="nika_edge_enabled_summary">Przesuń jednym palcem od dolnej krawędzi w górę lub od górnej w dół. Krótkie i długie przesunięcie wykonują wybraną akcję. Dotyki zaczynające się przy krawędzi nie są odczytywane.</string>
+    <string name="nika_edge_band_title">Szerokość pasa przy krawędzi</string>
+    <string name="nika_edge_cat_bottom">Od dolnej krawędzi w górę</string>
+    <string name="nika_edge_cat_top">Od górnej krawędzi w dół</string>
+    <string name="nika_edge_short_action">Krótkie przesunięcie: akcja</string>
+    <string name="nika_edge_short_len">Krótkie przesunięcie: długość</string>
+    <string name="nika_edge_long_action">Długie przesunięcie: akcja</string>
+    <string name="nika_edge_long_len">Długie przesunięcie: długość</string>
 </resources>

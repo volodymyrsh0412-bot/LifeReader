@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_edge_title">Жести від краю екрана</string>
-    <string name="nika_edge_summary">Свайпи одним пальцем від країв екрана, як на айфоні</string>
-    <string name="nika_edge_enabled_title">Жести від краю екрана</string>
-    <string name="nika_edge_enabled_summary">Свайп вгору від нижнього краю: короткий — Головний екран, довший — Нещодавні. Свайп вниз від верхнього краю: короткий — Сповіщення, довший — Швидкі налаштування. Дотики, що починаються біля краю, не озвучуються.</string>
-    <string name="nika_edge_band_title">Ширина смуги біля краю (мм)</string>
-    <string name="nika_edge_home_title">Знизу: довжина свайпу для Головного екрана (мм)</string>
-    <string name="nika_edge_recents_title">Знизу: довжина свайпу для Нещодавніх (мм)</string>
-    <string name="nika_edge_notif_title">Зверху: довжина свайпу для Сповіщень (мм)</string>
-    <string name="nika_edge_qs_title">Зверху: довжина свайпу для Швидких налаштувань (мм)</string>
     <string name="nika_volume_title">Кнопки гучності</string>
     <string name="nika_volume_summary">Дії для клавіш гучності вгору й вниз</string>
+    <string name="nika_edge_summary">Свайпи одним пальцем від верхнього і нижнього країв екрана, як на айфоні. Для кожного свайпу можна вибрати будь-яку дію.</string>
+    <string name="nika_edge_enabled_title">Жести від краю екрана</string>
+    <string name="nika_edge_enabled_summary">Свайп одним пальцем від нижнього краю вгору або від верхнього краю вниз. Короткий і довгий свайп виконують дію на ваш вибір. Дотики, що починаються біля краю, не озвучуються.</string>
+    <string name="nika_edge_band_title">Ширина смуги біля краю</string>
+    <string name="nika_edge_cat_bottom">Від нижнього краю вгору</string>
+    <string name="nika_edge_cat_top">Від верхнього краю вниз</string>
+    <string name="nika_edge_short_action">Короткий свайп: дія</string>
+    <string name="nika_edge_short_len">Короткий свайп: довжина</string>
+    <string name="nika_edge_long_action">Довгий свайп: дія</string>
+    <string name="nika_edge_long_len">Довгий свайп: довжина</string>
 </resources>

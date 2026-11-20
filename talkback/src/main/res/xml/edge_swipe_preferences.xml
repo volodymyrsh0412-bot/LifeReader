@@ -6,39 +6,67 @@
         android:defaultValue="false"
         android:title="@string/nika_edge_enabled_title"
         android:summary="@string/nika_edge_enabled_summary" />
-  <ListPreference
-        android:key="nika_edge_band_mm"
-        android:defaultValue="6"
+    <ListPreference
+        android:key="nika_edge_band"
+        android:defaultValue="10"
         android:title="@string/nika_edge_band_title"
         android:summary="%s"
-        android:entries="@array/nika_edge_band_values"
+        android:entries="@array/nika_edge_band_entries"
         android:entryValues="@array/nika_edge_band_values" />
-  <ListPreference
-        android:key="nika_edge_home_mm"
-        android:defaultValue="10"
-        android:title="@string/nika_edge_home_title"
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
+        android:key="nika_edge_cat_bottom"
+        android:title="@string/nika_edge_cat_bottom">
+    <com.google.android.accessibility.talkback.preference.base.GestureListPreference
+        android:defaultValue="@string/shortcut_value_home"
+        android:key="nika_edge_b_short_act"
         android:summary="%s"
-        android:entries="@array/nika_edge_home_values"
-        android:entryValues="@array/nika_edge_home_values" />
-  <ListPreference
-        android:key="nika_edge_recents_mm"
+        android:title="@string/nika_edge_short_action" />
+    <ListPreference
+        android:key="nika_edge_b_short_len"
+        android:defaultValue="10"
+        android:title="@string/nika_edge_short_len"
+        android:summary="%s"
+        android:entries="@array/nika_edge_short_entries"
+        android:entryValues="@array/nika_edge_short_values" />
+    <com.google.android.accessibility.talkback.preference.base.GestureListPreference
+        android:defaultValue="@string/shortcut_value_overview"
+        android:key="nika_edge_b_long_act"
+        android:summary="%s"
+        android:title="@string/nika_edge_long_action" />
+    <ListPreference
+        android:key="nika_edge_b_long_len"
         android:defaultValue="20"
-        android:title="@string/nika_edge_recents_title"
+        android:title="@string/nika_edge_long_len"
         android:summary="%s"
-        android:entries="@array/nika_edge_recents_values"
-        android:entryValues="@array/nika_edge_recents_values" />
-  <ListPreference
-        android:key="nika_edge_notif_mm"
+        android:entries="@array/nika_edge_blong_entries"
+        android:entryValues="@array/nika_edge_blong_values" />
+  </com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory>
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
+        android:key="nika_edge_cat_top"
+        android:title="@string/nika_edge_cat_top">
+    <com.google.android.accessibility.talkback.preference.base.GestureListPreference
+        android:defaultValue="@string/shortcut_value_notifications"
+        android:key="nika_edge_t_short_act"
+        android:summary="%s"
+        android:title="@string/nika_edge_short_action" />
+    <ListPreference
+        android:key="nika_edge_t_short_len"
         android:defaultValue="10"
-        android:title="@string/nika_edge_notif_title"
+        android:title="@string/nika_edge_short_len"
         android:summary="%s"
-        android:entries="@array/nika_edge_notif_values"
-        android:entryValues="@array/nika_edge_notif_values" />
-  <ListPreference
-        android:key="nika_edge_qs_mm"
+        android:entries="@array/nika_edge_short_entries"
+        android:entryValues="@array/nika_edge_short_values" />
+    <com.google.android.accessibility.talkback.preference.base.GestureListPreference
+        android:defaultValue="@string/shortcut_value_quick_settings"
+        android:key="nika_edge_t_long_act"
+        android:summary="%s"
+        android:title="@string/nika_edge_long_action" />
+    <ListPreference
+        android:key="nika_edge_t_long_len"
         android:defaultValue="25"
-        android:title="@string/nika_edge_qs_title"
+        android:title="@string/nika_edge_long_len"
         android:summary="%s"
-        android:entries="@array/nika_edge_qs_values"
-        android:entryValues="@array/nika_edge_qs_values" />
+        android:entries="@array/nika_edge_tlong_entries"
+        android:entryValues="@array/nika_edge_tlong_values" />
+  </com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory>
 </PreferenceScreen>

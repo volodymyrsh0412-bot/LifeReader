@@ -44,11 +44,6 @@
         android:key="@string/pref_category_manage_gestures_key"
         android:title="@string/title_pref_category_manage_gestures" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:fragment="com.google.android.accessibility.talkback.preference.base.EdgeSwipeFragment"
-        android:key="pref_nika_edge"
-        android:summary="@string/nika_edge_summary"
-        android:title="@string/nika_edge_title" />
-    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:fragment="com.google.android.accessibility.talkback.preference.base.ContextMenuFragment"
         android:key="@string/pref_category_manage_context_menu_key"
         android:title="@string/title_pref_category_context_menu" />

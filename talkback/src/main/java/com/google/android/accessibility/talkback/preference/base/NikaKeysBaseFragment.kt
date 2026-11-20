@@ -34,6 +34,9 @@ import com.google.android.accessibility.utils.preference.PreferencesActivity.FRA
 abstract class NikaKeysBaseFragment(xml: Int) : TalkbackBaseFragment(xml) {
   private var updateOnResume = false
 
+  /** Screens with many sections start with them collapsed. */
+  protected open val collapseSections: Boolean = true
+
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     super.onCreatePreferences(savedInstanceState, rootKey)
     if (FormFactorUtils.isAndroidWear()) {
@@ -47,7 +50,9 @@ abstract class NikaKeysBaseFragment(xml: Int) : TalkbackBaseFragment(xml) {
         true
       }
     }
-    collapseCategories()
+    if (collapseSections) {
+      collapseCategories()
+    }
   }
 
   /** On a watch only the "any key" slots are kept: there are no digit or volume keys. */

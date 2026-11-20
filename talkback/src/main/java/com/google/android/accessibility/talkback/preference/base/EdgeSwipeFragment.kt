@@ -18,7 +18,9 @@ package com.google.android.accessibility.talkback.preference.base
 
 import com.google.android.accessibility.talkback.R
 
-/** Nika: settings of the one-finger swipes from the screen edges. */
-class EdgeSwipeFragment : TalkbackBaseFragment(R.xml.edge_swipe_preferences) {
+/** Nika: settings of the one-finger swipes from the screen edges; every swipe runs any action. */
+class EdgeSwipeFragment : NikaKeysBaseFragment(R.xml.edge_swipe_preferences) {
+  override val collapseSections: Boolean = false
+
   override fun getTitle(): CharSequence = getText(R.string.nika_edge_title)
 }

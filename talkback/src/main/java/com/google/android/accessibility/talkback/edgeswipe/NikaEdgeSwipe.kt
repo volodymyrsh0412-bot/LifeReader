@@ -16,19 +16,21 @@
 
 package com.google.android.accessibility.talkback.edgeswipe
 
-import android.accessibilityservice.AccessibilityService
 import android.content.Context
+import android.os.Build
 import android.view.MotionEvent
+import android.view.WindowManager
+import com.google.android.accessibility.talkback.TalkBackService
 import com.google.android.accessibility.utils.SharedPreferencesUtils
 import kotlin.math.abs
 
 /**
- * Nika: one-finger swipes from the top and bottom edges of the screen, like on an iPhone.
- * Bottom edge, up: short = Home, long = Recents. Top edge, down: short = Notifications, long =
- * Quick settings. While such a touch is in progress TalkBack does not explore or detect gestures.
+ * Nika: one-finger swipes from the bottom and top edges of the screen, like on an iPhone. Each of
+ * the four swipes (bottom short/long, top short/long) runs any action of the gesture settings. While
+ * such a touch is in progress TalkBack does not explore or detect gestures.
  */
 class NikaEdgeSwipe(
-  private val service: AccessibilityService,
+  private val service: TalkBackService,
   private val context: Context,
 ) {
   private var active = false
@@ -38,23 +40,41 @@ class NikaEdgeSwipe(
   private var lastX = 0f
   private var lastY = 0f
 
-  private fun intPref(key: String, default: Int): Int {
-    val prefs = SharedPreferencesUtils.getSharedPreferences(context)
-    return prefs.getString(key, null)?.toIntOrNull() ?: default
-  }
+  private fun prefs() = SharedPreferencesUtils.getSharedPreferences(context)
 
-  private fun mmToPx(mm: Int): Float =
-    mm * context.resources.displayMetrics.ydpi / 25.4f
+  private fun intPref(key: String, default: Int): Int =
+    prefs().getString(key, null)?.toIntOrNull() ?: default
+
+  private fun actionPref(key: String, default: String): String =
+    prefs().getString(key, null) ?: default
+
+  /** Millimetres to pixels. The density is used because the reported physical dpi is often wrong. */
+  private fun mmToPx(mm: Int): Float = mm * context.resources.displayMetrics.densityDpi / 25.4f
+
+  /** The full height of the screen, with the navigation bar. */
+  private fun screenHeight(): Int {
+    try {
+      if (Build.VERSION.SDK_INT >= 30) {
+        val wm = context.getSystemService(WindowManager::class.java)
+        val bounds = wm?.maximumWindowMetrics?.bounds
+        if (bounds != null && bounds.height() > 0) {
+          return bounds.height()
+        }
+      }
+    } catch (e: RuntimeException) {
+      // Falls back to the display metrics.
+    }
+    return context.resources.displayMetrics.heightPixels
+  }
 
   /** Returns true while this touch belongs to the edge swipe, so TalkBack must ignore it. */
   fun onMotionEvent(event: MotionEvent): Boolean {
     when (event.actionMasked) {
       MotionEvent.ACTION_DOWN -> {
         active = false
-        val prefs = SharedPreferencesUtils.getSharedPreferences(context)
-        if (!prefs.getBoolean(PREF_ENABLED, false)) return false
-        val height = context.resources.displayMetrics.heightPixels
-        val band = mmToPx(intPref(PREF_BAND, 6))
+        if (!prefs().getBoolean(PREF_ENABLED, false)) return false
+        val height = screenHeight()
+        val band = mmToPx(intPref(PREF_BAND, 10))
         val y = event.rawY
         if (y >= height - band) {
           bottom = true
@@ -106,31 +126,35 @@ class NikaEdgeSwipe(
     val dx = abs(lastX - startX)
     val dy = if (bottom) startY - lastY else lastY - startY
     if (dy <= dx) return
+    val action: String
     if (bottom) {
-      val recents = mmToPx(intPref(PREF_RECENTS, 20))
-      val home = mmToPx(intPref(PREF_HOME, 10))
-      if (dy >= recents) {
-        service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS)
-      } else if (dy >= home) {
-        service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME)
-      }
+      val long = mmToPx(intPref(PREF_B_LONG_LEN, 20))
+      val short = mmToPx(intPref(PREF_B_SHORT_LEN, 10))
+      action =
+        if (dy >= long) actionPref(PREF_B_LONG_ACT, "OVERVIEW")
+        else if (dy >= short) actionPref(PREF_B_SHORT_ACT, "HOME")
+        else return
     } else {
-      val qs = mmToPx(intPref(PREF_QS, 25))
-      val notif = mmToPx(intPref(PREF_NOTIF, 10))
-      if (dy >= qs) {
-        service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_QUICK_SETTINGS)
-      } else if (dy >= notif) {
-        service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
-      }
+      val long = mmToPx(intPref(PREF_T_LONG_LEN, 25))
+      val short = mmToPx(intPref(PREF_T_SHORT_LEN, 10))
+      action =
+        if (dy >= long) actionPref(PREF_T_LONG_ACT, "QUICK_SETTINGS")
+        else if (dy >= short) actionPref(PREF_T_SHORT_ACT, "NOTIFICATIONS")
+        else return
     }
+    service.performNikaKeyAction(action)
   }
 
   companion object {
     const val PREF_ENABLED = "nika_edge_enabled"
-    const val PREF_BAND = "nika_edge_band_mm"
-    const val PREF_HOME = "nika_edge_home_mm"
-    const val PREF_RECENTS = "nika_edge_recents_mm"
-    const val PREF_NOTIF = "nika_edge_notif_mm"
-    const val PREF_QS = "nika_edge_qs_mm"
+    const val PREF_BAND = "nika_edge_band"
+    const val PREF_B_SHORT_ACT = "nika_edge_b_short_act"
+    const val PREF_B_SHORT_LEN = "nika_edge_b_short_len"
+    const val PREF_B_LONG_ACT = "nika_edge_b_long_act"
+    const val PREF_B_LONG_LEN = "nika_edge_b_long_len"
+    const val PREF_T_SHORT_ACT = "nika_edge_t_short_act"
+    const val PREF_T_SHORT_LEN = "nika_edge_t_short_len"
+    const val PREF_T_LONG_ACT = "nika_edge_t_long_act"
+    const val PREF_T_LONG_LEN = "nika_edge_t_long_len"
   }
 }
