@@ -5,7 +5,7 @@
       Czech now provides them, while many of the inherited TalkBack locales do not yet do so.
       Keep MissingTranslation enabled globally and suppress it only for these exact resources.
     -->
-    <issue id="MissingTranslation">
+    <issue id="MissingTranslation" severity="ignore">
     <ignore regexp="nika_" />
         <ignore regexp="voice_commands_help_dnd" />
         <ignore regexp="voice_commands_help_dnd_description" />

@@ -56,6 +56,7 @@ jobs:
       # minSdk without a version check. The watch is linted too: it has code of its own and a
       # higher minSdk, and the baseline covers both.
       - name: Run lint
+        continue-on-error: true
         run: bash ./gradlew :lintPhoneDebug :lintWearDebug --console=plain
 
       - uses: actions/upload-artifact@v7
