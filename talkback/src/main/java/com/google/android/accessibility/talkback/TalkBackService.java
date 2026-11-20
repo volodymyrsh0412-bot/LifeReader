@@ -825,6 +825,15 @@ public class TalkBackService extends AccessibilityServiceCompat
   // event is in the time window between TYPE_TOUCH_INTERACTION_START and
   // TYPE_TOUCH_INTERACTION_END will be considered as passthrough window.
   private boolean isTouchInteracting = false;
+
+  private com.google.android.accessibility.talkback.keyactions.NikaKeyActions nikaKeyActions;
+
+  /** Nika: runs a gesture action (a value of the gesture settings) for a key. */
+  public void performNikaKeyAction(String action) {
+    if (gestureController != null) {
+      gestureController.performAction(action, EVENT_ID_UNTRACKED);
+    }
+  }
   // In order to handle key action down/up in pair for the same functions.
   // Records whether the last keystroke of VolumeUp key occurred in the passthrough window.
   private boolean volumeUpKeyPressedInPassThroughWindow = false;
@@ -1418,6 +1427,17 @@ public class TalkBackService extends AccessibilityServiceCompat
       // change input mode to keyboard, and cancel pending accessibility hints. It is OK to just
       // ignore these KeyEvents since they're unused in TalkBack.
       return false;
+    }
+    if (isServiceActive() && !isTouchInteracting) {
+      if (nikaKeyActions == null) {
+        nikaKeyActions =
+            new com.google.android.accessibility.talkback.keyactions.NikaKeyActions(this);
+      }
+      if (nikaKeyActions.onKeyEvent(
+          keyEvent,
+          inputFocusInterpreter != null && inputFocusInterpreter.isInputFocusEditable())) {
+        return true;
+      }
     }
     boolean passThroughThisKey = false;
     boolean triggerModifierPressed =
