@@ -411,11 +411,11 @@
   <string name="voice_commands_call_needs_newer_android">Ending calls by voice needs Android 9 or later</string>
   <!-- Spoken when Android refuses to place, answer or end a call. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_call_failed">Could not complete the call</string>
-  <!-- Voice-shortcut command to launch Backtalk Settings. [CHAR_LIMIT=30] -->
+  <!-- Voice-shortcut command to launch Nika Settings. [CHAR_LIMIT=30] -->
   <string name="voice_commands_backtalk_settings">Nika settings</string>
-  <!-- Voice command: the singular form of "Backtalk settings", spoken to open Backtalk settings. [CHAR_LIMIT=30] -->
+  <!-- Voice command: the singular form of "Nika settings", spoken to open Nika settings. [CHAR_LIMIT=30] -->
   <string name="voice_commands_backtalk_setting">Nika setting</string>
-  <!-- Voice command spoken to open Backtalk settings. [CHAR_LIMIT=30] -->
+  <!-- Voice command spoken to open Nika settings. [CHAR_LIMIT=30] -->
   <string name="voice_commands_open_backtalk_settings">Open Nika settings</string>
   <!-- Feedback strings for system voice commands -->
   <string name="voice_commands_dnd_on">Do Not Disturb turned on</string>
@@ -425,7 +425,7 @@
   <string name="voice_commands_dnd_permission_required">Please grant Do Not Disturb access to use this voice command</string>
   <!-- Spoken when the voice command opens Android Settings. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_opening_settings">Opening Settings</string>
-  <!-- Spoken when the voice command opens Backtalk settings. [CHAR_LIMIT=NONE] -->
+  <!-- Spoken when the voice command opens Nika settings. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_opening_backtalk_settings">Opening Nika settings</string>
   <!-- Spoken after the volume voice command; %1$d is the media volume as a percentage. [CHAR_LIMIT=NONE] -->
   <string name="voice_commands_volume_set">Volume %1$d percent</string>

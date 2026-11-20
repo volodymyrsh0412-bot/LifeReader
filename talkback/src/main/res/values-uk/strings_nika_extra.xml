@@ -23,7 +23,7 @@
   <string name="emoji_speech_engine">Читає синтезатор мовлення</string>
   <string name="emoji_speech_names">Читає Nika</string>
   <string name="emoji_speech_none">Нічого</string>
-  <string name="emoji_speech_state">Емодзі: <xliff:g example="Read by Backtalk" id="state">%1$s</xliff:g></string>
+  <string name="emoji_speech_state">Емодзі: <xliff:g example="Read by Nika" id="state">%1$s</xliff:g></string>
   <string name="gemini_error_api_key">Gemini не прийняв ключ API. Перевірте ключ у налаштуваннях автоматичних описів.</string>
   <string name="gemini_error_busy">Gemini зараз зайнятий. Спробуйте за хвилину.</string>
   <string name="gemini_error_quota">Ліміт використання вашого ключа Gemini API вичерпано. Спробуйте пізніше.</string>

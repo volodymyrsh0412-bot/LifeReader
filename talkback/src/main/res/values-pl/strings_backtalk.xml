@@ -80,7 +80,7 @@
   <string name="emoji_speech_names">Odczytywane przez Nika</string>
   <string name="emoji_speech_none">Nie odczytuj</string>
   <string name="summary_selector_menu_emoji">Zmień sposób odczytywania emoji</string>
-  <string name="emoji_speech_state">Emoji: <xliff:g example="Read by Backtalk" id="state">%1$s</xliff:g></string>
+  <string name="emoji_speech_state">Emoji: <xliff:g example="Read by Nika" id="state">%1$s</xliff:g></string>
   <string name="title_pref_emoji_repeat_count">Podawaj liczbę powtórzonych emoji</string>
   <string name="emoji_repeat_count_off">Wyłączone</string>
   <string name="emoji_repeat_count_2">2 lub więcej</string>

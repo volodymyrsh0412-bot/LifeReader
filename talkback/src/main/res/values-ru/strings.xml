@@ -1528,7 +1528,7 @@
   <string name="emoji_speech_names">Озвучивать средствами Nika</string>
   <string name="emoji_speech_none">Не озвучивать</string>
   <string name="summary_selector_menu_emoji">Изменить способ озвучивания эмодзи</string>
-  <string name="emoji_speech_state">Эмодзи: <xliff:g example="Read by Backtalk" id="state">%1$s</xliff:g></string>
+  <string name="emoji_speech_state">Эмодзи: <xliff:g example="Read by Nika" id="state">%1$s</xliff:g></string>
   <string name="title_pref_emoji_repeat_count">Подсчитывать повторяющиеся эмодзи</string>
   <string name="emoji_repeat_count_off">Отключено</string>
   <string name="emoji_repeat_count_2">От 2 повторов</string>

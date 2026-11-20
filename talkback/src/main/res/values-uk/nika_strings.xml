@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_whats_new_title">Що нового</string>
+    <string name="nika_whats_new_summary">Зміни в цій версії</string>
+    <string name="nika_whats_new_message">Nika — скрінрідер на основі Backtalk і Google TalkBack.\n\nНове в цій версії:\n\u2022 Програма тепер називається Nika.\n\u2022 Нові пункти: «Що нового» і «Написати відгук».\n\u2022 Оновлення беруться зі сторінки Nika на GitHub.\n\u2022 Постійний ключ підпису: нові версії встановлюються поверх старої.</string>
+    <string name="nika_feedback_title">Написати відгук</string>
+    <string name="nika_feedback_summary">Написати розробнику: повідомити про проблему або запропонувати ідею</string>
+    <string name="nika_feedback_subject">Відгук про Nika (збірка %1$d)</string>
+    <string name="nika_feedback_body">\n\n---\nПристрій: %1$s %2$s\nAndroid: %3$s\nЗбірка: %4$d</string>
+    <string name="nika_feedback_copied">Поштової програми не знайдено. Адресу %1$s скопійовано.</string>
+</resources>

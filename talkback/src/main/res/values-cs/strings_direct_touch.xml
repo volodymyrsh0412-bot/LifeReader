@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Backtalk-specific Czech translations for direct touch. -->
+    <!-- Nika-specific Czech translations for direct touch. -->
     <string name="direct_touch_on">Přímý dotyk zapnut</string>
     <string name="direct_touch_off">Přímý dotyk vypnut</string>
     <string name="direct_touch_tile_label">Přímý dotyk</string>

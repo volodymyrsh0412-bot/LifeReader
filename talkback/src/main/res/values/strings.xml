@@ -3,7 +3,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
 
     <!--The human-readable name of this service. Do not translate. -->
-    <string name="talkback_title" translatable="false">LifeReader</string>
+    <string name="talkback_title" translatable="false">Nika</string>
 
     <!--
       Source: A brief description of TalkBack.
@@ -90,7 +90,7 @@
     -->
     <string name="speech_engine_unavailable_with_profile">Speech engine unavailable while using a voice profile</string>
     <!--
-      Item in the menu of voice profiles for the profile in use, opened from the Backtalk menu, a
+      Item in the menu of voice profiles for the profile in use, opened from the Nika menu, a
       gesture or a keyboard shortcut. [CHAR LIMIT=NONE]
     -->
     <string name="voice_profile_menu_item_in_use"><xliff:g id="name" example="Reading">%1$s</xliff:g>, in use</string>
@@ -109,7 +109,7 @@
     <!-- Name given to a new voice profile, with a number to tell it apart. [CHAR LIMIT=NONE] -->
     <string name="voice_profile_new_name">Voice profile <xliff:g id="number" example="2">%1$d</xliff:g></string>
     <!--
-      Error on the name field when the name entered is already another voice profile's, or Backtalk
+      Error on the name field when the name entered is already another voice profile's, or Nika
       default's. [CHAR LIMIT=NONE]
     -->
     <string name="voice_profile_name_taken">A voice profile is already called <xliff:g id="name" example="Reading">%1$s</xliff:g></string>
@@ -171,7 +171,7 @@
     <string name="summary_pref_use_accessibility_stream">Speech and sounds use the accessibility volume, so you can set them apart from media. When off, they use the media volume.</string>
     <!--
       Source: Title for the "speak long text in phrases" toggle.
-      Description: When on, Backtalk sends long text to the speech engine as separate phrases. [CHAR LIMIT=NONE]
+      Description: When on, Nika sends long text to the speech engine as separate phrases. [CHAR LIMIT=NONE]
     -->
     <string name="title_pref_speak_in_phrases">Send long text a sentence at a time</string>
     <!--
@@ -179,9 +179,9 @@
       Description: Explains what sending long text as phrases does, and why to turn it off. [CHAR LIMIT=NONE]
     -->
     <string name="summary_pref_speak_in_phrases">For speech engines that are slow to stop, such as Gryphon, so swiping away stops long text at once. Many engines pause longer between sentences sent separately, so leave this off if yours stops quickly.</string>
-    <!-- Title of the notification shown once on phones whose battery saver can stop Backtalk, when battery optimization is on for it. [CHAR LIMIT=NONE] -->
+    <!-- Title of the notification shown once on phones whose battery saver can stop Nika, when battery optimization is on for it. [CHAR LIMIT=NONE] -->
     <string name="battery_optimization_notification_title">Battery optimization can stop Nika</string>
-    <!-- Text of the notification shown once on phones whose battery saver can stop Backtalk. Tapping it opens the system list of battery optimization. [CHAR LIMIT=NONE] -->
+    <!-- Text of the notification shown once on phones whose battery saver can stop Nika. Tapping it opens the system list of battery optimization. [CHAR LIMIT=NONE] -->
     <string name="battery_optimization_notification_text">On this phone, the battery saver can stop Nika after the screen turns off, so it falls silent until it is restarted. Tap to open battery optimization, choose All apps, find Nika and choose Don\'t optimize.</string>
     <!-- Title of the setting that keeps speech the user did not ask for, such as notifications, quiet while another app records with the microphone. [CHAR LIMIT=NONE] -->
     <string name="title_pref_mute_speech_while_recording">Quiet while recording</string>
@@ -327,7 +327,7 @@
     -->
     <string name="value_device_unlocked">Device unlocked.</string>
 
-    <!-- Settings for what Backtalk says when the screen turns off or on and when the phone is unlocked. [CHAR LIMIT=NONE] -->
+    <!-- Settings for what Nika says when the screen turns off or on and when the phone is unlocked. [CHAR LIMIT=NONE] -->
     <string name="title_pref_screen_announcements">Screen on and off</string>
     <!-- [CHAR LIMIT=NONE] -->
     <string name="summary_pref_screen_announcements">Choose what Nika says when the screen turns off or on, and when the phone is unlocked</string>
@@ -361,7 +361,7 @@
     <string name="title_pref_category_feedback">Feedback</string>
     <!-- Settings category for keyboards and braille. [CHAR LIMIT=40] -->
     <string name="title_pref_category_typing_and_braille">Typing and braille</string>
-    <!-- Settings category for scripts, custom labels and other apps that speak through Backtalk, which change how other apps work with Backtalk. [CHAR LIMIT=40] -->
+    <!-- Settings category for scripts, custom labels and other apps that speak through Nika, which change how other apps work with Nika. [CHAR LIMIT=40] -->
     <string name="title_pref_category_apps">Apps</string>
     <!-- Title of the settings screen for how touches focus and activate items: focus delay, lift to activate, single tap and the like. [CHAR LIMIT=40] -->
     <string name="title_pref_touch_activation">Touch and activation</string>
@@ -397,29 +397,29 @@
     <string name="title_pref_cover_proximity_sensor">Cover proximity sensor to stop speech</string>
     <!-- Title of a switch in Advanced Settings on Wear OS watches. Reserves two-finger single and double taps for Samsung's Vibration Watch feature, which tells the time through vibrations. [CHAR LIMIT=NONE] -->
     <string name="title_pref_reserve_vibration_watch_gestures">Reserve gestures for Vibration Watch</string>
-    <!-- Summary of the Vibration Watch gesture switch. Backtalk stops handling the two gestures; the user must separately enable Samsung's Vibration Watch feature in the watch's accessibility settings. [CHAR LIMIT=NONE] -->
+    <!-- Summary of the Vibration Watch gesture switch. Nika stops handling the two gestures; the user must separately enable Samsung's Vibration Watch feature in the watch's accessibility settings. [CHAR LIMIT=NONE] -->
     <string name="summary_pref_reserve_vibration_watch_gestures">Stops Nika handling two-finger single and double taps so Samsung Vibration Watch can use them. Enable Vibration Watch in your watch’s accessibility settings.</string>
-    <!-- Explanation shown instead of a gesture's assigned action when the Vibration Watch switch in Advanced Settings makes its two-finger single or double tap unavailable to Backtalk. [CHAR LIMIT=NONE] -->
+    <!-- Explanation shown instead of a gesture's assigned action when the Vibration Watch switch in Advanced Settings makes its two-finger single or double tap unavailable to Nika. [CHAR LIMIT=NONE] -->
     <string name="shortcut_reserved_for_vibration_watch">Reserved for Vibration Watch in Advanced Settings</string>
     <!-- Title of the setting that moves calls to the speaker when the phone is away from the ear. [CHAR LIMIT=NONE] -->
     <string name="title_pref_speakerphone_away_from_ear">Speaker when away from your ear</string>
     <!-- Summary of that setting. [CHAR LIMIT=NONE] -->
     <string name="summary_pref_speakerphone_away_from_ear">During a call, switches to the speaker when you take the phone away from your ear, and back to the earpiece when you hold it up again.</string>
-    <!-- Summary of that setting when Backtalk does not have the permission. %1$s is the adb command that grants it. [CHAR LIMIT=NONE] -->
+    <!-- Summary of that setting when Nika does not have the permission. %1$s is the adb command that grants it. [CHAR LIMIT=NONE] -->
     <string name="summary_pref_speakerphone_needs_permission">Needs a permission that Android does not give to screen readers. To grant it, run this command with adb or Shizuku, then come back to this screen: %1$s</string>
     <!-- Action on a setting that needs a permission granted with adb. Copies the adb command to the clipboard. [CHAR LIMIT=NONE] -->
     <string name="action_copy_command">Copy command</string>
     <!-- Shown after the adb command was copied to the clipboard. [CHAR LIMIT=NONE] -->
     <string name="command_copied">Command copied</string>
-    <!-- Title of the setting that lets other apps speak through Backtalk. [CHAR LIMIT=NONE] -->
+    <!-- Title of the setting that lets other apps speak through Nika. [CHAR LIMIT=NONE] -->
     <string name="title_pref_speech_control">Let other apps speak</string>
     <!-- Summary of that setting. [CHAR LIMIT=NONE] -->
     <string name="summary_pref_speech_control">Apps that you allow can say text in your Nika voice. Nothing is said while the device is locked.</string>
-    <!-- Heading of the list of apps that asked to speak through Backtalk. [CHAR LIMIT=NONE] -->
+    <!-- Heading of the list of apps that asked to speak through Nika. [CHAR LIMIT=NONE] -->
     <string name="speech_control_apps_category">Apps</string>
     <!-- Shown in that list before any app has asked to speak. [CHAR LIMIT=NONE] -->
     <string name="speech_control_no_apps">No apps have asked to speak yet.</string>
-    <!-- Title of the notification that asks whether an app may speak through Backtalk. The app's name is filled in. [CHAR LIMIT=NONE] -->
+    <!-- Title of the notification that asks whether an app may speak through Nika. The app's name is filled in. [CHAR LIMIT=NONE] -->
     <string name="speech_control_ask_title">Allow <xliff:g id="app" example="Tasker">%1$s</xliff:g> to speak through Nika?</string>
     <!-- Text of that notification. [CHAR LIMIT=NONE] -->
     <string name="speech_control_ask_text">It can say text in your Nika voice. You can change this in Advanced settings.</string>
@@ -427,11 +427,11 @@
     <string name="speech_control_allow">Allow</string>
     <!-- Button in that notification that stops the app from speaking. [CHAR LIMIT=30] -->
     <string name="speech_control_deny">Don\'t allow</string>
-    <!-- Name of the permission that apps ask for to speak through Backtalk, shown in the app's permission list. [CHAR LIMIT=NONE] -->
+    <!-- Name of the permission that apps ask for to speak through Nika, shown in the app's permission list. [CHAR LIMIT=NONE] -->
     <string name="permission_speak_label">speak through Nika</string>
     <!-- Description of that permission. [CHAR LIMIT=NONE] -->
     <string name="permission_speak_description">Lets the app ask to say text in your Nika voice. Nika asks you before the app can speak.</string>
-    <!-- Name of the permission that an app needs to ask to be a braille display for Backtalk, shown in the app's permission list. [CHAR LIMIT=NONE] -->
+    <!-- Name of the permission that an app needs to ask to be a braille display for Nika, shown in the app's permission list. [CHAR LIMIT=NONE] -->
     <string name="permission_braille_display_label">ask to be a braille display for Nika</string>
     <!-- Description of that permission. [CHAR LIMIT=NONE] -->
     <string name="permission_braille_display_description">Lets the app ask to be a braille display for Nika. If you allow it in Nika, it can read everything on the screen and control your device. Nika asks you first.</string>
@@ -482,7 +482,7 @@
     -->
     <string name="emoji_speech_engine">Read by speech engine</string>
     <!--
-      Source: Emoji preference choice: Backtalk sends the speech engine each emoji's name. [CHAR LIMIT=45]
+      Source: Emoji preference choice: Nika sends the speech engine each emoji's name. [CHAR LIMIT=45]
     -->
     <string name="emoji_speech_names">Read by Nika</string>
     <!--
@@ -490,13 +490,13 @@
     -->
     <string name="emoji_speech_none">None</string>
     <!--
-      Source: Summary of the Emoji reading control, and of the Emoji item in the list of Backtalk menu items. [CHAR LIMIT=NONE]
+      Source: Summary of the Emoji reading control, and of the Emoji item in the list of Nika menu items. [CHAR LIMIT=NONE]
     -->
     <string name="summary_selector_menu_emoji">Change how emoji are read</string>
     <!--
-      Source: Spoken when the Emoji reading control or menu changes how emoji are read, like "Emoji: Read by Backtalk". [CHAR LIMIT=NONE]
+      Source: Spoken when the Emoji reading control or menu changes how emoji are read, like "Emoji: Read by Nika". [CHAR LIMIT=NONE]
     -->
-    <string name="emoji_speech_state">Emoji: <xliff:g example="Read by Backtalk" id="state">%1$s</xliff:g></string>
+    <string name="emoji_speech_state">Emoji: <xliff:g example="Read by Nika" id="state">%1$s</xliff:g></string>
     <!--
       Source: Preference for saying how many times an emoji repeats, like "3 grinning face", instead of naming it each time. [CHAR LIMIT=45]
     -->
@@ -801,49 +801,49 @@
       Description: Explains whether to show the banner. [CHAR LIMIT=NONE]
     -->
     <string name="summary_pref_show_exit_watermark">When Nika turns on, show how to turn it off</string>
-    <!-- Title of the switch that makes the Notifications action open Backtalk's own list of notifications instead of the system's notification shade. [CHAR_LIMIT=NONE] -->
+    <!-- Title of the switch that makes the Notifications action open Nika's own list of notifications instead of the system's notification shade. [CHAR_LIMIT=NONE] -->
     <string name="title_pref_notification_list">Use Nika\'s notification list</string>
-    <!-- Title of the screen that chooses which parts of a notification Backtalk's notification list speaks, and their order. [CHAR_LIMIT=NONE] -->
+    <!-- Title of the screen that chooses which parts of a notification Nika's notification list speaks, and their order. [CHAR_LIMIT=NONE] -->
     <string name="title_pref_notification_parts">Notification details</string>
-    <!-- A part of a notification that Backtalk's notification list can speak: its title. [CHAR_LIMIT=NONE] -->
+    <!-- A part of a notification that Nika's notification list can speak: its title. [CHAR_LIMIT=NONE] -->
     <string name="notification_part_title">Title</string>
-    <!-- A part of a notification that Backtalk's notification list can speak: its text. [CHAR_LIMIT=NONE] -->
+    <!-- A part of a notification that Nika's notification list can speak: its text. [CHAR_LIMIT=NONE] -->
     <string name="notification_part_text">Text</string>
-    <!-- A part of a notification that Backtalk's notification list can speak: the name of the app that posted it. [CHAR_LIMIT=NONE] -->
+    <!-- A part of a notification that Nika's notification list can speak: the name of the app that posted it. [CHAR_LIMIT=NONE] -->
     <string name="notification_part_app">App name</string>
-    <!-- A part of a notification that Backtalk's notification list can speak: when it was posted. [CHAR_LIMIT=NONE] -->
+    <!-- A part of a notification that Nika's notification list can speak: when it was posted. [CHAR_LIMIT=NONE] -->
     <string name="notification_part_time">Time</string>
-    <!-- A part of a media notification that Backtalk's notification list can speak: whether its media is playing or paused. [CHAR_LIMIT=NONE] -->
+    <!-- A part of a media notification that Nika's notification list can speak: whether its media is playing or paused. [CHAR_LIMIT=NONE] -->
     <string name="notification_part_playback">Playing or paused</string>
-    <!-- Title of Backtalk's own list of notifications. [CHAR_LIMIT=NONE] -->
+    <!-- Title of Nika's own list of notifications. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_title">Notifications</string>
-    <!-- Shown in Backtalk's notification list when there are no notifications. [CHAR_LIMIT=NONE] -->
+    <!-- Shown in Nika's notification list when there are no notifications. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_empty">No notifications</string>
-    <!-- Shown in Backtalk's notification list when Backtalk does not have notification access. [CHAR_LIMIT=NONE] -->
+    <!-- Shown in Nika's notification list when Nika does not have notification access. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_no_access">Notification access is off</string>
-    <!-- Button that opens the system setting for Backtalk's notification access. [CHAR_LIMIT=NONE] -->
+    <!-- Button that opens the system setting for Nika's notification access. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_grant_access">Turn on notification access</string>
-    <!-- Button in Backtalk's notification list that opens the system's quick settings. [CHAR_LIMIT=NONE] -->
+    <!-- Button in Nika's notification list that opens the system's quick settings. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_quick_settings">Quick settings</string>
-    <!-- Accessibility action that removes a notification from Backtalk's notification list. [CHAR_LIMIT=NONE] -->
+    <!-- Accessibility action that removes a notification from Nika's notification list. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_dismiss">Dismiss</string>
-    <!-- Button in Backtalk's notification list that removes every notification that can be removed. [CHAR_LIMIT=NONE] -->
+    <!-- Button in Nika's notification list that removes every notification that can be removed. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_clear_all">Clear all</string>
-    <!-- Button that sends a reply typed in Backtalk's notification list. [CHAR_LIMIT=NONE] -->
+    <!-- Button that sends a reply typed in Nika's notification list. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_send">Send</string>
-    <!-- State of a media notification in Backtalk's notification list whose media is playing. [CHAR_LIMIT=NONE] -->
+    <!-- State of a media notification in Nika's notification list whose media is playing. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_playing">Playing</string>
-    <!-- State of a media notification in Backtalk's notification list whose media is paused. [CHAR_LIMIT=NONE] -->
+    <!-- State of a media notification in Nika's notification list whose media is paused. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_paused">Paused</string>
-    <!-- Action on a media notification in Backtalk's notification list that starts playback. [CHAR_LIMIT=NONE] -->
+    <!-- Action on a media notification in Nika's notification list that starts playback. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_play">Play</string>
-    <!-- Action on a media notification in Backtalk's notification list that pauses playback. [CHAR_LIMIT=NONE] -->
+    <!-- Action on a media notification in Nika's notification list that pauses playback. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_pause">Pause</string>
-    <!-- Action on a media notification in Backtalk's notification list that skips to the previous item. [CHAR_LIMIT=NONE] -->
+    <!-- Action on a media notification in Nika's notification list that skips to the previous item. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_previous">Previous</string>
-    <!-- Action on a media notification in Backtalk's notification list that skips to the next item. [CHAR_LIMIT=NONE] -->
+    <!-- Action on a media notification in Nika's notification list that skips to the next item. [CHAR_LIMIT=NONE] -->
     <string name="notification_list_next">Next</string>
-    <!-- Number of notifications in a group in Backtalk's notification list. [CHAR_LIMIT=NONE] -->
+    <!-- Number of notifications in a group in Nika's notification list. [CHAR_LIMIT=NONE] -->
     <plurals name="notification_list_group_count">
         <item quantity="one">%d notification</item>
         <item quantity="other">%d notifications</item>
@@ -852,7 +852,7 @@
     <string name="talkback_exit_watermark_text">Nika on. Hold 2 fingers on screen for 5 seconds to turn off. To stop showing this message, tap with 3 fingers to open the Nika menu.</string>
     <!-- The hint text of TalkBack mis-trigger-prevention watermark. [CHAR_LIMIT=NONE]-->
     <string name="talkback_exit_watermark_hint_text">Showing banner indicating Nika is on. To turn off Nika, hold 2 fingers on the screen for 5 seconds. To remove this banner, go to Nika Settings.</string>
-    <!-- The text of the Backtalk-on banner when no 3-finger tap opens the Backtalk menu. [CHAR_LIMIT=NONE]-->
+    <!-- The text of the Nika-on banner when no 3-finger tap opens the Nika menu. [CHAR_LIMIT=NONE]-->
     <string name="talkback_exit_watermark_text_no_menu_gesture">Nika on. Hold 2 fingers on screen for 5 seconds to turn off. To stop showing this message, turn off Nika settings &gt; Advanced settings &gt; Show instructions for turning off Nika.</string>
 
     <!-- Label for the reset gesture settings. [CHAR_LIMIT=66] -->
@@ -1453,7 +1453,7 @@
       Description: This preference reduces window title announcement delay.
     -->
     <string name="pref_reduce_window_delay_title">Turn off animations</string>
-    <!-- Summary of the setting that turns off animations so that Backtalk reads new screens faster. [CHAR LIMIT=NONE] -->
+    <!-- Summary of the setting that turns off animations so that Nika reads new screens faster. [CHAR LIMIT=NONE] -->
     <string name="pref_reduce_window_delay_summary">Nika reads new screens faster when animations are off. This turns off animations for the whole phone.</string>
 
     <!--
@@ -1610,7 +1610,7 @@ Delays below 0.3 seconds will change double-tap to activate to two-finger tap to
     Source: Preference title.
     Description: This preference to enable/disable the recognize text in images. [CHAR_LIMIT=NONE]
   -->
-  <string name="summary_pref_ai_description">Hear longer descriptions when you select \"<xliff:g id="Backtalk menu item" example="Describe image">%1$s</xliff:g>\" from the Nika menu</string>
+  <string name="summary_pref_ai_description">Hear longer descriptions when you select \"<xliff:g id="Nika menu item" example="Describe image">%1$s</xliff:g>\" from the Nika menu</string>
 
   <!-- Message for dialog shown when a user wants to enable detailed image description. [CHAR LIMIT=NONE]  -->
   <string name="dialog_message_detailed_ai_description">Selected images are sent to Google\'s Gemini API to be described. With On-device AI turned on, they\'re described on this phone instead and aren\'t sent.\n\nWith a free API key, Google may keep what it receives, use it to improve its products, and have people review it. Generative AI is experimental, so it will make mistakes. The <xliff:g id="Gemini API terms" example="Gemini API Additional Terms of Service">%1$s</xliff:g> apply.</string>
@@ -1866,7 +1866,7 @@ Description: Explain that the feature is enabled for all images. [CHAR_LIMIT=NON
     <string name="shortcut_overview">Overview</string>
     <!-- Label for the shortcut that opens the notifications shade. [CHAR_LIMIT=40] -->
     <string name="shortcut_notifications">Notifications</string>
-    <!-- Label for the shortcut that opens the system's notification shade, even when the Notifications shortcut opens Backtalk's own notification list. [CHAR_LIMIT=40] -->
+    <!-- Label for the shortcut that opens the system's notification shade, even when the Notifications shortcut opens Nika's own notification list. [CHAR_LIMIT=40] -->
     <string name="shortcut_system_notifications">System notification shade</string>
     <!-- Label for the shortcut that opens the quick settings. [CHAR_LIMIT=50] -->
     <string name="shortcut_quick_settings">Quick Settings</string>
@@ -2087,7 +2087,7 @@ Description: Explain that the feature is enabled for all images. [CHAR_LIMIT=NON
     <string name="title_read_from_top">Read from top</string>
     <!-- Label for the menu item that lets the user copies the last spoken phrase. [CHAR_LIMIT=130] -->
     <string name="title_copy_last_spoken_phrase">Copy last spoken phrase</string>
-    <!-- Backtalk menu item and gesture action that adds the last phrase Backtalk said to the text it copied, on a new line, so that several phrases can be copied together. [CHAR LIMIT=NONE] -->
+    <!-- Nika menu item and gesture action that adds the last phrase Nika said to the text it copied, on a new line, so that several phrases can be copied together. [CHAR LIMIT=NONE] -->
     <string name="title_append_last_spoken_phrase">Add last spoken phrase to clipboard</string>
     <!-- Edit options menu item that deletes all the text in the focused text field. [CHAR LIMIT=40] -->
     <string name="title_edittext_clear">Clear text</string>
@@ -2167,7 +2167,7 @@ Description: Explain that the feature is enabled for all images. [CHAR_LIMIT=NON
     <!-- Summary for the menu item that lets the user change the read from cursor position. [CHAR_LIMIT=NONE] -->
     <string name="summary_read_from_current">Starting from the focused item, read all items on the screen</string>
     <!-- Summary for the menu item that lets the user copies the last spoken phrase. [CHAR_LIMIT=NONE] -->
-    <!-- Summary of the setting that shows Add last spoken phrase to clipboard in the Backtalk menu. [CHAR LIMIT=NONE] -->
+    <!-- Summary of the setting that shows Add last spoken phrase to clipboard in the Nika menu. [CHAR LIMIT=NONE] -->
     <string name="summary_append_last_spoken_phrase">Add the last phrase Nika said to the text you copied, on a new line, to copy several phrases together</string>
     <string name="summary_copy_last_spoken_phrase">Copy the last phrase Nika said to the clipboard so you can paste the text</string>
     <!-- Summary for the menu item that lets the user spells the last spoken phrase. [CHAR_LIMIT=NONE] -->
@@ -2683,11 +2683,11 @@ Description: Explain that the feature is enabled for all images. [CHAR_LIMIT=NON
     <string name="pref_node_desc_order_entry_role_name_state_pos">Type, name, state</string>
     <!-- Label for preference specifying that TalkBack should describe elements in order: name, type, state. -->
     <string name="pref_node_desc_order_entry_name_role_state_pos">Name, type, state</string>
-    <!-- Label for preference specifying that Backtalk should describe elements in order: name, state, type. -->
+    <!-- Label for preference specifying that Nika should describe elements in order: name, state, type. -->
     <string name="pref_node_desc_order_entry_name_state_role_pos">Name, state, type</string>
-    <!-- Label for preference specifying that Backtalk should describe elements in order: type, state, name. -->
+    <!-- Label for preference specifying that Nika should describe elements in order: type, state, name. -->
     <string name="pref_node_desc_order_entry_role_state_name_pos">Type, state, name</string>
-    <!-- Label for preference specifying that Backtalk should describe elements in order: state, type, name. -->
+    <!-- Label for preference specifying that Nika should describe elements in order: state, type, name. -->
     <string name="pref_node_desc_order_entry_state_role_name_pos">State, type, name</string>
     <!-- Order of item details settings: the item's name, such as the text of a button. [CHAR LIMIT=30] -->
     <string name="item_detail_name">Name</string>
@@ -3701,7 +3701,7 @@ Description: Explain that the feature is enabled for all images. [CHAR_LIMIT=NON
   <!-- The content of typo correction tutorial text for supported locale but none English for pre R. [CHAR_LIMIT=NONE]-->
   <string name="typo_correction_text_supported_but_not_english_pre_r">You can use proofreading to check the spelling or grammar within a text box.\n\nTo try it, focus on the text box below and type a misspelled word. After focusing, swipe down and then up until you find \"Proofread\".</string>
   <!-- The content of typo correction edit box typos example. [CHAR_LIMIT=NONE]-->
-  <string name="typo_correction_typo_example" translatable="false">Wellcome too Backtalk.</string>
+  <string name="typo_correction_typo_example" translatable="false">Wellcome too Nika.</string>
   <!-- The content of typo correction edit box hint. [CHAR_LIMIT=NONE]-->
   <string name="typo_correction_editbox_hint">Type here</string>
 

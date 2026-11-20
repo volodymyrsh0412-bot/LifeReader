@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- Backtalk-specific Czech translations. -->
+    <!-- Nika-specific Czech translations. -->
 
     <!-- Reduce delays. -->
     <string name="title_pref_low_latency_audio">Zvuk s nízkou latencí</string>

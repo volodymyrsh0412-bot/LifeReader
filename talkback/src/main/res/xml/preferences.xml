@@ -2,6 +2,10 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+      android:key="pref_nika_whats_new"
+      android:summary="@string/nika_whats_new_summary"
+      android:title="@string/nika_whats_new_title" />
 
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
       android:fragment="com.google.android.accessibility.talkback.preference.base.WhatsNewFragment"
@@ -139,6 +143,10 @@
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:key="@string/pref_check_for_updates_key"
         android:title="@string/title_pref_check_for_updates" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:key="pref_nika_feedback"
+        android:summary="@string/nika_feedback_summary"
+        android:title="@string/nika_feedback_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
         android:defaultValue="@bool/pref_auto_update_check_default"
         android:key="@string/pref_auto_update_check_key"

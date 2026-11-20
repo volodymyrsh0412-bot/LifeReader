@@ -44,6 +44,7 @@ import com.google.android.accessibility.talkback.training.OnboardingInitiator;
 import com.google.android.accessibility.talkback.training.TutorialInitiator;
 import com.google.android.accessibility.talkback.trainingcommon.tv.TvTutorialInitiator;
 import com.google.android.accessibility.talkback.trainingcommon.tv.VendorConfigReader;
+import com.google.android.accessibility.talkback.update.NikaSettings;
 import com.google.android.accessibility.talkback.update.Updater;
 import com.google.android.accessibility.utils.FeatureSupport;
 import com.google.android.accessibility.utils.FormFactorUtils;
@@ -150,6 +151,7 @@ public class TalkBackPreferenceFragment extends TalkbackBaseFragment {
     }
     updateGeminiPreferenceState();
     Updater.setUpPreferences(this);
+    NikaSettings.setUpPreferences(this);
   }
 
   private void updateGeminiPreferenceState() {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_whats_new_title">Co nowego</string>
+    <string name="nika_whats_new_summary">Zmiany w tej wersji</string>
+    <string name="nika_whats_new_message">Nika to czytnik ekranu oparty na Backtalk i Google TalkBack.\n\nNowości w tej wersji:\n\u2022 Aplikacja nazywa się teraz Nika.\n\u2022 Nowe pozycje: „Co nowego” i „Wyślij opinię”.\n\u2022 Aktualizacje pochodzą ze strony Nika na GitHubie.\n\u2022 Stały klucz podpisu: nowe wersje instalują się na starej.</string>
+    <string name="nika_feedback_title">Wyślij opinię</string>
+    <string name="nika_feedback_summary">Napisz do twórcy: zgłoś problem lub zaproponuj pomysł</string>
+    <string name="nika_feedback_subject">Opinia o Nice (kompilacja %1$d)</string>
+    <string name="nika_feedback_body">\n\n---\nUrządzenie: %1$s %2$s\nAndroid: %3$s\nKompilacja: %4$d</string>
+    <string name="nika_feedback_copied">Nie znaleziono aplikacji pocztowej. Adres %1$s został skopiowany.</string>
+</resources>

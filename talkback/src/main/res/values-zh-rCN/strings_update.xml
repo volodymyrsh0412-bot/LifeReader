@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- Title of the setting that checks GitHub for a newer development build of Backtalk. [CHAR LIMIT=40] -->
+    <!-- Title of the setting that checks GitHub for a newer development build of Nika. [CHAR LIMIT=40] -->
     <string name="title_pref_check_for_updates">检查更新</string>
     <!-- Summary of the check for updates setting, with the build number of the running app. [CHAR LIMIT=NONE] -->
     <string name="summary_pref_check_for_updates">构建 <xliff:g id="build" example="96">%1$d</xliff:g></string>
@@ -32,6 +32,6 @@
     <string name="update_wifi_download_failed">无法通过 Wi-Fi 下载更新</string>
     <!-- Toast shown when the user cancels the install. [CHAR LIMIT=NONE] -->
     <string name="update_install_canceled">更新已取消</string>
-    <!-- Toast shown with the settings screen where the user allows Backtalk to install apps. [CHAR LIMIT=NONE] -->
+    <!-- Toast shown with the settings screen where the user allows Nika to install apps. [CHAR LIMIT=NONE] -->
     <string name="update_allow_install">请允许 Nika 安装应用，然后重试更新</string>
 </resources>

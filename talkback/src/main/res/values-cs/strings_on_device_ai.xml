@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Backtalk-specific Czech translations for on-device AI. -->
+    <!-- Nika-specific Czech translations for on-device AI. -->
     <string name="title_pref_on_device_ai">AI v zařízení</string>
     <string name="summary_pref_on_device_ai">Popisujte obrázky a obrazovku modelem v tomto telefonu bez klíče API</string>
     <string name="pref_on_device_ai_enable">Používat AI v zařízení</string>
