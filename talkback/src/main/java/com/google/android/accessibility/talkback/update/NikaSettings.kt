@@ -38,6 +38,7 @@ object NikaSettings {
       .setTitle(R.string.nika_whats_new_title)
       .setMessage(R.string.nika_whats_new_message)
       .setPositiveButton(android.R.string.ok, null)
+      .create()
       .show()
   }
 
