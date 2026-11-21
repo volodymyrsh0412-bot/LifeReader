@@ -238,6 +238,21 @@ internal class RadialMenuView(context: Context, private val listener: Listener) 
     return (arc / wedgeArc).toInt().coerceIn(0, items.size - 1)
   }
 
+  /** Nika: the gap between the items can be set in the menu settings (0 keeps the original). */
+  private fun nikaGapDegrees(original: Float, wedgeArc: Float): Float {
+    var value = 0f
+    try {
+      val a = android.preference.PreferenceManager.getDefaultSharedPreferences(context)
+      var raw = a.getString("nika_radial_gap", null)
+      if (raw == null) raw = com.google.android.accessibility.utils.SharedPreferencesUtils.getSharedPreferences(context).getString("nika_radial_gap", "0")
+      value = (raw ?: "0").toFloat()
+    } catch (e: RuntimeException) {
+      value = 0f
+    }
+    if (value <= 0f) return original
+    return value.coerceAtMost(wedgeArc / 2 - 1f).coerceAtLeast(0f)
+  }
+
   /** Rebuilds the shape of a single slice, which depends on how many items there are. */
   private fun updateSliceShapes() {
     slicePath.rewind()
@@ -247,7 +262,7 @@ internal class RadialMenuView(context: Context, private val listener: Listener) 
     }
     val wedgeArc = 360f / items.size
     val offsetArc = wedgeArc / 2 + 90f
-    val spacingArc = Math.toDegrees(tan(spacing / outerRadius.toDouble())).toFloat()
+    val spacingArc = nikaGapDegrees(Math.toDegrees(tan(spacing / outerRadius.toDouble())).toFloat(), wedgeArc)
     val left = wedgeArc - spacingArc - offsetArc
     val middle = wedgeArc / 2 - offsetArc
     val right = spacingArc - offsetArc

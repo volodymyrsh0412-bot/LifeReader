@@ -80,4 +80,20 @@
         <item>Свій сервіс (сумісний з OpenAI)</item>
         <item>Vivo (NVDACN)</item>
     </string-array>
+    <string name="nika_tr_prefix_title">Перед перекладом</string>
+    <string-array name="nika_tr_prefix_entries">
+        <item>Сказати слово</item>
+        <item>Подати звук</item>
+        <item>Нічого</item>
+    </string-array>
+    <string name="nika_radial_gap_title">Відстань між пунктами меню</string>
+    <string-array name="nika_radial_gap_entries">
+        <item>Стандартна</item>
+        <item>3°</item>
+        <item>5°</item>
+        <item>10°</item>
+        <item>15°</item>
+        <item>20°</item>
+        <item>30°</item>
+    </string-array>
 </resources>

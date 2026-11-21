@@ -36,4 +36,18 @@
         <item>custom</item>
         <item>vivo</item>
     </string-array>
+    <string-array name="nika_tr_prefix_values" translatable="false">
+        <item>word</item>
+        <item>sound</item>
+        <item>none</item>
+    </string-array>
+    <string-array name="nika_radial_gap_values" translatable="false">
+        <item>0</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+    </string-array>
 </resources>

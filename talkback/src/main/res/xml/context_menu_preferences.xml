@@ -7,6 +7,13 @@
         android:key="@string/pref_radial_menu_key"
         android:summary="@string/summary_pref_radial_menu"
         android:title="@string/title_pref_radial_menu" />
+    <ListPreference
+        android:key="nika_radial_gap"
+        android:defaultValue="0"
+        android:title="@string/nika_radial_gap_title"
+        android:summary="%s"
+        android:entries="@array/nika_radial_gap_entries"
+        android:entryValues="@array/nika_radial_gap_values" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
         android:key="@string/pref_show_context_menu_contextual_actions_category_key"
         android:title="@string/context_menu_category_contextual_actions">

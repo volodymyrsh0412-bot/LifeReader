@@ -37,9 +37,9 @@
     <string name="nika_iph_cat_br">Bottom edge, right half of the screen</string>
     <string name="nika_iph_cat_tl">Top edge, left half of the screen</string>
     <string name="nika_iph_cat_tr">Top edge, right half of the screen</string>
-    <string name="nika_side_title">Edge gestures</string>
+    <string name="nika_side_title">Side gestures</string>
     <string name="nika_side_summary">Swipes from the left and right edges, with separate actions for the upper and lower half of the screen</string>
-    <string name="nika_side_enabled_title">Edge gestures</string>
+    <string name="nika_side_enabled_title">Side gestures</string>
     <string name="nika_side_enabled_summary">Swipe with one finger from the left edge to the right or from the right edge to the left. A short and a long swipe each run an action of your choice, separately for the upper and the lower half of the screen. This switch does not affect the iPhone-style gestures.</string>
     <string name="nika_side_band_l_title">Left edge band width</string>
     <string name="nika_side_band_r_title">Right edge band width</string>

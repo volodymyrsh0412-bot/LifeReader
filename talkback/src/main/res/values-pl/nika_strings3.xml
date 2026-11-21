@@ -37,9 +37,9 @@
     <string name="nika_iph_cat_br">Dolna krawędź, prawa połowa ekranu</string>
     <string name="nika_iph_cat_tl">Górna krawędź, lewa połowa ekranu</string>
     <string name="nika_iph_cat_tr">Górna krawędź, prawa połowa ekranu</string>
-    <string name="nika_side_title">Gesty krawędziowe</string>
+    <string name="nika_side_title">Gesty boczne</string>
     <string name="nika_side_summary">Przesunięcia od lewej i prawej krawędzi, z osobnymi akcjami dla górnej i dolnej połowy ekranu</string>
-    <string name="nika_side_enabled_title">Gesty krawędziowe</string>
+    <string name="nika_side_enabled_title">Gesty boczne</string>
     <string name="nika_side_enabled_summary">Przesunięcie jednym palcem od lewej krawędzi w prawo lub od prawej w lewo. Krótkie i długie przesunięcie wykonują wybraną akcję, osobno dla górnej i dolnej połowy ekranu. Ten przełącznik nie wpływa na gesty jak na iPhonie.</string>
     <string name="nika_side_band_l_title">Szerokość pasa przy lewej krawędzi</string>
     <string name="nika_side_band_r_title">Szerokość pasa przy prawej krawędzi</string>

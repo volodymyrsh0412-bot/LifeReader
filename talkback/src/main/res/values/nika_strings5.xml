@@ -80,4 +80,20 @@
         <item>Own service (OpenAI compatible)</item>
         <item>Vivo (NVDACN)</item>
     </string-array>
+    <string name="nika_tr_prefix_title">Before translating</string>
+    <string-array name="nika_tr_prefix_entries">
+        <item>Say the word</item>
+        <item>Play a sound</item>
+        <item>Nothing</item>
+    </string-array>
+    <string name="nika_radial_gap_title">Gap between menu items</string>
+    <string-array name="nika_radial_gap_entries">
+        <item>Original (default)</item>
+        <item>3°</item>
+        <item>5°</item>
+        <item>10°</item>
+        <item>15°</item>
+        <item>20°</item>
+        <item>30°</item>
+    </string-array>
 </resources>

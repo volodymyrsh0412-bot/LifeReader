@@ -80,4 +80,20 @@
         <item>Własna usługa (zgodna z OpenAI)</item>
         <item>Vivo (NVDACN)</item>
     </string-array>
+    <string name="nika_tr_prefix_title">Przed tłumaczeniem</string>
+    <string-array name="nika_tr_prefix_entries">
+        <item>Powiedz słowo</item>
+        <item>Odtwórz dźwięk</item>
+        <item>Nic</item>
+    </string-array>
+    <string name="nika_radial_gap_title">Odstęp między pozycjami menu</string>
+    <string-array name="nika_radial_gap_entries">
+        <item>Standardowy</item>
+        <item>3°</item>
+        <item>5°</item>
+        <item>10°</item>
+        <item>15°</item>
+        <item>20°</item>
+        <item>30°</item>
+    </string-array>
 </resources>

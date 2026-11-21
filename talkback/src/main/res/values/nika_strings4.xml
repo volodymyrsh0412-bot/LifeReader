@@ -55,4 +55,6 @@
         <item>Sound only</item>
         <item>Do not announce</item>
     </string-array>
+    <string name="nika_clock_perm_title">Allow exact alarms</string>
+    <string name="nika_clock_perm_summary">Opens the system screen. Allow alarms and reminders so the clock, the timer and the stopwatch speak on time.</string>
 </resources>

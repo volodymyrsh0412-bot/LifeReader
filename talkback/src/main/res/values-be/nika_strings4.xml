@@ -57,4 +57,6 @@
         <item>Толькі гук</item>
         <item>Не агучваць</item>
     </string-array>
+    <string name="nika_clock_perm_title">Дазвол на будзільнікі і нагадванні</string>
+    <string name="nika_clock_perm_summary">Адкрывае экран сістэмы. Дазвольце будзільнікі і нагадванні, каб гадзіннік, таймер і секундамер казалі ўчас.</string>
 </resources>

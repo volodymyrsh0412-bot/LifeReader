@@ -49,5 +49,9 @@
           android:summary="%s"
           android:entries="@array/nika_clock_timer_entries"
           android:entryValues="@array/nika_clock_timer_values" />
+    <Preference
+          android:key="nika_clock_permission"
+          android:title="@string/nika_clock_perm_title"
+          android:summary="@string/nika_clock_perm_summary" />
   </com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory>
 </PreferenceScreen>

@@ -57,4 +57,6 @@
         <item>Только звук</item>
         <item>Не озвучивать</item>
     </string-array>
+    <string name="nika_clock_perm_title">Разрешение на будильники и напоминания</string>
+    <string name="nika_clock_perm_summary">Открывает экран системы. Разрешите будильники и напоминания, чтобы часы, таймер и секундомер говорили вовремя.</string>
 </resources>

@@ -33,6 +33,14 @@ object NikaSettings {
         fragment.getString(R.string.category_collapsed),
         fragment.getString(R.string.category_expanded),
       )
+    fragment
+      .findPreference<AccessibilitySuitePreferenceCategory>(
+        fragment.getString(R.string.pref_category_advanced_key)
+      )
+      ?.setCollapsible(
+        fragment.getString(R.string.category_collapsed),
+        fragment.getString(R.string.category_expanded),
+      )
     fragment.findPreference<Preference>(KEY_WHATS_NEW)?.setOnPreferenceClickListener {
       fragment.activity?.let { showWhatsNew(it) }
       true

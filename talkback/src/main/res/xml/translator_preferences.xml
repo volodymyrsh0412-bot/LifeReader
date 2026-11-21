@@ -5,6 +5,7 @@
         android:key="nika_tr_cat_general"
         android:title="@string/nika_tr_cat_general">
     <ListPreference android:key="nika_tr_mode" android:defaultValue="auto" android:title="@string/nika_tr_mode_title" android:summary="%s" android:entries="@array/nika_tr_mode_entries" android:entryValues="@array/nika_tr_mode_values" />
+    <ListPreference android:key="nika_tr_prefix" android:defaultValue="word" android:title="@string/nika_tr_prefix_title" android:summary="%s" android:entries="@array/nika_tr_prefix_entries" android:entryValues="@array/nika_tr_prefix_values" />
     <ListPreference android:key="nika_tr_lang" android:defaultValue="uk" android:title="@string/nika_tr_lang_title" android:summary="%s" android:entries="@array/nika_tr_lang_entries" android:entryValues="@array/nika_tr_lang_values" />
     <ListPreference android:key="nika_tr_provider" android:defaultValue="gemini" android:title="@string/nika_tr_provider_title" android:summary="%s" android:entries="@array/nika_tr_provider_entries" android:entryValues="@array/nika_tr_provider_values" />
     <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference android:key="nika_tr_copy" android:defaultValue="false" android:title="@string/nika_tr_copy_title" android:summary="@string/nika_tr_copy_summary" />

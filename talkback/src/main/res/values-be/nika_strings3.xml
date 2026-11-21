@@ -37,9 +37,9 @@
     <string name="nika_iph_cat_br">Ніжні край, правая палова экрана</string>
     <string name="nika_iph_cat_tl">Верхні край, левая палова экрана</string>
     <string name="nika_iph_cat_tr">Верхні край, правая палова экрана</string>
-    <string name="nika_side_title">Крайнія жэсты</string>
+    <string name="nika_side_title">Бакавыя жэсты</string>
     <string name="nika_side_summary">Свайпы ад левага і правага краёў, з асобнымі дзеяннямі для верхняй і ніжняй паловы экрана</string>
-    <string name="nika_side_enabled_title">Крайнія жэсты</string>
+    <string name="nika_side_enabled_title">Бакавыя жэсты</string>
     <string name="nika_side_enabled_summary">Свайп адным пальцам ад левага краю ўправа або ад правага краю ўлева. Кароткі і доўгі свайп выконваюць дзеянне на ваш выбар, асобна для верхняй і ніжняй паловы экрана. Гэты пераключальнік не ўплывае на жэсты як на айфоне.</string>
     <string name="nika_side_band_l_title">Шырыня паласы ля левага краю</string>
     <string name="nika_side_band_r_title">Шырыня паласы ля правага краю</string>

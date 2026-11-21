@@ -17,6 +17,8 @@
 
 package com.google.android.accessibility.talkback.translate
 
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -209,7 +211,17 @@ class NikaTranslator private constructor(private val service: TalkBackService) {
 
   private fun start(source: String) {
     val text = if (source.length > MAX_CHARS) source.substring(0, MAX_CHARS) else source
-    say(service.getString(R.string.nika_tr_working), true)
+    when (str("nika_tr_prefix", "word")) {
+      "none" -> {}
+      "sound" -> {
+        try {
+          ToneGenerator(AudioManager.STREAM_MUSIC, 80).startTone(ToneGenerator.TONE_PROP_BEEP, 120)
+        } catch (e: RuntimeException) {
+          // skip
+        }
+      }
+      else -> say(service.getString(R.string.nika_tr_working), true)
+    }
     worker.execute {
       try {
         val code = str("nika_tr_lang", "uk")
