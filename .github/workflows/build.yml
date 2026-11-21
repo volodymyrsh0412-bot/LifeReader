@@ -125,13 +125,14 @@ jobs:
           # The phone build is backtalk.apk, which the updater on phones looks for, the watch build
           # is backtalk-wear.apk, which the updater on watches looks for, and the phone build
           # without Play services is backtalk-nogms.apk, which its own updater looks for.
-          for build in phone:backtalk.apk wear:backtalk-wear.apk nogms:backtalk-nogms.apk; do
+          for build in phone:nika.apk wear:nika-wear.apk nogms:nika-nogms.apk; do
             apk=$(find apks -name "backtalk-${build%%:*}-debug.apk" | head -n 1)
             if [ -z "$apk" ]; then
               echo "The ${build%%:*} APK was not found." >&2
               exit 1
             fi
             cp "$apk" "${build#*:}"
+            cp "$apk" "backtalk${build#*:nika}"
           done
           title="Development build $count ($short)"
           tag=dev
@@ -140,8 +141,8 @@ jobs:
             # which notifies everyone watching the repository.
             git tag -f "$tag" "$GITHUB_SHA"
             git push -f origin "refs/tags/$tag"
-            gh release upload "$tag" backtalk.apk backtalk-wear.apk backtalk-nogms.apk --clobber
+            gh release upload "$tag" nika.apk nika-wear.apk nika-nogms.apk backtalk.apk backtalk-wear.apk backtalk-nogms.apk --clobber
             gh release edit "$tag" --title "$title" --notes-file release-notes.md --prerelease
           else
-            gh release create "$tag" backtalk.apk backtalk-wear.apk backtalk-nogms.apk --prerelease --target "$GITHUB_SHA" --title "$title" --notes-file release-notes.md
+            gh release create "$tag" nika.apk nika-wear.apk nika-nogms.apk backtalk.apk backtalk-wear.apk backtalk-nogms.apk --prerelease --target "$GITHUB_SHA" --title "$title" --notes-file release-notes.md
           fi
