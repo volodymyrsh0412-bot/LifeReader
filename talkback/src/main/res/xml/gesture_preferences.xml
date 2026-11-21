@@ -17,10 +17,15 @@
       android:entries="@array/pref_gesture_set_entries"
       android:entryValues="@array/pref_gesture_set_values" />
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-      android:fragment="com.google.android.accessibility.talkback.preference.base.EdgeSwipeFragment"
-      android:key="pref_nika_edge"
-      android:summary="@string/nika_edge_summary"
-      android:title="@string/nika_edge_title" />
+      android:fragment="com.google.android.accessibility.talkback.preference.base.IphSwipeFragment"
+      android:key="pref_nika_iph"
+      android:summary="@string/nika_iph_summary"
+      android:title="@string/nika_iph_title" />
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+      android:fragment="com.google.android.accessibility.talkback.preference.base.SideSwipeFragment"
+      android:key="pref_nika_side"
+      android:summary="@string/nika_side_summary"
+      android:title="@string/nika_side_title" />
   <!-- One finger gestures -->
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
       android:key="@string/pref_category_1finger_shortcuts_key"

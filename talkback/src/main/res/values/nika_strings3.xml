@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nika_edge_title">Edge gestures</string>
-    <string name="nika_edge_summary">One-finger swipes from the four screen edges, like on an iPhone. You can choose any action for each swipe.</string>
-    <string name="nika_edge_enabled_title">Edge gestures</string>
-    <string name="nika_edge_enabled_summary">Swipe with one finger from an edge of the screen. A short and a long swipe each run an action of your choice. Touches that start at an edge are not read aloud.</string>
-    <string name="nika_edge_band_title">Edge band width</string>
-    <string name="nika_edge_cat_bottom">From the bottom edge, up</string>
-    <string name="nika_edge_cat_top">From the top edge, down</string>
-    <string name="nika_edge_cat_side_len">Side edges: swipe lengths</string>
-    <string name="nika_edge_cat_left_upper">From the left edge, upper half of the screen</string>
-    <string name="nika_edge_cat_left_lower">From the left edge, lower half of the screen</string>
-    <string name="nika_edge_cat_right_upper">From the right edge, upper half of the screen</string>
-    <string name="nika_edge_cat_right_lower">From the right edge, lower half of the screen</string>
     <string name="nika_edge_cat_announce">Announce navigation buttons</string>
     <string name="nika_edge_speak_title">Speak the action</string>
     <string name="nika_edge_speak_summary">Say Home, Back, Recents, Notifications, Quick settings or another action when the swipe is long enough for it.</string>
@@ -34,4 +22,32 @@
     <string name="nika_notif_what_summary">Choose which parts of a notification are read, together or separately.</string>
     <string name="nika_keys_debug_title">Key diagnostics</string>
     <string name="nika_keys_debug_summary">Shows a short message for every key press that reaches Nika: what the key is and whether it was used. Turn it on to find out why a key does not work.</string>
+    <string name="nika_iph_title">iPhone-style gestures</string>
+    <string name="nika_iph_summary">Swipes from the bottom and top edges, like on an iPhone, with separate actions for the left and right side</string>
+    <string name="nika_iph_enabled_title">iPhone-style gestures</string>
+    <string name="nika_iph_enabled_summary">Swipe up from the bottom edge or down from the top edge with one finger. A short and a long swipe each run an action of your choice, separately for the left and the right half of the screen. This switch does not affect the edge gestures from the sides.</string>
+    <string name="nika_iph_band_b_title">Bottom edge band width</string>
+    <string name="nika_iph_band_t_title">Top edge band width</string>
+    <string name="nika_iph_cat_len">Swipe lengths</string>
+    <string name="nika_iph_b_short_len_title">Bottom: short swipe length</string>
+    <string name="nika_iph_b_long_len_title">Bottom: long swipe length</string>
+    <string name="nika_iph_t_short_len_title">Top: short swipe length</string>
+    <string name="nika_iph_t_long_len_title">Top: long swipe length</string>
+    <string name="nika_iph_cat_bl">Bottom edge, left half of the screen</string>
+    <string name="nika_iph_cat_br">Bottom edge, right half of the screen</string>
+    <string name="nika_iph_cat_tl">Top edge, left half of the screen</string>
+    <string name="nika_iph_cat_tr">Top edge, right half of the screen</string>
+    <string name="nika_side_title">Edge gestures</string>
+    <string name="nika_side_summary">Swipes from the left and right edges, with separate actions for the upper and lower half of the screen</string>
+    <string name="nika_side_enabled_title">Edge gestures</string>
+    <string name="nika_side_enabled_summary">Swipe with one finger from the left edge to the right or from the right edge to the left. A short and a long swipe each run an action of your choice, separately for the upper and the lower half of the screen. This switch does not affect the iPhone-style gestures.</string>
+    <string name="nika_side_band_l_title">Left edge band width</string>
+    <string name="nika_side_band_r_title">Right edge band width</string>
+    <string name="nika_side_cat_len">Swipe lengths</string>
+    <string name="nika_side_cat_lu">From the left edge, upper half of the screen</string>
+    <string name="nika_side_cat_ld">From the left edge, lower half of the screen</string>
+    <string name="nika_side_cat_ru">From the right edge, upper half of the screen</string>
+    <string name="nika_side_cat_rd">From the right edge, lower half of the screen</string>
+    <string name="nika_edge_debug_title">Gesture diagnostics</string>
+    <string name="nika_edge_debug_summary">Shows a short message at every touch: where it was, whether it is in an edge band and what the swipe did. Turn it on to find out why a gesture does not work.</string>
 </resources>

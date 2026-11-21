@@ -24,7 +24,9 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
+import android.view.ViewConfiguration
 import android.view.WindowManager
+import android.widget.Toast
 import com.google.android.accessibility.talkback.TalkBackService
 import com.google.android.accessibility.talkback.gesture.GestureShortcutMapping
 import com.google.android.accessibility.utils.Performance
@@ -36,12 +38,17 @@ import kotlin.math.abs
 import kotlin.math.sin
 
 /**
- * Nika: one-finger swipes from the four edges of the screen, like on an iPhone. A swipe has a short
- * and a long length, and each of them runs any action of the gesture settings. While the finger
- * moves, rising sounds and the spoken name of the action tell what will happen on release. While
- * such a touch is in progress TalkBack does not explore or detect gestures.
+ * Nika: one-finger swipes from the edges of the screen.
  *
- * The side edges are split into an upper and a lower half of the screen.
+ * Two independent groups, each with its own switch, sounds and edge band widths:
+ * - "iPhone" gestures from the bottom and top edges (vertical swipes), with separate actions for
+ *   the left and the right half of the screen;
+ * - "edge" gestures from the left and right edges (horizontal swipes), with separate actions for
+ *   the upper and the lower half of the screen.
+ *
+ * A swipe has a short and a long length. While the finger moves, rising sounds and the spoken name
+ * of the action tell what a release would do. A touch that starts in an edge band is left to
+ * TalkBack until the finger has really moved, so taps and exploring near the edge keep working.
  */
 class NikaEdgeSwipe(
   private val service: TalkBackService,
@@ -54,19 +61,28 @@ class NikaEdgeSwipe(
     RIGHT,
   }
 
+  private enum class Phase {
+    IDLE,
+    PENDING,
+    CLAIMED,
+  }
+
   private val handler = Handler(Looper.getMainLooper())
-  private var active = false
+  private var phase = Phase.IDLE
   private var candidates = emptySet<Edge>()
   private var startX = 0f
   private var startY = 0f
   private var screenW = 0
   private var screenH = 0
-  private var upperHalf = false
+  private var rightHalf = false
+  private var lowerHalf = false
   private var edge: Edge? = null
   private var level = 0
   private var ticks = 0
   private var speakOn = true
   private var soundOn = true
+  private var debug = false
+  private var lastToast: Toast? = null
 
   private fun prefs() = SharedPreferencesUtils.getSharedPreferences(context)
 
@@ -97,62 +113,122 @@ class NikaEdgeSwipe(
     }
   }
 
-  /** Returns true while this touch belongs to the edge swipe, so TalkBack must ignore it. */
+  private fun note(text: String) {
+    if (!debug) return
+    try {
+      lastToast?.cancel()
+      val toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)
+      lastToast = toast
+      toast.show()
+    } catch (e: RuntimeException) {
+      // A message is not worth a crash.
+    }
+  }
+
+  private fun isIphoneEdge(e: Edge) = e == Edge.BOTTOM || e == Edge.TOP
+
+  private fun bandMm(e: Edge): Int =
+    when (e) {
+      Edge.BOTTOM -> intPref(PREF_IPH_BAND_B, 10)
+      Edge.TOP -> intPref(PREF_IPH_BAND_T, 10)
+      Edge.LEFT -> intPref(PREF_SIDE_BAND_L, 10)
+      Edge.RIGHT -> intPref(PREF_SIDE_BAND_R, 10)
+    }
+
+  /** Returns true while this touch belongs to an edge swipe, so TalkBack must ignore it. */
   fun onMotionEvent(event: MotionEvent): Boolean {
     when (event.actionMasked) {
       MotionEvent.ACTION_DOWN -> {
-        active = false
-        if (!prefs().getBoolean(PREF_ENABLED, false)) return false
+        phase = Phase.IDLE
+        val p = prefs()
+        debug = p.getBoolean(PREF_DEBUG, false)
+        val iphone = p.getBoolean(PREF_IPH_ENABLED, false)
+        val side = p.getBoolean(PREF_SIDE_ENABLED, false)
+        if (!iphone && !side) return false
         fullScreenSize()
-        val band = mmToPx(intPref(PREF_BAND, 10))
         val x = event.rawX
         val y = event.rawY
         val found = HashSet<Edge>()
-        if (y >= screenH - band) found.add(Edge.BOTTOM)
-        if (y <= band) found.add(Edge.TOP)
-        if (x <= band) found.add(Edge.LEFT)
-        if (x >= screenW - band) found.add(Edge.RIGHT)
-        if (found.isEmpty()) return false
+        if (iphone && y >= screenH - mmToPx(bandMm(Edge.BOTTOM))) found.add(Edge.BOTTOM)
+        if (iphone && y <= mmToPx(bandMm(Edge.TOP))) found.add(Edge.TOP)
+        if (side && x <= mmToPx(bandMm(Edge.LEFT))) found.add(Edge.LEFT)
+        if (side && x >= screenW - mmToPx(bandMm(Edge.RIGHT))) found.add(Edge.RIGHT)
+        if (found.isEmpty()) {
+          note("touch x=${x.toInt()} y=${y.toInt()} of ${screenW}x${screenH}: not in an edge band")
+          return false
+        }
         candidates = found
-        active = true
+        phase = Phase.PENDING
         startX = x
         startY = y
-        upperHalf = y < screenH / 2f
+        rightHalf = x >= screenW / 2f
+        lowerHalf = y >= screenH / 2f
         edge = null
         level = 0
         ticks = 0
-        speakOn = prefs().getBoolean(PREF_SPEAK, true)
-        soundOn = prefs().getBoolean(PREF_SOUND, true)
-        if (soundOn) beep(400, 35)
-        return true
+        note("touch x=${x.toInt()} y=${y.toInt()} of ${screenW}x${screenH}: edge $found, waiting for a swipe")
+        return false
       }
       MotionEvent.ACTION_MOVE -> {
-        if (active) update(event.rawX, event.rawY)
-        return active
+        when (phase) {
+          Phase.IDLE -> return false
+          Phase.PENDING -> {
+            if (!anyProgress(event.rawX, event.rawY)) return false
+            phase = Phase.CLAIMED
+            claimed()
+            update(event.rawX, event.rawY)
+            return true
+          }
+          Phase.CLAIMED -> {
+            update(event.rawX, event.rawY)
+            return true
+          }
+        }
       }
       MotionEvent.ACTION_POINTER_DOWN -> {
-        // A second finger: this is not an edge swipe any more, but the touch is still ignored.
-        val was = active
-        active = false
+        val was = phase == Phase.CLAIMED
+        phase = Phase.IDLE
         return was
       }
       MotionEvent.ACTION_UP -> {
-        if (!active) return false
-        active = false
-        update(event.rawX, event.rawY)
-        val action = currentAction()
-        if (action != null) {
-          service.performNikaKeyAction(action)
+        val was = phase
+        phase = Phase.IDLE
+        if (was == Phase.CLAIMED) {
+          update(event.rawX, event.rawY)
+          val action = currentAction()
+          note("released: level $level, action ${action ?: "none"}")
+          if (action != null) {
+            service.performNikaKeyAction(action)
+          }
+          return true
         }
-        return true
+        return false
       }
       MotionEvent.ACTION_CANCEL -> {
-        val was = active
-        active = false
+        val was = phase == Phase.CLAIMED
+        phase = Phase.IDLE
         return was
       }
-      else -> return active
+      else -> return phase == Phase.CLAIMED
     }
+  }
+
+  /** True when the finger has gone far enough from the edge to be a swipe and not a tap. */
+  private fun anyProgress(x: Float, y: Float): Boolean {
+    val slop = ViewConfiguration.get(context).scaledTouchSlop.toFloat()
+    for (c in candidates) {
+      if (progress(c, x, y) >= slop) return true
+    }
+    return false
+  }
+
+  private fun claimed() {
+    val p = prefs()
+    val iph = candidates.any { isIphoneEdge(it) }
+    speakOn = if (iph) p.getBoolean(PREF_IPH_SPEAK, true) else p.getBoolean(PREF_SIDE_SPEAK, true)
+    soundOn = if (iph) p.getBoolean(PREF_IPH_SOUND, true) else p.getBoolean(PREF_SIDE_SOUND, true)
+    note("swipe from the edge started")
+    if (soundOn) beep(400, 35)
   }
 
   /** How far the finger has gone from the edge into the screen, or 0 if it is going another way. */
@@ -169,26 +245,36 @@ class NikaEdgeSwipe(
 
   private fun lengthMm(e: Edge, long: Boolean): Int =
     when (e) {
-      Edge.BOTTOM -> if (long) intPref(PREF_B_LONG_LEN, 20) else intPref(PREF_B_SHORT_LEN, 10)
-      Edge.TOP -> if (long) intPref(PREF_T_LONG_LEN, 25) else intPref(PREF_T_SHORT_LEN, 10)
+      Edge.BOTTOM ->
+        if (long) intPref(PREF_IPH_B_LONG_LEN, 20) else intPref(PREF_IPH_B_SHORT_LEN, 10)
+      Edge.TOP -> if (long) intPref(PREF_IPH_T_LONG_LEN, 25) else intPref(PREF_IPH_T_SHORT_LEN, 10)
       else -> if (long) intPref(PREF_SIDE_LONG_LEN, 25) else intPref(PREF_SIDE_SHORT_LEN, 10)
     }
 
-  private fun actionFor(e: Edge, long: Boolean): String =
-    when (e) {
-      Edge.BOTTOM ->
-        if (long) actionPref(PREF_B_LONG_ACT, "OVERVIEW") else actionPref(PREF_B_SHORT_ACT, "HOME")
-      Edge.TOP ->
-        if (long) actionPref(PREF_T_LONG_ACT, "QUICK_SETTINGS")
-        else actionPref(PREF_T_SHORT_ACT, "NOTIFICATIONS")
+  private fun actionFor(e: Edge, long: Boolean): String {
+    val type = if (long) "long" else "short"
+    return when (e) {
+      Edge.BOTTOM,
+      Edge.TOP -> {
+        val row = if (e == Edge.BOTTOM) "b" else "t"
+        val col = if (rightHalf) "r" else "l"
+        val default =
+          when {
+            e == Edge.BOTTOM && !long -> "HOME"
+            e == Edge.BOTTOM -> "OVERVIEW"
+            !long == !rightHalf -> "NOTIFICATIONS"
+            else -> "QUICK_SETTINGS"
+          }
+        actionPref("nika_iph_${row}${col}_${type}_act", default)
+      }
       else -> {
         val side = if (e == Edge.LEFT) "l" else "r"
-        val half = if (upperHalf) "u" else "d"
-        val type = if (long) "long" else "short"
-        val default = if (e == Edge.LEFT && !upperHalf && !long) "BACK" else UNASSIGNED
-        actionPref("nika_edge___act", default)
+        val half = if (lowerHalf) "d" else "u"
+        val default = if (e == Edge.LEFT && lowerHalf && !long) "BACK" else UNASSIGNED
+        actionPref("nika_side_${side}${half}_${type}_act", default)
       }
     }
+  }
 
   /** The action that a release now would run, or null. */
   private fun currentAction(): String? {
@@ -284,19 +370,22 @@ class NikaEdgeSwipe(
 
   companion object {
     const val UNASSIGNED = "UNASSIGNED"
-    const val PREF_ENABLED = "nika_edge_enabled"
-    const val PREF_SPEAK = "nika_edge_speak"
-    const val PREF_SOUND = "nika_edge_sound"
-    const val PREF_BAND = "nika_edge_band"
-    const val PREF_B_SHORT_ACT = "nika_edge_b_short_act"
-    const val PREF_B_SHORT_LEN = "nika_edge_b_short_len"
-    const val PREF_B_LONG_ACT = "nika_edge_b_long_act"
-    const val PREF_B_LONG_LEN = "nika_edge_b_long_len"
-    const val PREF_T_SHORT_ACT = "nika_edge_t_short_act"
-    const val PREF_T_SHORT_LEN = "nika_edge_t_short_len"
-    const val PREF_T_LONG_ACT = "nika_edge_t_long_act"
-    const val PREF_T_LONG_LEN = "nika_edge_t_long_len"
-    const val PREF_SIDE_SHORT_LEN = "nika_edge_side_short_len"
-    const val PREF_SIDE_LONG_LEN = "nika_edge_side_long_len"
+    const val PREF_DEBUG = "nika_edge_debug"
+    const val PREF_IPH_ENABLED = "nika_iph_enabled"
+    const val PREF_IPH_SPEAK = "nika_iph_speak"
+    const val PREF_IPH_SOUND = "nika_iph_sound"
+    const val PREF_IPH_BAND_B = "nika_iph_band_b"
+    const val PREF_IPH_BAND_T = "nika_iph_band_t"
+    const val PREF_IPH_B_SHORT_LEN = "nika_iph_b_short_len"
+    const val PREF_IPH_B_LONG_LEN = "nika_iph_b_long_len"
+    const val PREF_IPH_T_SHORT_LEN = "nika_iph_t_short_len"
+    const val PREF_IPH_T_LONG_LEN = "nika_iph_t_long_len"
+    const val PREF_SIDE_ENABLED = "nika_side_enabled"
+    const val PREF_SIDE_SPEAK = "nika_side_speak"
+    const val PREF_SIDE_SOUND = "nika_side_sound"
+    const val PREF_SIDE_BAND_L = "nika_side_band_l"
+    const val PREF_SIDE_BAND_R = "nika_side_band_r"
+    const val PREF_SIDE_SHORT_LEN = "nika_side_short_len"
+    const val PREF_SIDE_LONG_LEN = "nika_side_long_len"
   }
 }

@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nika_edge_title">Крайние жесты</string>
-    <string name="nika_edge_summary">Свайпы одним пальцем от четырёх краёв экрана, как на айфоне. Для каждого свайпа можно выбрать любое действие.</string>
-    <string name="nika_edge_enabled_title">Крайние жесты</string>
-    <string name="nika_edge_enabled_summary">Свайп одним пальцем от края экрана. Короткий и длинный свайп выполняют действие на ваш выбор. Касания, начинающиеся у края, не озвучиваются.</string>
-    <string name="nika_edge_band_title">Ширина полосы у края</string>
-    <string name="nika_edge_cat_bottom">От нижнего края вверх</string>
-    <string name="nika_edge_cat_top">От верхнего края вниз</string>
-    <string name="nika_edge_cat_side_len">Боковые края: длина свайпов</string>
-    <string name="nika_edge_cat_left_upper">От левого края, верхняя половина экрана</string>
-    <string name="nika_edge_cat_left_lower">От левого края, нижняя половина экрана</string>
-    <string name="nika_edge_cat_right_upper">От правого края, верхняя половина экрана</string>
-    <string name="nika_edge_cat_right_lower">От правого края, нижняя половина экрана</string>
     <string name="nika_edge_cat_announce">Озвучивание кнопок навигации</string>
     <string name="nika_edge_speak_title">Озвучивать действие</string>
     <string name="nika_edge_speak_summary">Называть Главный экран, Назад, Недавние, Панель уведомлений, Быстрые настройки или другое действие, когда свайп достиг нужной длины.</string>
@@ -34,4 +22,32 @@
     <string name="nika_notif_what_summary">Выберите, какие части уведомления читать, вместе или по отдельности.</string>
     <string name="nika_keys_debug_title">Диагностика клавиш</string>
     <string name="nika_keys_debug_summary">Показывает короткое сообщение при каждом нажатии клавиши, дошедшем до Ники: какая это клавиша и использована ли она. Включите, чтобы выяснить, почему клавиша не работает.</string>
+    <string name="nika_iph_title">Жесты как на айфоне</string>
+    <string name="nika_iph_summary">Свайпы от нижнего и верхнего краёв, как на айфоне, с отдельными действиями слева и справа</string>
+    <string name="nika_iph_enabled_title">Жесты как на айфоне</string>
+    <string name="nika_iph_enabled_summary">Свайп одним пальцем вверх от нижнего края или вниз от верхнего. Короткий и длинный свайп выполняют действие на ваш выбор, отдельно для левой и правой половины экрана. Этот переключатель не влияет на крайние жесты с боков.</string>
+    <string name="nika_iph_band_b_title">Ширина полосы у нижнего края</string>
+    <string name="nika_iph_band_t_title">Ширина полосы у верхнего края</string>
+    <string name="nika_iph_cat_len">Длина свайпов</string>
+    <string name="nika_iph_b_short_len_title">Снизу: длина короткого свайпа</string>
+    <string name="nika_iph_b_long_len_title">Снизу: длина длинного свайпа</string>
+    <string name="nika_iph_t_short_len_title">Сверху: длина короткого свайпа</string>
+    <string name="nika_iph_t_long_len_title">Сверху: длина длинного свайпа</string>
+    <string name="nika_iph_cat_bl">Нижний край, левая половина экрана</string>
+    <string name="nika_iph_cat_br">Нижний край, правая половина экрана</string>
+    <string name="nika_iph_cat_tl">Верхний край, левая половина экрана</string>
+    <string name="nika_iph_cat_tr">Верхний край, правая половина экрана</string>
+    <string name="nika_side_title">Крайние жесты</string>
+    <string name="nika_side_summary">Свайпы от левого и правого краёв, с отдельными действиями для верхней и нижней половины экрана</string>
+    <string name="nika_side_enabled_title">Крайние жесты</string>
+    <string name="nika_side_enabled_summary">Свайп одним пальцем от левого края вправо или от правого края влево. Короткий и длинный свайп выполняют действие на ваш выбор, отдельно для верхней и нижней половины экрана. Этот переключатель не влияет на жесты как на айфоне.</string>
+    <string name="nika_side_band_l_title">Ширина полосы у левого края</string>
+    <string name="nika_side_band_r_title">Ширина полосы у правого края</string>
+    <string name="nika_side_cat_len">Длина свайпов</string>
+    <string name="nika_side_cat_lu">От левого края, верхняя половина экрана</string>
+    <string name="nika_side_cat_ld">От левого края, нижняя половина экрана</string>
+    <string name="nika_side_cat_ru">От правого края, верхняя половина экрана</string>
+    <string name="nika_side_cat_rd">От правого края, нижняя половина экрана</string>
+    <string name="nika_edge_debug_title">Диагностика жестов</string>
+    <string name="nika_edge_debug_summary">Показывает короткое сообщение при каждом касании: где оно было, попало ли в полосу у края и что сделал свайп. Включите, чтобы выяснить, почему жест не работает.</string>
 </resources>

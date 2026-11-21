@@ -137,7 +137,9 @@ class NikaKeyActions(private val service: TalkBackService) {
       return false
     }
     val code = event.keyCode
-    if (!prefs.getBoolean(PREF_ENABLED, true)) {
+    // The volume keys do not depend on the common switch: their actions are set on their own screen.
+    val isVolume = code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN
+    if (!isVolume && !prefs.getBoolean(PREF_ENABLED, true)) {
       note.append("key actions are off")
       return false
     }
@@ -147,7 +149,6 @@ class NikaKeyActions(private val service: TalkBackService) {
       return false
     }
     note.append(slot)
-    val isVolume = code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN
     val isArrow = code in KeyEvent.KEYCODE_DPAD_UP..KeyEvent.KEYCODE_DPAD_RIGHT
     if (isArrow && !prefs.getBoolean(PREF_ARROWS, false)) {
       note.append(", arrows are off")

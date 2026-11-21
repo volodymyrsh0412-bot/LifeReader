@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika is a screen reader built on Backtalk and Google TalkBack</string>
-    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 Edge gestures (one finger, off by default): swipes from the bottom, top, left and right edges, each with a short and a long length and any action; rising sounds and spoken names of the actions while you swipe.\n\u2022 Volume keys fixed: the actions you set now run.\n\u2022 The button and volume key screens moved into Quick keys.\n\u2022 Notifications: one item; choose app name, time, type, title and text.\n\u2022 In the gesture action list, Open Nika menu is under System actions and the reading controls are under Reading.</string>
+    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 Two separate gesture screens, each with its own switch: \u00abiPhone-style gestures\u00bb (from the bottom and top edges, separate actions for the left and right half) and \u00abEdge gestures\u00bb (from the left and right edges, separate actions for the upper and lower half). Each has its own sounds, navigation button announcements and edge band width.\n\u2022 Taps near the edges still work.\n\u2022 Volume keys work even when the key actions switch is off.</string>
     <string name="nika_update_available">Update available: build %1$d</string>
     <string name="nika_update_tap">Tap to download and install</string>
     <string name="nika_telegram_title">Nika on Telegram</string>
@@ -9,7 +9,7 @@
     <string name="nika_keys_title">For button phones</string>
     <string name="nika_keys_summary">Actions for volume keys, number keys, arrows and other keys</string>
     <string name="nika_keys_enabled_title">Key actions</string>
-    <string name="nika_keys_enabled_summary">Turn all the key actions below on or off</string>
+    <string name="nika_keys_enabled_summary">Turn all the key actions below on or off Volume keys do not depend on this switch.</string>
     <string name="nika_keys_arrows_title">Arrow keys without a modifier</string>
     <string name="nika_keys_arrows_summary">When off, only the combinations with Alt and other modifiers work</string>
     <string name="nika_keys_skip_edit_title">Leave keys alone in text fields</string>

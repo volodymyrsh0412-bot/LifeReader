@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nika_edge_title">Gesty krawędziowe</string>
-    <string name="nika_edge_summary">Przesunięcia jednym palcem od czterech krawędzi ekranu, jak na iPhonie. Dla każdego przesunięcia można wybrać dowolną akcję.</string>
-    <string name="nika_edge_enabled_title">Gesty krawędziowe</string>
-    <string name="nika_edge_enabled_summary">Przesunięcie jednym palcem od krawędzi ekranu. Krótkie i długie przesunięcie wykonują wybraną akcję. Dotknięcia zaczynające się przy krawędzi nie są odczytywane.</string>
-    <string name="nika_edge_band_title">Szerokość pasa przy krawędzi</string>
-    <string name="nika_edge_cat_bottom">Od dolnej krawędzi w górę</string>
-    <string name="nika_edge_cat_top">Od górnej krawędzi w dół</string>
-    <string name="nika_edge_cat_side_len">Krawędzie boczne: długość przesunięć</string>
-    <string name="nika_edge_cat_left_upper">Od lewej krawędzi, górna połowa ekranu</string>
-    <string name="nika_edge_cat_left_lower">Od lewej krawędzi, dolna połowa ekranu</string>
-    <string name="nika_edge_cat_right_upper">Od prawej krawędzi, górna połowa ekranu</string>
-    <string name="nika_edge_cat_right_lower">Od prawej krawędzi, dolna połowa ekranu</string>
     <string name="nika_edge_cat_announce">Odczytywanie przycisków nawigacji</string>
     <string name="nika_edge_speak_title">Wymawiaj akcję</string>
     <string name="nika_edge_speak_summary">Wymawiaj Ekran główny, Wstecz, Ostatnie, Powiadomienia, Szybkie ustawienia lub inną akcję, gdy przesunięcie jest dość długie.</string>
@@ -34,4 +22,32 @@
     <string name="nika_notif_what_summary">Wybierz, które części powiadomienia są czytane, razem lub osobno.</string>
     <string name="nika_keys_debug_title">Diagnostyka klawiszy</string>
     <string name="nika_keys_debug_summary">Pokazuje krótki komunikat przy każdym naciśnięciu klawisza, które dotarło do Niki: jaki to klawisz i czy został użyty. Włącz, aby sprawdzić, dlaczego klawisz nie działa.</string>
+    <string name="nika_iph_title">Gesty jak na iPhonie</string>
+    <string name="nika_iph_summary">Przesunięcia od dolnej i górnej krawędzi, jak na iPhonie, z osobnymi akcjami po lewej i prawej</string>
+    <string name="nika_iph_enabled_title">Gesty jak na iPhonie</string>
+    <string name="nika_iph_enabled_summary">Przesunięcie jednym palcem w górę od dolnej krawędzi lub w dół od górnej. Krótkie i długie przesunięcie wykonują wybraną akcję, osobno dla lewej i prawej połowy ekranu. Ten przełącznik nie wpływa na gesty krawędziowe z boków.</string>
+    <string name="nika_iph_band_b_title">Szerokość pasa przy dolnej krawędzi</string>
+    <string name="nika_iph_band_t_title">Szerokość pasa przy górnej krawędzi</string>
+    <string name="nika_iph_cat_len">Długość przesunięć</string>
+    <string name="nika_iph_b_short_len_title">Dół: długość krótkiego przesunięcia</string>
+    <string name="nika_iph_b_long_len_title">Dół: długość długiego przesunięcia</string>
+    <string name="nika_iph_t_short_len_title">Góra: długość krótkiego przesunięcia</string>
+    <string name="nika_iph_t_long_len_title">Góra: długość długiego przesunięcia</string>
+    <string name="nika_iph_cat_bl">Dolna krawędź, lewa połowa ekranu</string>
+    <string name="nika_iph_cat_br">Dolna krawędź, prawa połowa ekranu</string>
+    <string name="nika_iph_cat_tl">Górna krawędź, lewa połowa ekranu</string>
+    <string name="nika_iph_cat_tr">Górna krawędź, prawa połowa ekranu</string>
+    <string name="nika_side_title">Gesty krawędziowe</string>
+    <string name="nika_side_summary">Przesunięcia od lewej i prawej krawędzi, z osobnymi akcjami dla górnej i dolnej połowy ekranu</string>
+    <string name="nika_side_enabled_title">Gesty krawędziowe</string>
+    <string name="nika_side_enabled_summary">Przesunięcie jednym palcem od lewej krawędzi w prawo lub od prawej w lewo. Krótkie i długie przesunięcie wykonują wybraną akcję, osobno dla górnej i dolnej połowy ekranu. Ten przełącznik nie wpływa na gesty jak na iPhonie.</string>
+    <string name="nika_side_band_l_title">Szerokość pasa przy lewej krawędzi</string>
+    <string name="nika_side_band_r_title">Szerokość pasa przy prawej krawędzi</string>
+    <string name="nika_side_cat_len">Długość przesunięć</string>
+    <string name="nika_side_cat_lu">Od lewej krawędzi, górna połowa ekranu</string>
+    <string name="nika_side_cat_ld">Od lewej krawędzi, dolna połowa ekranu</string>
+    <string name="nika_side_cat_ru">Od prawej krawędzi, górna połowa ekranu</string>
+    <string name="nika_side_cat_rd">Od prawej krawędzi, dolna połowa ekranu</string>
+    <string name="nika_edge_debug_title">Diagnostyka gestów</string>
+    <string name="nika_edge_debug_summary">Pokazuje krótki komunikat przy każdym dotknięciu: gdzie było, czy trafiło w pas przy krawędzi i co zrobiło przesunięcie. Włącz, aby sprawdzić, dlaczego gest nie działa.</string>
 </resources>

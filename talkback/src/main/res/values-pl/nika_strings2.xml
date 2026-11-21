@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika to czytnik ekranu zbudowany na bazie Backtalk i Google TalkBack</string>
-    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Gesty krawędziowe (jednym palcem, domyślnie wyłączone): przesunięcia od dolnej, górnej, lewej i prawej krawędzi, każde z krótką i długą długością oraz dowolną akcją; podczas przesuwania słychać narastające dźwięki i nazwę akcji.\n\u2022 Naprawiono klawisze głośności: ustawione akcje działają.\n\u2022 Ekrany przycisków i głośności przeniesiono do Szybkich klawiszy.\n\u2022 Powiadomienia: jedna pozycja; można wybrać nazwę aplikacji, czas, typ, tytuł i tekst.\n\u2022 Na liście akcji gestów Otwórz menu Nika jest w Akcjach systemowych, a sterowanie czytaniem w Czytaniu.</string>
+    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Dwie osobne strony gestów, każda z własnym przełącznikiem: „Gesty jak na iPhonie” (od dolnej i górnej krawędzi, osobne akcje dla lewej i prawej połowy) oraz „Gesty krawędziowe” (od lewej i prawej krawędzi, osobne akcje dla górnej i dolnej połowy). Każda ma własne dźwięki, odczytywanie przycisków nawigacji i szerokość pasa przy krawędzi.\n\u2022 Dotknięcia przy krawędziach znów działają.\n\u2022 Klawisze głośności działają, nawet gdy przełącznik akcji klawiszy jest wyłączony.</string>
     <string name="nika_update_available">Dost\u0119pna aktualizacja: kompilacja %1$d</string>
     <string name="nika_update_tap">Dotknij, aby pobra\u0107 i zainstalowa\u0107</string>
     <string name="nika_telegram_title">Nika na Telegramie</string>
@@ -9,7 +9,7 @@
     <string name="nika_keys_title">Dla telefon\u00f3w z przyciskami</string>
     <string name="nika_keys_summary">Akcje dla klawiszy g\u0142o\u015bno\u015bci, cyfr, strza\u0142ek i innych</string>
     <string name="nika_keys_enabled_title">Akcje klawiszy</string>
-    <string name="nika_keys_enabled_summary">W\u0142\u0105cza lub wy\u0142\u0105cza wszystkie akcje klawiszy poni\u017cej</string>
+    <string name="nika_keys_enabled_summary">W\u0142\u0105cza lub wy\u0142\u0105cza wszystkie akcje klawiszy poni\u017cej Klawisze głośności nie zależą od tego przełącznika.</string>
     <string name="nika_keys_arrows_title">Strza\u0142ki bez modyfikatora</string>
     <string name="nika_keys_arrows_summary">Po wy\u0142\u0105czeniu dzia\u0142aj\u0105 tylko kombinacje z Alt i innymi modyfikatorami</string>
     <string name="nika_keys_skip_edit_title">Nie przechwytuj klawiszy w polach tekstowych</string>
