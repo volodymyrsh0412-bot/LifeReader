@@ -72,16 +72,6 @@
         android:title="@string/title_pref_manage_keyboard_shortcuts"
         android:fragment="com.google.android.accessibility.talkback.preference.base.TalkBackKeyboardShortcutPreferenceFragment" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:fragment="com.google.android.accessibility.talkback.preference.base.ButtonPhoneFragment"
-        android:key="pref_nika_keys"
-        android:summary="@string/nika_keys_summary"
-        android:title="@string/nika_keys_title" />
-    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:fragment="com.google.android.accessibility.talkback.preference.base.VolumeKeysFragment"
-        android:key="pref_nika_volume"
-        android:summary="@string/nika_volume_summary"
-        android:title="@string/nika_volume_title" />
-    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:fragment="com.google.android.accessibility.talkback.preference.base.GeminiSettingsFragment"
         android:key="@string/pref_gemini_settings_key"
         android:title="@string/title_pref_gemini_settings" />

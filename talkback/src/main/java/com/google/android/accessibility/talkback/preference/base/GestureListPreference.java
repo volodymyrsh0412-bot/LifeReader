@@ -282,6 +282,12 @@ public final class GestureListPreference extends AccessibilitySuiteDialogPrefere
             R.array.shortcut_system_actions,
             R.array.shortcut_value_system_actions);
     Resources resources = getContext().getResources();
+    // nika-moved-actions: Open Nika menu belongs to the system actions.
+    builder.add(
+        new ActionItem(
+            resources.getString(R.string.shortcut_talkback_breakout),
+            resources.getString(R.string.shortcut_value_talkback_breakout),
+            TYPE_ACTION_ITEM));
     if (FeatureSupport.supportGetSystemActions(getContext())) {
       builder.add(
           new ActionItem(
@@ -308,6 +314,27 @@ public final class GestureListPreference extends AccessibilitySuiteDialogPrefere
             R.string.shortcut_title_reading_control,
             R.array.shortcut_reading_control,
             R.array.shortcut_value_reading_control);
+    // nika-moved-actions: the reading controls belong to the Reading section.
+    builder.add(
+        new ActionItem(
+            getContext().getResources().getString(R.string.shortcut_select_previous_setting),
+            getContext().getResources().getString(R.string.shortcut_value_select_previous_setting),
+            TYPE_ACTION_ITEM));
+    builder.add(
+        new ActionItem(
+            getContext().getResources().getString(R.string.shortcut_select_next_setting),
+            getContext().getResources().getString(R.string.shortcut_value_select_next_setting),
+            TYPE_ACTION_ITEM));
+    builder.add(
+        new ActionItem(
+            getContext().getResources().getString(R.string.shortcut_selected_setting_previous_action),
+            getContext().getResources().getString(R.string.shortcut_value_selected_setting_previous_action),
+            TYPE_ACTION_ITEM));
+    builder.add(
+        new ActionItem(
+            getContext().getResources().getString(R.string.shortcut_selected_setting_next_action),
+            getContext().getResources().getString(R.string.shortcut_value_selected_setting_next_action),
+            TYPE_ACTION_ITEM));
     if (FeatureFlagReader.enableTextFormattingInline(getContext())) {
       Resources resources = getContext().getResources();
       builder.add(
@@ -329,9 +356,7 @@ public final class GestureListPreference extends AccessibilitySuiteDialogPrefere
 
   private ImmutableList<ActionItem> createMenuControl() {
     return createActionListBuilder(
-            R.string.shortcut_title_menu_control,
-            R.array.shortcut_menu_control,
-            R.array.shortcut_value_menu_control)
+            R.string.shortcut_title_menu_control, 0, 0)
         .build();
   }
 

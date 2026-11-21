@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika is a screen reader built on Backtalk and Google TalkBack</string>
-    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 Edge swipes with one finger, like on an iPhone (off by default, enable in the main settings): from the bottom edge short = Home, long = Recents; from the top edge short = Notifications, long = Quick settings. Lengths and edge width are adjustable.\n\u2022 If checking for updates fails, the real reason is now shown.</string>
+    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 Edge gestures (one finger, off by default): swipes from the bottom, top, left and right edges, each with a short and a long length and any action; rising sounds and spoken names of the actions while you swipe.\n\u2022 Volume keys fixed: the actions you set now run.\n\u2022 The button and volume key screens moved into Quick keys.\n\u2022 Notifications: one item; choose app name, time, type, title and text.\n\u2022 In the gesture action list, Open Nika menu is under System actions and the reading controls are under Reading.</string>
     <string name="nika_update_available">Update available: build %1$d</string>
     <string name="nika_update_tap">Tap to download and install</string>
     <string name="nika_telegram_title">Nika on Telegram</string>

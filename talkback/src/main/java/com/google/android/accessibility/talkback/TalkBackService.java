@@ -1428,7 +1428,7 @@ public class TalkBackService extends AccessibilityServiceCompat
       // ignore these KeyEvents since they're unused in TalkBack.
       return false;
     }
-    if (isServiceActive() && !isTouchInteracting) {
+    if (isServiceActive()) {
       if (nikaKeyActions == null) {
         nikaKeyActions =
             new com.google.android.accessibility.talkback.keyactions.NikaKeyActions(this);

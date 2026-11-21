@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nika_edge_title">Жесты от края экрана</string>
-    <string name="nika_volume_title">Кнопки громкости</string>
-    <string name="nika_volume_summary">Действия для клавиш громкости вверх и вниз</string>
-    <string name="nika_edge_summary">Свайпы одним пальцем от верхнего и нижнего краёв экрана, как на айфоне. Для каждого свайпа можно выбрать любое действие.</string>
-    <string name="nika_edge_enabled_title">Жесты от края экрана</string>
-    <string name="nika_edge_enabled_summary">Свайп одним пальцем от нижнего края вверх или от верхнего края вниз. Короткий и длинный свайп выполняют действие по вашему выбору. Касания, начинающиеся у края, не озвучиваются.</string>
+    <string name="nika_edge_title">Крайние жесты</string>
+    <string name="nika_edge_summary">Свайпы одним пальцем от четырёх краёв экрана, как на айфоне. Для каждого свайпа можно выбрать любое действие.</string>
+    <string name="nika_edge_enabled_title">Крайние жесты</string>
+    <string name="nika_edge_enabled_summary">Свайп одним пальцем от края экрана. Короткий и длинный свайп выполняют действие на ваш выбор. Касания, начинающиеся у края, не озвучиваются.</string>
     <string name="nika_edge_band_title">Ширина полосы у края</string>
     <string name="nika_edge_cat_bottom">От нижнего края вверх</string>
     <string name="nika_edge_cat_top">От верхнего края вниз</string>
+    <string name="nika_edge_cat_side_len">Боковые края: длина свайпов</string>
+    <string name="nika_edge_cat_left_upper">От левого края, верхняя половина экрана</string>
+    <string name="nika_edge_cat_left_lower">От левого края, нижняя половина экрана</string>
+    <string name="nika_edge_cat_right_upper">От правого края, верхняя половина экрана</string>
+    <string name="nika_edge_cat_right_lower">От правого края, нижняя половина экрана</string>
+    <string name="nika_edge_cat_announce">Озвучивание кнопок навигации</string>
+    <string name="nika_edge_speak_title">Озвучивать действие</string>
+    <string name="nika_edge_speak_summary">Называть Главный экран, Назад, Недавние, Панель уведомлений, Быстрые настройки или другое действие, когда свайп достиг нужной длины.</string>
+    <string name="nika_edge_sound_title">Нарастающие звуки</string>
+    <string name="nika_edge_sound_summary">Воспроизводить повышающиеся звуки, пока палец движется, и более высокий звук, когда достигнуто действие.</string>
     <string name="nika_edge_short_action">Короткий свайп: действие</string>
     <string name="nika_edge_short_len">Короткий свайп: длина</string>
     <string name="nika_edge_long_action">Длинный свайп: действие</string>
     <string name="nika_edge_long_len">Длинный свайп: длина</string>
+    <string name="nika_volume_title">Кнопки громкости</string>
+    <string name="nika_volume_summary">Действия для клавиш громкости вверх и вниз</string>
+    <string name="nika_keys_category_title">Кнопки</string>
+    <string name="nika_notif_summary">Читать новые уведомления вслух, выбирать, что озвучивается, и читать ли их при выключенном экране. Входящие звонки озвучиваются всегда.</string>
+    <string name="nika_notif_cat_what">Что читать в уведомлении</string>
+    <string name="nika_notif_app_title">Название приложения</string>
+    <string name="nika_notif_time_title">Время</string>
+    <string name="nika_notif_type_title">Тип (сообщение, звонок, почта...)</string>
+    <string name="nika_notif_head_title">Заголовок</string>
+    <string name="nika_notif_text_title">Текст</string>
+    <string name="nika_notif_what_summary">Выберите, какие части уведомления читать, вместе или по отдельности.</string>
 </resources>

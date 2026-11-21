@@ -315,6 +315,7 @@ public class TalkBackKeyboardShortcutPreferenceFragment extends TalkbackBaseFrag
 
   /** Updates preference, including UI, by KeyComboModel. */
   private void updatePreference() {
+    com.google.android.accessibility.talkback.update.NikaSettings.hideForWatch(this);
     // By default, the preference filter is applied in TalkbackBaseFragment which is only performed
     // 1st time the fragment created. Keyboard shortcut preference group can change between default
     // key map and new key map, so need to redo the filter when the preference changed.

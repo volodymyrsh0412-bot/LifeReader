@@ -33,11 +33,6 @@ object NikaSettings {
         fragment.getString(R.string.category_collapsed),
         fragment.getString(R.string.category_expanded),
       )
-    if (FormFactorUtils.isAndroidWear()) {
-      for (key in arrayOf("pref_nika_volume", "pref_nika_edge")) {
-        fragment.findPreference<Preference>(key)?.let { it.parent?.removePreference(it) }
-      }
-    }
     fragment.findPreference<Preference>(KEY_WHATS_NEW)?.setOnPreferenceClickListener {
       fragment.activity?.let { showWhatsNew(it) }
       true
@@ -45,6 +40,14 @@ object NikaSettings {
     fragment.findPreference<Preference>(KEY_FEEDBACK)?.setOnPreferenceClickListener {
       fragment.activity?.let { sendFeedback(it) }
       true
+    }
+  }
+
+  /** On a watch there are no volume keys to set up, so that item of the key screen is removed. */
+  @JvmStatic
+  fun hideForWatch(fragment: PreferenceFragmentCompat) {
+    if (FormFactorUtils.isAndroidWear()) {
+      fragment.findPreference<Preference>("pref_nika_volume")?.let { it.parent?.removePreference(it) }
     }
   }
 

@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nika_edge_title">Edge swipes</string>
-    <string name="nika_volume_title">Volume keys</string>
-    <string name="nika_volume_summary">Actions for the volume up and down keys</string>
-    <string name="nika_edge_summary">One-finger swipes from the top and bottom screen edges, like on an iPhone. You can choose any action for each swipe.</string>
-    <string name="nika_edge_enabled_title">Edge swipes</string>
-    <string name="nika_edge_enabled_summary">Swipe with one finger from the bottom edge up or from the top edge down. A short and a long swipe each run an action of your choice. Touches that start at the edge are not read aloud.</string>
+    <string name="nika_edge_title">Edge gestures</string>
+    <string name="nika_edge_summary">One-finger swipes from the four screen edges, like on an iPhone. You can choose any action for each swipe.</string>
+    <string name="nika_edge_enabled_title">Edge gestures</string>
+    <string name="nika_edge_enabled_summary">Swipe with one finger from an edge of the screen. A short and a long swipe each run an action of your choice. Touches that start at an edge are not read aloud.</string>
     <string name="nika_edge_band_title">Edge band width</string>
     <string name="nika_edge_cat_bottom">From the bottom edge, up</string>
     <string name="nika_edge_cat_top">From the top edge, down</string>
+    <string name="nika_edge_cat_side_len">Side edges: swipe lengths</string>
+    <string name="nika_edge_cat_left_upper">From the left edge, upper half of the screen</string>
+    <string name="nika_edge_cat_left_lower">From the left edge, lower half of the screen</string>
+    <string name="nika_edge_cat_right_upper">From the right edge, upper half of the screen</string>
+    <string name="nika_edge_cat_right_lower">From the right edge, lower half of the screen</string>
+    <string name="nika_edge_cat_announce">Announce navigation buttons</string>
+    <string name="nika_edge_speak_title">Speak the action</string>
+    <string name="nika_edge_speak_summary">Say Home, Back, Recents, Notifications, Quick settings or another action when the swipe is long enough for it.</string>
+    <string name="nika_edge_sound_title">Rising sounds</string>
+    <string name="nika_edge_sound_summary">Play rising tones while the finger moves, a higher tone when an action is reached.</string>
     <string name="nika_edge_short_action">Short swipe: action</string>
     <string name="nika_edge_short_len">Short swipe: length</string>
     <string name="nika_edge_long_action">Long swipe: action</string>
     <string name="nika_edge_long_len">Long swipe: length</string>
+    <string name="nika_volume_title">Volume keys</string>
+    <string name="nika_volume_summary">Actions for the volume up and down keys</string>
+    <string name="nika_keys_category_title">Keys</string>
+    <string name="nika_notif_summary">Read new notifications aloud, choose what is said, and whether to read them when the screen is off. Incoming calls are always read.</string>
+    <string name="nika_notif_cat_what">What to read in a notification</string>
+    <string name="nika_notif_app_title">App name</string>
+    <string name="nika_notif_time_title">Time</string>
+    <string name="nika_notif_type_title">Type (message, call, email...)</string>
+    <string name="nika_notif_head_title">Title</string>
+    <string name="nika_notif_text_title">Text</string>
+    <string name="nika_notif_what_summary">Choose which parts of a notification are read, together or separately.</string>
 </resources>

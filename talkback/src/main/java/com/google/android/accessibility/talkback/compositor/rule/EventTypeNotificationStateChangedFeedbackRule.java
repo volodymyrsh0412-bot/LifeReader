@@ -82,6 +82,13 @@ public final class EventTypeNotificationStateChangedFeedbackRule {
                     AccessibilityEventUtils.extractNotification(eventOptions.eventObject));
             ttsOutput =
                 CompositorUtils.joinCharSequences(notificationCategory, notificationDetails);
+            ttsOutput =
+                com.google.android.accessibility.talkback.notifications.NikaNotificationFormat.compose(
+                    context,
+                    AccessibilityEventUtils.extractNotification(eventOptions.eventObject),
+                    eventOptions.eventObject.getPackageName(),
+                    notificationCategory,
+                    ttsOutput);
             // Add a hint on how to answer the call using the gesture shortcut to play or pause
             // media.
             if (notificationCategory

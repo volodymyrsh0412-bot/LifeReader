@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika to czytnik ekranu zbudowany na bazie Backtalk i Google TalkBack</string>
-    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Gesty od krawędzi ekranu jednym palcem, jak na iPhonie (domyślnie wyłączone, włączane w ustawieniach głównych): od dołu krótkie = Ekran główny, dłuższe = Ostatnie; od góry krótkie = Powiadomienia, dłuższe = Szybkie ustawienia. Długość i szerokość krawędzi można zmieniać.\n\u2022 Gdy sprawdzanie aktualizacji się nie powiedzie, pokazywana jest prawdziwa przyczyna.</string>
+    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Gesty krawędziowe (jednym palcem, domyślnie wyłączone): przesunięcia od dolnej, górnej, lewej i prawej krawędzi, każde z krótką i długą długością oraz dowolną akcją; podczas przesuwania słychać narastające dźwięki i nazwę akcji.\n\u2022 Naprawiono klawisze głośności: ustawione akcje działają.\n\u2022 Ekrany przycisków i głośności przeniesiono do Szybkich klawiszy.\n\u2022 Powiadomienia: jedna pozycja; można wybrać nazwę aplikacji, czas, typ, tytuł i tekst.\n\u2022 Na liście akcji gestów Otwórz menu Nika jest w Akcjach systemowych, a sterowanie czytaniem w Czytaniu.</string>
     <string name="nika_update_available">Dost\u0119pna aktualizacja: kompilacja %1$d</string>
     <string name="nika_update_tap">Dotknij, aby pobra\u0107 i zainstalowa\u0107</string>
     <string name="nika_telegram_title">Nika na Telegramie</string>
