@@ -313,6 +313,8 @@ public class GestureController {
                   .setDefaultToInputFocus(true)
                   .setScroll(true)
                   .setWrap(true));
+    } else if (com.google.android.accessibility.talkback.clock.NikaClockActions.isAction(action)) {
+      result = com.google.android.accessibility.talkback.clock.NikaClockActions.perform(service, action);
     } else if (NavigationGestureActions.isAction(action)) {
       result =
           NavigationGestureActions.perform(

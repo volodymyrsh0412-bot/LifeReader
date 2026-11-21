@@ -144,6 +144,11 @@
         android:summary="@string/nika_feedback_summary"
         android:title="@string/nika_feedback_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.ClockSettingsFragment"
+        android:key="pref_nika_clock"
+        android:summary="@string/nika_clock_summary"
+        android:title="@string/nika_clock_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:key="pref_nika_telegram"
         android:summary="@string/nika_telegram_summary"
         android:title="@string/nika_telegram_title">

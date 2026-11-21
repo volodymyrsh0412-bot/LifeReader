@@ -86,7 +86,7 @@ public final class EventTypeViewSelectedFeedbackRule {
     Locale preferredLocale = globalVariables.getPreferredLocaleByNode(node);
     int role = Role.getRole(node);
     return EventFeedback.builder()
-        .setTtsOutput(computeTtsOutput(node, event, preferredLocale, roleDescriptionExtractor))
+        .setTtsOutput(com.google.android.accessibility.talkback.progress.NikaProgress.speech(node, computeTtsOutput(node, event, preferredLocale, roleDescriptionExtractor)))
         .setQueueMode(queueMode(node, role))
         .setTtsAddToHistory(true)
         .setForceFeedbackEvenIfAudioPlaybackActive(true)

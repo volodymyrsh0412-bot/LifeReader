@@ -52,6 +52,9 @@ public final class EarconFeedbackUtils {
         || (eventType != TYPE_WINDOW_CONTENT_CHANGED && eventType != TYPE_VIEW_SELECTED)) {
       return -1;
     }
+    if (!com.google.android.accessibility.talkback.progress.NikaProgress.soundOn()) {
+      return -1;
+    }
 
     CharSequence eventDescription =
         AccessibilityEventFeedbackUtils.getEventContentDescriptionOrEventAggregateText(

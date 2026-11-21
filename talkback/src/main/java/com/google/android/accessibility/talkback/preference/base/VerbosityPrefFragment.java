@@ -81,6 +81,7 @@ public class VerbosityPrefFragment extends TalkbackBaseFragment {
     setupTellTimePreference();
     setupEmojiRepeatCountPreference();
     updatePreferences();
+    collapseCategories();
   }
 
   /** Counting repeated emoji only applies while Backtalk names emoji. */

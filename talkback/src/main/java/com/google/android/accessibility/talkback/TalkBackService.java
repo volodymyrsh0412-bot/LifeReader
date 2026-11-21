@@ -1074,6 +1074,7 @@ public class TalkBackService extends AccessibilityServiceCompat
       speechCacheController.destroy();
     }
 
+    com.google.android.accessibility.talkback.clock.NikaClock.shutdown();
     super.onDestroy();
 
     if (isServiceActive()) {
@@ -2040,6 +2041,7 @@ public class TalkBackService extends AccessibilityServiceCompat
   @Override
   protected void onServiceConnected() {
     super.onServiceConnected();
+    com.google.android.accessibility.talkback.clock.NikaClock.get(this).start();
     EventId talkbackOnEventId =
         Performance.getInstance().onHintEventReceived(Performance.HINT_SUB_TYPE_TALKBACK_ON);
 

@@ -105,6 +105,10 @@
         android:title="@string/title_pref_capital_letters" />
   </PreferenceCategory>
 
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
+      android:key="nika_vcat_order"
+      android:title="@string/nika_vcat_order">
+
   <!-- Order of item details -->
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
       android:fragment="com.google.android.accessibility.talkback.preference.base.ItemDetailsOrderFragment"
@@ -119,6 +123,12 @@
       android:key="@string/pref_time_feedback_format_key"
       android:summary="%s"
       android:title="@string/pref_time_feedback_format_title"/>
+
+  </com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory>
+
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
+      android:key="nika_vcat_keys"
+      android:title="@string/nika_vcat_keys">
 
   <!-- Physical keyboard interrupts -->
   <ListPreference
@@ -145,6 +155,12 @@
             android:title="@string/title_text_formatting_verbosity_options"
             android:fragment="com.google.android.accessibility.talkback.preference.base.TextFormattingDetailFragment" />
 
+  </com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory>
+
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
+      android:key="nika_vcat_screen"
+      android:title="@string/nika_vcat_screen">
+
   <!-- What is said when the screen turns off or on and when the phone is unlocked -->
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
       android:key="pref_screen_announcements"
@@ -170,6 +186,12 @@
       android:key="@string/pref_allow_frequent_content_change_announcement_key"
       android:title="@string/pref_allow_frequent_content_change_announcement_title"
       android:summary="@string/summary_pref_allow_frequent_content_change_announcement" />
+  </com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory>
+
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
+      android:key="nika_vcat_symbols"
+      android:title="@string/nika_vcat_symbols">
+
   <!-- Speak element IDs - Non-preset detailed settings -->
   <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
       android:defaultValue="@bool/pref_speak_element_ids_default"
@@ -208,6 +230,33 @@
       android:key="@string/pref_count_repeated_symbols_key"
       android:summary="@string/summary_pref_count_repeated_symbols"
       android:title="@string/title_pref_count_repeated_symbols" />
+
+  </com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory>
+
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
+      android:key="nika_vcat_progress"
+      android:title="@string/nika_vcat_progress">
+
+    <ListPreference
+        android:defaultValue="both"
+        android:entries="@array/nika_progress_mode_entries"
+        android:entryValues="@array/nika_progress_mode_values"
+        android:key="nika_progress_mode"
+        android:summary="%s"
+        android:title="@string/nika_progress_mode_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
+        android:defaultValue="true"
+        android:key="nika_progress_percent"
+        android:summary="@string/nika_progress_percent_summary"
+        android:title="@string/nika_progress_percent_title" />
+    <ListPreference
+        android:defaultValue="5"
+        android:entries="@array/nika_progress_step_entries"
+        android:entryValues="@array/nika_progress_step_values"
+        android:key="nika_progress_step"
+        android:summary="%s"
+        android:title="@string/nika_progress_step_title" />
+  </com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory>
 
   <!-- Table settings -->
   <PreferenceCategory

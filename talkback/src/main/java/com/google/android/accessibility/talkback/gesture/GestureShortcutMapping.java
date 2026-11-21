@@ -1183,6 +1183,10 @@ public class GestureShortcutMapping implements GestureShortcutProvider {
         return context.getString(action.actionNameResId);
       }
     }
+    @Nullable String clockLabel = com.google.android.accessibility.talkback.clock.NikaClockActions.label(context, actionKeyString);
+    if (clockLabel != null) {
+      return clockLabel;
+    }
     @Nullable String navigationLabel = NavigationGestureActions.label(context, actionKeyString);
     if (navigationLabel != null) {
       return navigationLabel;

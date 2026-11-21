@@ -170,6 +170,7 @@ public final class EventTypeWindowContentChangedFeedbackRule {
       }
     }
 
+    ttsOutput = com.google.android.accessibility.talkback.progress.NikaProgress.speech(node, ttsOutput);
     boolean nodeNotFrequentAnnounced = true;
     if (!TextUtils.isEmpty(ttsOutput)) {
       nodeNotFrequentAnnounced =
