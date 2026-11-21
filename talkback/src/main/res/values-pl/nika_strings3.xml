@@ -50,4 +50,6 @@
     <string name="nika_side_cat_rd">Od prawej krawędzi, dolna połowa ekranu</string>
     <string name="nika_edge_debug_title">Diagnostyka gestów</string>
     <string name="nika_edge_debug_summary">Pokazuje krótki komunikat przy każdym dotknięciu: gdzie było, czy trafiło w pas przy krawędzi i co zrobiło przesunięcie. Włącz, aby sprawdzić, dlaczego gest nie działa.</string>
+    <string name="nika_finger_volume_title">Głośność mowy palcem na ekranie</string>
+    <string name="nika_finger_volume_summary">Włączone: przytrzymaj jeden palec na ekranie i naciskaj klawisze głośności, aby zmienić głośność czytnika ekranu. Wyłączone: klawisze głośności zawsze zmieniają głośność multimediów, a czytnik ekranu zmienia się razem z nią.</string>
 </resources>

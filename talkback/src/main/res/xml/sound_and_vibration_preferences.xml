@@ -69,8 +69,9 @@
       android:key="pref_individual_feedback"
       android:title="@string/title_pref_individual_feedback"
       android:summary="@string/summary_pref_individual_feedback" />
-  <com.google.android.accessibility.talkback.preference.base.AccessibilityFooterPreference
-      android:key="@string/pref_speech_footer_key"
-      android:title="@string/title_pref_speech_footer"
-      android:selectable="false" />
+  <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
+      android:defaultValue="true"
+      android:key="nika_finger_volume"
+      android:summary="@string/nika_finger_volume_summary"
+      android:title="@string/nika_finger_volume_title" />
 </PreferenceScreen>

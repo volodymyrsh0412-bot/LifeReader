@@ -50,4 +50,6 @@
     <string name="nika_side_cat_rd">From the right edge, lower half of the screen</string>
     <string name="nika_edge_debug_title">Gesture diagnostics</string>
     <string name="nika_edge_debug_summary">Shows a short message at every touch: where it was, whether it is in an edge band and what the swipe did. Turn it on to find out why a gesture does not work.</string>
+    <string name="nika_finger_volume_title">Speech volume with a finger on the screen</string>
+    <string name="nika_finger_volume_summary">On: hold one finger on the screen and press volume up or down to change the screen reader\'s volume. Off: the volume keys always change the media volume, so the screen reader follows the media volume.</string>
 </resources>

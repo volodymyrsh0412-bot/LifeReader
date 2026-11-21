@@ -826,6 +826,32 @@ public class TalkBackService extends AccessibilityServiceCompat
   // TYPE_TOUCH_INTERACTION_END will be considered as passthrough window.
   private boolean isTouchInteracting = false;
 
+  /** Nika: is the switch "finger on the screen + volume key changes the speech volume" on? */
+  private boolean nikaFingerVolume() {
+    boolean on = true;
+    try {
+      if (!androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
+          .getBoolean("nika_finger_volume", true)) {
+        on = false;
+      }
+      if (!SharedPreferencesUtils.getSharedPreferences(this)
+          .getBoolean("nika_finger_volume", true)) {
+        on = false;
+      }
+    } catch (RuntimeException e) {
+      // keep the default
+    }
+    return on;
+  }
+
+  /** Nika: a volume key pressed with a finger on the screen belongs to the speech volume. */
+  private boolean nikaTouchVolumeKey(KeyEvent keyEvent) {
+    int code = keyEvent.getKeyCode();
+    return (code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN)
+        && isTouchInteracting
+        && nikaFingerVolume();
+  }
+
   private com.google.android.accessibility.talkback.keyactions.NikaKeyActions nikaKeyActions;
 
   /** Nika: runs a gesture action (a value of the gesture settings) for a key. */
@@ -1433,7 +1459,8 @@ public class TalkBackService extends AccessibilityServiceCompat
         nikaKeyActions =
             new com.google.android.accessibility.talkback.keyactions.NikaKeyActions(this);
       }
-      if (nikaKeyActions.onKeyEvent(
+      if (!nikaTouchVolumeKey(keyEvent)
+          && nikaKeyActions.onKeyEvent(
           keyEvent,
           inputFocusInterpreter != null && inputFocusInterpreter.isInputFocusEditable())) {
         return true;
@@ -1449,7 +1476,7 @@ public class TalkBackService extends AccessibilityServiceCompat
     }
     if (keyAction == KeyEvent.ACTION_DOWN) {
       boolean handleVolumeKeyInTalkBack =
-          isTouchInteracting
+          (isTouchInteracting && nikaFingerVolume())
               || triggerModifierPressed
               || isBrailleImeTouchInteracting()
               || pipeline.getActorState().getContinuousRead().isActive();
