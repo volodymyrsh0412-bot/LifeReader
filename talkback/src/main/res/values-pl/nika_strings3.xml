@@ -32,4 +32,6 @@
     <string name="nika_notif_head_title">Tytuł</string>
     <string name="nika_notif_text_title">Tekst</string>
     <string name="nika_notif_what_summary">Wybierz, które części powiadomienia są czytane, razem lub osobno.</string>
+    <string name="nika_keys_debug_title">Diagnostyka klawiszy</string>
+    <string name="nika_keys_debug_summary">Pokazuje krótki komunikat przy każdym naciśnięciu klawisza, które dotarło do Niki: jaki to klawisz i czy został użyty. Włącz, aby sprawdzić, dlaczego klawisz nie działa.</string>
 </resources>

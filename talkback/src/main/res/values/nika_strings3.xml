@@ -32,4 +32,6 @@
     <string name="nika_notif_head_title">Title</string>
     <string name="nika_notif_text_title">Text</string>
     <string name="nika_notif_what_summary">Choose which parts of a notification are read, together or separately.</string>
+    <string name="nika_keys_debug_title">Key diagnostics</string>
+    <string name="nika_keys_debug_summary">Shows a short message for every key press that reaches Nika: what the key is and whether it was used. Turn it on to find out why a key does not work.</string>
 </resources>

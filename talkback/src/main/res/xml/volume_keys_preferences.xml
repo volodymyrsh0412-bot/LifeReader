@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+  <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
+        android:key="nika_keys_debug"
+        android:defaultValue="false"
+        android:title="@string/nika_keys_debug_title"
+        android:summary="@string/nika_keys_debug_summary" />
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
         android:key="nika_keys_cat_vol_up"
         android:title="@string/nika_key_vol_up">

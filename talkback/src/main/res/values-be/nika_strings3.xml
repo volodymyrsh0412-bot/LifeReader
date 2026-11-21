@@ -32,4 +32,6 @@
     <string name="nika_notif_head_title">Загаловак</string>
     <string name="nika_notif_text_title">Тэкст</string>
     <string name="nika_notif_what_summary">Выберыце, якія часткі апавяшчэння чытаць, разам ці асобна.</string>
+    <string name="nika_keys_debug_title">Дыягностыка клавіш</string>
+    <string name="nika_keys_debug_summary">Паказвае кароткае паведамленне пры кожным націску клавішы, які дайшоў да Нікі: якая гэта клавіша і ці выкарыстана яна. Уключыце, каб высветліць, чаму клавіша не працуе.</string>
 </resources>

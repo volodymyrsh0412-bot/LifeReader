@@ -20,17 +20,23 @@ import android.content.SharedPreferences
 import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.KeyEvent
+import android.widget.Toast
+import androidx.preference.PreferenceManager
 import com.google.android.accessibility.talkback.TalkBackService
 import com.google.android.accessibility.utils.SharedPreferencesUtils
 
 /**
  * Nika: runs a gesture action when a key is pressed, held, pressed twice or pressed three times.
- * The keys and their actions are set in the "For button phones" settings. A key with no action
- * works as usual.
+ * The keys and their actions are set in the key settings. A key with no action works as usual.
+ * With the diagnostics switch on, a message tells what happened with every key that reaches this
+ * code.
  */
 class NikaKeyActions(private val service: TalkBackService) {
   companion object {
+    private const val TAG = "NikaKeys"
+
     /** True while the settings wait for the user to press a key to assign, so keys pass through. */
     @JvmField @Volatile var capturing = false
 
@@ -40,6 +46,7 @@ class NikaKeyActions(private val service: TalkBackService) {
     const val PREF_SKIP_EDIT = "nika_keys_skip_edit"
     const val PREF_HOLD_MS = "nika_keys_hold_ms"
     const val PREF_MULTI_MS = "nika_keys_multi_ms"
+    const val PREF_DEBUG = "nika_keys_debug"
     val TYPES = arrayOf("tap1", "hold", "tap2", "tap3")
 
     fun customCodeKey(n: Int) = "nika_key_c${n}_code"
@@ -57,6 +64,22 @@ class NikaKeyActions(private val service: TalkBackService) {
 
   private val handler = Handler(Looper.getMainLooper())
   private val states = HashMap<Int, State>()
+
+  /** The settings of the screens may be stored in the device or in the user storage. */
+  private fun userPrefs(): SharedPreferences? =
+    try {
+      PreferenceManager.getDefaultSharedPreferences(service)
+    } catch (e: RuntimeException) {
+      null
+    }
+
+  private fun readAction(prefs: SharedPreferences, slot: String, type: String): String {
+    val key = actionKey(slot, type)
+    val first = prefs.getString(key, null)
+    if (first != null && first != UNASSIGNED) return first
+    val second = userPrefs()?.getString(key, null)
+    return if (second != null && second != UNASSIGNED) second else first ?: UNASSIGNED
+  }
 
   private fun slotFor(prefs: SharedPreferences, code: Int): String? {
     for (n in 1..4) {
@@ -82,37 +105,74 @@ class NikaKeyActions(private val service: TalkBackService) {
 
   /** Returns true if the key event was used. */
   fun onKeyEvent(event: KeyEvent, inEditField: Boolean): Boolean {
+    val prefs = SharedPreferencesUtils.getSharedPreferences(service)
+    val note = StringBuilder()
+    val used = handle(event, inEditField, prefs, note)
+    if (
+      event.action == KeyEvent.ACTION_DOWN &&
+        event.repeatCount == 0 &&
+        (prefs.getBoolean(PREF_DEBUG, false) || userPrefs()?.getBoolean(PREF_DEBUG, false) == true)
+    ) {
+      val text =
+        KeyEvent.keyCodeToString(event.keyCode).removePrefix("KEYCODE_") +
+          ": " +
+          (if (used) "used" else "passed on") +
+          " (" +
+          note +
+          ")"
+      Log.d(TAG, text)
+      Toast.makeText(service, text, Toast.LENGTH_SHORT).show()
+    }
+    return used
+  }
+
+  private fun handle(
+    event: KeyEvent,
+    inEditField: Boolean,
+    prefs: SharedPreferences,
+    note: StringBuilder,
+  ): Boolean {
     if (capturing) {
+      note.append("waiting for a key to assign")
       return false
     }
     val code = event.keyCode
-    val prefs = SharedPreferencesUtils.getSharedPreferences(service)
     if (!prefs.getBoolean(PREF_ENABLED, true)) {
+      note.append("key actions are off")
       return false
     }
-    val slot = slotFor(prefs, code) ?: return false
+    val slot = slotFor(prefs, code)
+    if (slot == null) {
+      note.append("no settings for this key")
+      return false
+    }
+    note.append(slot)
     val isVolume = code == KeyEvent.KEYCODE_VOLUME_UP || code == KeyEvent.KEYCODE_VOLUME_DOWN
     val isArrow = code in KeyEvent.KEYCODE_DPAD_UP..KeyEvent.KEYCODE_DPAD_RIGHT
     if (isArrow && !prefs.getBoolean(PREF_ARROWS, false)) {
+      note.append(", arrows are off")
       return false
     }
     if (!isVolume) {
       if (inEditField && prefs.getBoolean(PREF_SKIP_EDIT, true)) {
+        note.append(", text field")
         return false
       }
       if (event.isShiftPressed) {
+        note.append(", Shift")
+        return false
+      }
+      if (event.isCtrlPressed || event.isAltPressed || event.isMetaPressed) {
+        note.append(", modifier key")
         return false
       }
     }
-    if (event.isCtrlPressed || event.isAltPressed || event.isMetaPressed) {
-      return false
-    }
-    val actions =
-      Array(4) { prefs.getString(actionKey(slot, TYPES[it]), UNASSIGNED) ?: UNASSIGNED }
+    val actions = Array(4) { readAction(prefs, slot, TYPES[it]) }
     val hasTap1 = actions[0] != UNASSIGNED
     val hasHold = actions[1] != UNASSIGNED
     val hasTap2 = actions[2] != UNASSIGNED
     val hasTap3 = actions[3] != UNASSIGNED
+    note.append(": ").append(actions.joinToString(" / "))
     if (!hasTap1 && !hasHold && !hasTap2 && !hasTap3) {
       return false
     }
