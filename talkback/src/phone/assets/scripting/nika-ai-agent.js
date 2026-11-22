@@ -1,10 +1,10 @@
-// ШІ-агент для Ніки. Скрипт для рушія скриптів (Застосунки > Скрипти > Імпорт скрипта).
-// Кожен крок: скрипт читає екран, ШІ обирає дії, скрипт питає підтвердження і виконує їх.
+// ШІ-агент для Ніки.
+// Кожен крок: агент читає екран, ШІ обирає дії, агент питає підтвердження і виконує їх.
 
 export const manifest = {
   "id": "ai-agent",
   "name": "Nika AI",
-  "version": "1.3",
+  "version": "1.4",
   "author": "Nika",
   "description": "Виконує задачу на телефоні: ШІ читає екран і по одній дії натискає, вводить текст, прокручує й відкриває програми. Перед кожною дією питає підтвердження. Працює з Claude, Gemini, GPT, Grok, DeepSeek, Mistral, Groq, OpenRouter, власним сервісом і Vivo. Потрібен ключ вибраного сервісу.",
   "permissions": [
@@ -284,7 +284,7 @@ const OPENAI_BASES = {
 };
 
 const REQUEST_TIMEOUT_MS = 60000;
-const MAX_NODES = 400;          // скрипт пам'ятає лише 500 останніх елементів екрана
+const MAX_NODES = 400;          // Ніка пам'ятає лише 500 останніх елементів екрана
 const MAX_NODES_VIVO = 220;
 const MAX_DEPTH = 40;
 const MAX_LABEL = 120;
@@ -313,13 +313,86 @@ const setting = (key, fallback) => {
   return value === undefined || value === null || value === '' ? fallback : value;
 };
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+// ---------------------------------------------------------------- мова телефона
+const LANG = (() => {
+  let tag = '';
+  try { tag = String(backtalk.locale || '').toLowerCase(); } catch (e) { tag = ''; }
+  if (tag.indexOf('uk') === 0) return 'uk';
+  if (tag.indexOf('ru') === 0 || tag.indexOf('be') === 0) return 'ru';
+  return tag ? 'en' : 'uk';
+})();
+const LANG_NAME = { uk: 'Ukrainian', ru: 'Russian', en: 'the phone language (English if unsure)' }[LANG];
+const PHRASES = [
+  ["Модель відповіла не в тому форматі. Зупиняюсь. Вона написала:", "Модель ответила не в том формате. Останавливаюсь. Она написала:", "The model answered in the wrong format. Stopping. It wrote:"],
+  ["Сервіс відповів, але не в потрібному форматі:", "Сервис ответил, но не в нужном формате:", "The service answered, but not in the needed format:"],
+  ["З’єднання з ", "Соединение с ", "Connection to "],
+  [" працює", " работает", " works"],
+  ["Не вдалося: ", "Не удалось: ", "Failed: "],
+  ["Помилка агента: ", "Ошибка агента: ", "Agent error: "],
+  ["Помилка: ", "Ошибка: ", "Error: "],
+  ["У цій збірці Ніки немає голосового вводу. Введіть задачу текстом.", "В этой сборке Ники нет голосового ввода. Введите задачу текстом.", "This Nika build has no voice input. Type the task."],
+  ["У цій збірці Ніки немає голосового вводу", "В этой сборке Ники нет голосового ввода", "This Nika build has no voice input"],
+  ["Голосовий ввід не вдався: ", "Голосовой ввод не удался: ", "Voice input failed: "],
+  [". Введіть задачу текстом.", ". Введите задачу текстом.", ". Type the task."],
+  ["Не почув. Введіть задачу текстом.", "Не расслышал. Введите задачу текстом.", "I did not hear. Type the task."],
+  ["Слухаю задачу", "Слушаю задачу", "Listening for the task"],
+  ["Зрозумів: ", "Понял: ", "Understood: "],
+  ["Що зробити на телефоні?", "Что сделать на телефоне?", "What to do on the phone?"],
+  ["Продиктуйте або введіть задачу", "Продиктуйте или введите задачу", "Say or type the task"],
+  ["Агента примусово зупинено", "Агент принудительно остановлен", "Agent was force stopped"],
+  ["Агент не працював", "Агент не работал", "The agent was not running"],
+  ["Зупиняю", "Останавливаю", "Stopping"],
+  ["Зупинено", "Остановлено", "Stopped"],
+  [" у «", " в «", " into «"],
+  ["Прокрутити вгору", "Прокрутить вверх", "Scroll up"],
+  ["Прокрутити вниз", "Прокрутить вниз", "Scroll down"],
+  ["Дія: назад", "Действие: назад", "Action: back"],
+  ["Починаю", "Начинаю", "Starting"],
+  ["Ви двічі відмовились. Зупиняюсь.", "Вы дважды отказались. Останавливаюсь.", "You declined twice. Stopping."],
+  ["Досягнуто ліміту кроків.", "Достигнут лимит шагов.", "Step limit reached."],
+  ["Не зрозумів відповідь", "Не понял ответ", "I did not understand the answer"],
+  [" Скажіть так або ні.", " Скажите да или нет.", " Say yes or no."],
+  ["Підтвердити дію", "Подтвердить действие", "Confirm the action"],
+  ["Відкрити нещодавні програми", "Открыть недавние приложения", "Open recent apps"],
+  ["Відкрити швидкі налаштування", "Открыть быстрые настройки", "Open quick settings"],
+  ["Відкрити сповіщення", "Открыть уведомления", "Open notifications"],
+  ["Відкрити програму ", "Открыть приложение ", "Open app "],
+  ["На головний екран", "На главный экран", "Go to the home screen"],
+  ["Довго натиснути ", "Долго нажать ", "Long press "],
+  ["Натиснути ", "Нажать ", "Tap "],
+  ["Ввести текст ", "Ввести текст ", "Type text "],
+  ["Прокрутити ", "Прокрутить ", "Scroll "],
+  ["елемент ", "элемент ", "item "],
+  ["Питання", "Вопрос", "Question"],
+  ["Відповідь", "Ответ", "Answer"],
+  ["Не вказано ключ", "Не указан ключ", "No key set"],
+  ["Не вказано модель", "Не указана модель", "No model set"],
+  ["Не вказано адресу свого сервісу", "Не указан адрес своего сервиса", "No address of your own service"],
+  ["Не вказано логін і пароль NVDACN", "Не указаны логин и пароль NVDACN", "NVDACN login and password are not set"],
+  [" не дав відповіді", " не дал ответа", " gave no answer"],
+  [": немає зв’язку (", ": нет связи (", ": no connection ("],
+  [": помилка ", ": ошибка ", ": error "],
+  [": відповідь не схожа на JSON. ", ": ответ не похож на JSON. ", ": the answer is not JSON. "],
+  ["Невідомий сервіс: ", "Неизвестный сервис: ", "Unknown service: "],
+  ["відмовлено", "отказано", "refused"],
+  ["невідома помилка", "неизвестная ошибка", "unknown error"],
+  [" (код ", " (код ", " (code "],
+];
+const L = (text) => {
+  let out = String(text === undefined || text === null ? '' : text);
+  if (LANG === 'uk') return out;
+  const col = LANG === 'ru' ? 1 : 2;
+  for (const row of PHRASES) out = out.split(row[0]).join(row[col]);
+  return out;
+};
+
 const lower = (text) => String(text === undefined || text === null ? '' : text).toLowerCase();
 const clip = (text, limit) => {
   const flat = String(text === undefined || text === null ? '' : text).replace(/\s+/g, ' ').trim();
   return flat.length > limit ? flat.slice(0, limit - 1) + '…' : flat;
 };
 const say = (text, interrupt) => {
-  try { backtalk.speak(String(text), { interrupt: interrupt !== false }); } catch (e) { /* без озвучення */ }
+  try { backtalk.speak(L(text), { interrupt: interrupt !== false }); } catch (e) { /* без озвучення */ }
 };
 const T = (text) => { try { return backtalk._(text); } catch (e) { return text; } };
 
@@ -336,7 +409,7 @@ async function readScreen(limit) {
   while (stack.length > 0 && visited < limit + 20 && entries.length < limit) {
     const { node, depth } = stack.pop();
     visited += 1;
-    if (visited % 40 === 0) await sleep(0);   // у скрипта 2 секунди на один виклик
+    if (visited % 40 === 0) await sleep(0);   // на один виклик 2 секунди на один виклик
     if (node.visible === false) continue;
     const label = clip(node.text || node.contentDescription || node.hint || node.stateDescription || '', MAX_LABEL);
     const flags = [];
@@ -557,6 +630,7 @@ async function askModel(system, user) {
 // ---------------------------------------------------------------- промпт і розбір відповіді
 const SYSTEM_PROMPT = [
   'You operate an Android phone for a blind user through its accessibility tree. Each step you receive the task, your plan, a log of earlier actions and the current screen as a numbered list of elements.',
+  'The phone language is ' + LANG_NAME + '. Write "say", "summary" and "question" in that language unless the task is clearly in another one.',
   'Answer ONLY with one JSON object, no other text, no code fences:',
   '{"plan": "<your short plan, updated each step>", "say": "<one short sentence for the user, in the user language, telling what you do now>", "actions": [ ... ]}',
   'Each action is an object with "tool" and its arguments. Tools:',
@@ -591,11 +665,22 @@ function buildUserText(task, screen, step, maxSteps, history) {
   return parts.join('\n\n');
 }
 
-function extractJson(text) {
-  let body = String(text || '').trim();
-  body = body.replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
-  const start = body.indexOf('{');
-  if (start < 0) return null;
+function tryParse(chunk) {
+  const variants = [chunk];
+  const fixed = chunk
+    .replace(/[\u201c\u201d\u201e\u00ab\u00bb]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/,\s*([}\]])/g, '$1');
+  variants.push(fixed);
+  for (const v of variants) {
+    try { return JSON.parse(v); } catch (e) { /* next */ }
+  }
+  return null;
+}
+
+function balancedAt(body, start) {
+  const open = body[start];
+  const close = open === '{' ? '}' : ']';
   let depth = 0;
   let inString = false;
   let escaped = false;
@@ -608,15 +693,30 @@ function extractJson(text) {
       continue;
     }
     if (ch === '"') inString = true;
-    else if (ch === '{') depth += 1;
-    else if (ch === '}') {
+    else if (ch === open) depth += 1;
+    else if (ch === close) {
       depth -= 1;
-      if (depth === 0) {
-        try { return JSON.parse(body.slice(start, i + 1)); } catch (e) { return null; }
-      }
+      if (depth === 0) return body.slice(start, i + 1);
     }
   }
   return null;
+}
+
+function extractJson(text) {
+  const body = String(text || '').replace(/```(?:json)?/gi, ' ').trim();
+  let fallback = null;
+  for (let i = 0; i < body.length; i += 1) {
+    if (body[i] !== '{' && body[i] !== '[') continue;
+    const chunk = balancedAt(body, i);
+    if (!chunk) continue;
+    let parsed = tryParse(chunk);
+    if (Array.isArray(parsed)) parsed = { actions: parsed };
+    if (parsed && typeof parsed === 'object') {
+      if (Array.isArray(parsed.actions)) return parsed;
+      if (!fallback && typeof parsed.tool === 'string') fallback = { actions: [parsed] };
+    }
+  }
+  return fallback;
 }
 
 // ---------------------------------------------------------------- голос
@@ -664,8 +764,8 @@ function describe(call, screen) {
     case 'tap': return 'Натиснути ' + target;
     case 'long_press': return 'Довго натиснути ' + target;
     case 'type_text': return 'Ввести текст «' + clip(call.text, 80) + '»' + (target ? ' у ' + target : '');
-    case 'scroll': return 'Прокрутити ' + (call.direction === 'up' ? 'вгору' : 'вниз');
-    case 'back': return 'Назад';
+    case 'scroll': return (call.direction === 'up' ? 'Прокрутити вгору' : 'Прокрутити вниз');
+    case 'back': return 'Дія: назад';
     case 'home': return 'На головний екран';
     case 'recents': return 'Відкрити нещодавні програми';
     case 'notifications': return 'Відкрити сповіщення';
@@ -697,7 +797,7 @@ async function confirmCall(call, screen) {
   } else {
     say(question);
   }
-  const ok = await backtalk.ui.confirm(question, { title: 'Підтвердити дію', ok: 'Так', cancel: 'Ні' });
+  const ok = await backtalk.ui.confirm(L(question), { title: L('Підтвердити дію'), ok: { uk: 'Так', ru: 'Да', en: 'Yes' }[LANG], cancel: { uk: 'Ні', ru: 'Нет', en: 'No' }[LANG] });
   await sleep(400);   // діалог закривається, екран застосунку знову активний
   return ok === true;
 }
@@ -790,8 +890,8 @@ async function runTask(task) {
     const decision = extractJson(reply);
     if (!decision || !Array.isArray(decision.actions)) {
       badAnswers += 1;
-      addLog('your last answer was not valid JSON with an "actions" list; answer only with the JSON object');
-      if (badAnswers >= 3) { outcome = 'модель відповіла не в тому форматі'; say('Модель відповіла не в тому форматі. Зупиняюсь.'); break; }
+      addLog('your last answer was not valid JSON with an "actions" list; answer only with the JSON object, nothing before or after it. Your answer was: ' + clip(reply, 300));
+      if (badAnswers >= 3) { outcome = 'модель відповіла не в тому форматі'; say('Модель відповіла не в тому форматі. Зупиняюсь. Вона написала: ' + clip(reply, 150)); break; }
       continue;
     }
     badAnswers = 0;
@@ -820,7 +920,7 @@ async function runTask(task) {
         }
         if (!asked) {
           say(String(call.question || ''));
-          answer = await backtalk.ui.prompt(String(call.question || 'Питання'), { hint: 'Відповідь' });
+          answer = await backtalk.ui.prompt(L(String(call.question || 'Питання')), { hint: L('Відповідь') });
           await sleep(400);
         }
         addLog('asked the user "' + clip(call.question, 200) + '" and the answer was: ' + (answer === null ? '(cancelled)' : answer));
@@ -878,7 +978,7 @@ async function askTask(byVoice) {
       }
     }
   }
-  const typed = await backtalk.ui.prompt('Що зробити на телефоні?', { hint: 'Продиктуйте або введіть задачу' });
+  const typed = await backtalk.ui.prompt(L('Що зробити на телефоні?'), { hint: L('Продиктуйте або введіть задачу') });
   await sleep(400);
   return typed;
 }

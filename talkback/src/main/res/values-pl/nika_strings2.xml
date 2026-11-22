@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika \u2014 czytnik ekranu dla Androida</string>
-    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Nowa sekcja „Sztuczna inteligencja”: agent Nika AI i makra.\n\u2022 Makra: własne zestawy kroków (naciśnij przycisk, pauza, powiedz, wpisz tekst, otwórz aplikację, przyciski systemowe). Przyciski nagrywasz według fokusu, gotowe makro przypisujesz do dowolnego gestu lub klawisza.\n\u2022 Osobne pozycje Gemini zastąpiono makrami.\n\u2022 Makra potrafią przytrzymać przycisk i puścić go po przesunięciu palca w górę, w dół, w lewo lub w prawo o 0-40 mm (na przykład wiadomości głosowe w Telegramie).</string>
+    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Naprawiono pusty ekran „Kolejność pozycji menu”: teraz są tam pozycje włączone w ustawieniach menu, można je przesuwać w górę i w dół, a menu stosuje tę kolejność.\n\u2022 Agent ma własną stronę bez słowa „skrypt”: ustawienia, a „Uprawnienia” i „Polecenia” się zwijają.\n\u2022 Agent mówi w języku telefonu i lepiej rozumie odpowiedzi Vivo (NVDACN).\n\u2022 „Wyślij opinię” pozwala wybrać e-mail lub Telegram.\n\u2022 Mówiący zegar jest dokładniejszy.</string>
     <string name="nika_update_available">Dost\u0119pna aktualizacja: kompilacja %1$d</string>
     <string name="nika_update_tap">Dotknij, aby pobra\u0107 i zainstalowa\u0107</string>
     <string name="nika_telegram_title">Nika na Telegramie</string>

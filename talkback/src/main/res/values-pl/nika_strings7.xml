@@ -56,4 +56,12 @@
     <string name="nika_mac_t_release">Puść (kierunek i odległość)</string>
     <string name="nika_mac_distance_hint">Odległość w milimetrach (do 40, czyli 4 cm)</string>
     <string name="nika_mac_no_held">Nic nie jest przytrzymywane</string>
+    <string name="nika_agent_enabled">Agent włączony</string>
+    <string name="nika_agent_settings">Ustawienia</string>
+    <string name="nika_agent_perm_title">Uprawnienia</string>
+    <string name="nika_agent_perm_note">Jeśli ich nie przyznasz, agent Nika może działać nieprawidłowo</string>
+    <string name="nika_agent_cmd_title">Polecenia</string>
+    <string name="nika_feedback_choose_title">Jak napisać do twórcy?</string>
+    <string name="nika_feedback_by_email">E-mailem</string>
+    <string name="nika_feedback_by_telegram">W Telegramie (@Volodymyr0412sh)</string>
 </resources>

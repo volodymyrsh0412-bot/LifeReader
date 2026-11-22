@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:fragment="com.google.android.accessibility.talkback.scripting.ScriptDetailFragment"
+        android:fragment="com.google.android.accessibility.talkback.scripting.NikaAgentFragment"
         android:key="pref_nika_ai_agent"
         android:summary="@string/nika_ai_agent_summary"
         android:title="@string/nika_ai_agent_title">

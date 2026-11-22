@@ -41,7 +41,8 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
     val ctx = context ?: return
     val group = findPreference<PreferenceGroup>("nika_mo_cat") ?: return
     group.removeAll()
-    val order = NikaMenuOrder.load(ctx, NikaMenuOrder.ORDER_KEY)
+    val list = NikaMenuOrder.listForScreen(ctx)
+    val order = list.map { it.first }
     val hidden = NikaMenuOrder.load(ctx, NikaMenuOrder.HIDDEN_KEY)
     if (order.isEmpty()) {
       val empty = Preference(ctx)
@@ -50,10 +51,11 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
       group.addPreference(empty)
       return
     }
-    for ((i, title) in order.withIndex()) {
+    for ((i, entry) in list.withIndex()) {
+      val title = entry.first
       val isHidden = hidden.contains(title)
       val p = MovePreference(ctx)
-      p.title = title
+      p.title = entry.second
       p.summary = if (isHidden) getString(R.string.nika_mo_hidden) else null
       p.isPersistent = false
       p.up = if (i > 0) ({ move(title, -1) }) else null
@@ -61,25 +63,25 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
       p.toggle = { toggleHidden(title) }
       p.hiddenNow = isHidden
       p.setOnPreferenceClickListener {
-        showMenu(p, title, i, order.size, isHidden)
+        showMenu(p, title, entry.second, i, order.size, isHidden)
         true
       }
       group.addPreference(p)
     }
   }
 
-  private fun showMenu(p: Preference, title: String, index: Int, size: Int, isHidden: Boolean) {
+  private fun showMenu(p: Preference, key: String, title: String, index: Int, size: Int, isHidden: Boolean) {
     val act = activity ?: return
     val labels = ArrayList<String>()
     val actions = ArrayList<() -> Unit>()
     if (index > 0) {
-      labels.add(getString(R.string.nika_mo_up)); actions.add { move(title, -1) }
+      labels.add(getString(R.string.nika_mo_up)); actions.add { move(key, -1) }
     }
     if (index < size - 1) {
-      labels.add(getString(R.string.nika_mo_down)); actions.add { move(title, 1) }
+      labels.add(getString(R.string.nika_mo_down)); actions.add { move(key, 1) }
     }
     labels.add(getString(if (isHidden) R.string.nika_mo_show else R.string.nika_mo_hide))
-    actions.add { toggleHidden(title) }
+    actions.add { toggleHidden(key) }
     AlertDialog.Builder(act)
       .setTitle(title)
       .setItems(labels.toTypedArray()) { _, which -> actions[which]() }
@@ -89,6 +91,7 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
 
   private fun move(title: String, delta: Int) {
     val ctx = context ?: return
+    NikaMenuOrder.listForScreen(ctx)
     val order = NikaMenuOrder.load(ctx, NikaMenuOrder.ORDER_KEY)
     val i = order.indexOf(title)
     val j = i + delta
@@ -96,6 +99,7 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
     order.removeAt(i)
     order.add(j, title)
     NikaMenuOrder.save(ctx, NikaMenuOrder.ORDER_KEY, order)
+    NikaMenuOrder.setCustom(ctx)
     rebuild()
   }
 

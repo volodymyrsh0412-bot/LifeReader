@@ -195,15 +195,28 @@ class NikaClock private constructor(private val service: TalkBackService) {
     return if (v in 1..60 && 60 % v == 0) v else 30
   }
 
+  private var clockTarget = 0L
+  private var lastSpokenTarget = 0L
+
+  private val clockTask = Runnable { fireClock() }
+
   private fun scheduleClock() {
     cancel(pending(ACTION_CLOCK))
+    handler.removeCallbacks(clockTask)
+    clockTarget = 0L
     if (!bool("nika_clock_enabled", true)) return
     val step = interval()
+    val now = System.currentTimeMillis()
     val cal = Calendar.getInstance()
+    // Start from a moment 20 s later, so a tick that comes a little early is not scheduled again.
+    cal.timeInMillis = now + 20_000L
     cal.set(Calendar.SECOND, 0)
     cal.set(Calendar.MILLISECOND, 0)
     cal.add(Calendar.MINUTE, step - (cal.get(Calendar.MINUTE) % step))
-    setAlarm(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pending(ACTION_CLOCK))
+    clockTarget = cal.timeInMillis
+    setAlarm(AlarmManager.RTC_WAKEUP, clockTarget, pending(ACTION_CLOCK))
+    // While the phone is awake this is exact; the alarm covers the sleeping phone.
+    handler.postDelayed(clockTask, (clockTarget - now).coerceAtLeast(0L))
   }
 
   private fun inQuiet(hour: Int): Boolean {
@@ -214,10 +227,25 @@ class NikaClock private constructor(private val service: TalkBackService) {
     return if (from < to) hour in from until to else hour >= from || hour < to
   }
 
-  private fun onClockAlarm() {
-    // The alarm may come a few seconds off: round to the nearest minute.
+  private fun onClockAlarm() = fireClock()
+
+  private fun fireClock() {
+    val target = clockTarget
+    if (target == 0L) return
+    val now = System.currentTimeMillis()
+    if (now < target - 20_000L) {
+      // The system woke us too early: wait for the real time.
+      scheduleClock()
+      return
+    }
+    if (target == lastSpokenTarget) {
+      scheduleClock()
+      return
+    }
+    lastSpokenTarget = target
     val cal = Calendar.getInstance()
-    cal.add(Calendar.SECOND, 20)
+    // Up to a minute late is still the scheduled minute; later than that says the real time.
+    cal.timeInMillis = if (now - target <= 60_000L) target else now
     if (!inQuiet(cal.get(Calendar.HOUR_OF_DAY))) {
       speak(timeAndBattery(cal), false)
     }

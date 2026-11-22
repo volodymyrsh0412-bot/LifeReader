@@ -2,7 +2,7 @@
 <resources>
     <string name="nika_whats_new_title">Co nowego</string>
     <string name="nika_whats_new_summary">Zmiany w tej wersji</string>
-    <string name="nika_whats_new_message">Nika to czytnik ekranu dla Androida.\n\nNowości w tej wersji:\n\u2022 Nowa sekcja „Sztuczna inteligencja”: agent Nika AI i makra.\n\u2022 Makra: własne zestawy kroków (naciśnij przycisk, pauza, powiedz, wpisz tekst, otwórz aplikację, przyciski systemowe). Przyciski nagrywasz według fokusu, gotowe makro przypisujesz do dowolnego gestu lub klawisza.\n\u2022 Osobne pozycje Gemini zastąpiono makrami.\n\u2022 Makra potrafią przytrzymać przycisk i puścić go po przesunięciu palca w górę, w dół, w lewo lub w prawo o 0-40 mm (na przykład wiadomości głosowe w Telegramie).</string>
+    <string name="nika_whats_new_message">Nika — czytnik ekranu dla Androida.\n\nNowości w tej wersji:\n\u2022 Naprawiono pusty ekran „Kolejność pozycji menu”: teraz są tam pozycje włączone w ustawieniach menu, można je przesuwać w górę i w dół, a menu stosuje tę kolejność.\n\u2022 Agent ma własną stronę bez słowa „skrypt”: ustawienia, a „Uprawnienia” i „Polecenia” się zwijają.\n\u2022 Agent mówi w języku telefonu i lepiej rozumie odpowiedzi Vivo (NVDACN).\n\u2022 „Wyślij opinię” pozwala wybrać e-mail lub Telegram.\n\u2022 Mówiący zegar jest dokładniejszy.</string>
     <string name="nika_feedback_title">Wyślij opinię</string>
     <string name="nika_feedback_summary">Napisz do twórcy na Telegramie: zgłoś problem lub zaproponuj pomysł</string>
     <string name="nika_feedback_subject">Opinia o Nice (kompilacja %1$d)</string>

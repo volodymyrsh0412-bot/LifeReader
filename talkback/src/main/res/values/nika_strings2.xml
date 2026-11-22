@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika \u2014 a screen reader for Android</string>
-    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 New section \"Artificial intelligence\": the Nika AI agent and macros.\n\u2022 Macros: your own sets of steps (press a button, pause, say, type, open an app, system buttons). Record buttons by focus, then assign the macro to any gesture or key.\n\u2022 The separate Gemini items are replaced by macros.\n\u2022 Macros can hold a button and release it after moving the finger up, down, left or right by 0-40 mm (for example, Telegram voice messages).</string>
+    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 Fixed the empty \"Menu items order\" screen: it now lists the items you switched on in the menu settings, you can move them up and down, and the menu follows that order.\n\u2022 The agent has its own page without the word \"script\": settings, and folding \"Permissions\" and \"Commands\".\n\u2022 The agent speaks the language of the phone and understands answers from Vivo (NVDACN) better.\n\u2022 \"Send feedback\" lets you choose e-mail or Telegram.\n\u2022 The talking clock is more exact.</string>
     <string name="nika_update_available">Update available: build %1$d</string>
     <string name="nika_update_tap">Tap to download and install</string>
     <string name="nika_telegram_title">Nika on Telegram</string>

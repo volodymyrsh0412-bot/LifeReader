@@ -56,4 +56,12 @@
     <string name="nika_mac_t_release">Release (direction and distance)</string>
     <string name="nika_mac_distance_hint">Distance in millimetres (up to 40, that is 4 cm)</string>
     <string name="nika_mac_no_held">Nothing is being held</string>
+    <string name="nika_agent_enabled">Agent is on</string>
+    <string name="nika_agent_settings">Settings</string>
+    <string name="nika_agent_perm_title">Permissions</string>
+    <string name="nika_agent_perm_note">If you do not grant them, Nika agent may not work correctly</string>
+    <string name="nika_agent_cmd_title">Commands</string>
+    <string name="nika_feedback_choose_title">How do you want to write?</string>
+    <string name="nika_feedback_by_email">By e-mail</string>
+    <string name="nika_feedback_by_telegram">In Telegram (@Volodymyr0412sh)</string>
 </resources>

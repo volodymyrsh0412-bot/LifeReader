@@ -93,12 +93,30 @@ object NikaSettings {
         .putExtra(Intent.EXTRA_EMAIL, arrayOf(FEEDBACK_EMAIL))
         .putExtra(Intent.EXTRA_SUBJECT, subject)
         .putExtra(Intent.EXTRA_TEXT, body)
-    try {
-      activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_TELEGRAM)))
-      return
-    } catch (e: ActivityNotFoundException) {
-      // no Telegram or browser: write by e-mail
-    }
+    val labels =
+      arrayOf(
+        activity.getString(R.string.nika_feedback_by_email),
+        activity.getString(R.string.nika_feedback_by_telegram),
+      )
+    A11yAlertDialogWrapper.materialDialogBuilder(activity)
+      .setTitle(R.string.nika_feedback_choose_title)
+      .setItems(labels) { _, which ->
+        if (which == 1) {
+          try {
+            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_TELEGRAM)))
+          } catch (e: ActivityNotFoundException) {
+            sendEmail(activity, intent)
+          }
+        } else {
+          sendEmail(activity, intent)
+        }
+      }
+      .setNegativeButton(android.R.string.cancel, null)
+      .create()
+      .show()
+  }
+
+  private fun sendEmail(activity: Activity, intent: Intent) {
     try {
       activity.startActivity(intent)
     } catch (e: ActivityNotFoundException) {

@@ -56,4 +56,12 @@
     <string name="nika_mac_t_release">Отпустить (направление и расстояние)</string>
     <string name="nika_mac_distance_hint">Расстояние в миллиметрах (до 40, то есть 4 см)</string>
     <string name="nika_mac_no_held">Ничего не удерживается</string>
+    <string name="nika_agent_enabled">Агент включён</string>
+    <string name="nika_agent_settings">Настройки</string>
+    <string name="nika_agent_perm_title">Разрешения</string>
+    <string name="nika_agent_perm_note">Если вы их не предоставите, Ника агент может работать неправильно</string>
+    <string name="nika_agent_cmd_title">Команды</string>
+    <string name="nika_feedback_choose_title">Как написать разработчику?</string>
+    <string name="nika_feedback_by_email">По электронной почте</string>
+    <string name="nika_feedback_by_telegram">В Telegram (@Volodymyr0412sh)</string>
 </resources>
