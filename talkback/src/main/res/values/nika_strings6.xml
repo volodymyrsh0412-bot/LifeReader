@@ -45,4 +45,7 @@
     <string name="nika_gem_not_found">Button not found. Open the Gemini app first.</string>
     <string name="nika_gem_dumped">Copied %1$d names of buttons</string>
     <string name="nika_gem_summary">Separate the words with commas. The action presses the first button whose name has one of the words. Use the action that copies the names of the buttons to see the real names.</string>
+    <string name="nika_cat_settings_title">Settings</string>
+    <string name="nika_focus_category">Focus</string>
+    <string name="nika_act_focus_toggle">Switch focus: text field and keyboard</string>
 </resources>

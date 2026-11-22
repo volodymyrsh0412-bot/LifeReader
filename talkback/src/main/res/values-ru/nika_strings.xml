@@ -2,7 +2,7 @@
 <resources>
     <string name="nika_whats_new_title">Что нового</string>
     <string name="nika_whats_new_summary">Изменения в этой версии</string>
-    <string name="nika_whats_new_message">Nika — скринридер на основе Backtalk и Google TalkBack.\n\nНовое в этой версии:\n\u2022 Программа теперь называется Nika.\n\u2022 Новые пункты: «Что нового» и «Написать отзыв».\n\u2022 Обновления берутся со страницы Nika на GitHub.\n\u2022 Постоянный ключ подписи: новые версии устанавливаются поверх старой.</string>
+    <string name="nika_whats_new_message">Nika — скринридер на основе Backtalk и Google TalkBack.\n\nНовое в этой версии:\n\u2022 Действие «Переключить фокус: поле ввода и клавиатура» (раздел «Фокус» в списке действий жестов).\n\u2022 Кнопки Gemini: слова подобраны по настоящим названиям в приложении Gemini.\n\u2022 В настройках кнопок громкости убрана диагностика.\n\u2022 Заголовок «Отклик» в главных настройках теперь «Настройки».</string>
     <string name="nika_feedback_title">Написать отзыв</string>
     <string name="nika_feedback_summary">Написать разработчику: сообщить о проблеме или предложить идею</string>
     <string name="nika_feedback_subject">Отзыв о Nika (сборка %1$d)</string>

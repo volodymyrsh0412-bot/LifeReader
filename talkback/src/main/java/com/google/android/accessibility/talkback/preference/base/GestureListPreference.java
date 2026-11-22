@@ -180,6 +180,7 @@ public final class GestureListPreference extends AccessibilitySuiteDialogPrefere
       addActionItemsToList(builder, createNavigationCategory(category));
     }
     addActionItemsToList(builder, createNikaClockCategory());
+    addActionItemsToList(builder, createNikaFocusCategory());
     addActionItemsToList(builder, createNikaGeminiCategory());
     addActionItemsToList(builder, createNikaTranslatorCategory());
     addActionItemsToList(builder, createSystemActions());
@@ -283,6 +284,18 @@ public final class GestureListPreference extends AccessibilitySuiteDialogPrefere
         createActionListBuilder(R.string.nika_clock_category, 0, 0);
     Resources resources = getContext().getResources();
     for (com.google.android.accessibility.talkback.clock.NikaClockActions.Action action : com.google.android.accessibility.talkback.clock.NikaClockActions.ACTIONS) {
+      builder.add(
+          new ActionItem(
+              resources.getString(action.getLabelRes()), action.getValue(), TYPE_ACTION_ITEM));
+    }
+    return builder.build();
+  }
+
+  private ImmutableList<ActionItem> createNikaFocusCategory() {
+    ImmutableList.Builder<ActionItem> builder =
+        createActionListBuilder(R.string.nika_focus_category, 0, 0);
+    Resources resources = getContext().getResources();
+    for (com.google.android.accessibility.talkback.nikafocus.NikaFocusActions.Action action : com.google.android.accessibility.talkback.nikafocus.NikaFocusActions.ACTIONS) {
       builder.add(
           new ActionItem(
               resources.getString(action.getLabelRes()), action.getValue(), TYPE_ACTION_ITEM));

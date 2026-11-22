@@ -45,4 +45,7 @@
     <string name="nika_gem_not_found">Nie znaleziono przycisku. Najpierw otwórz aplikację Gemini.</string>
     <string name="nika_gem_dumped">Skopiowano nazw przycisków: %1$d</string>
     <string name="nika_gem_summary">Oddzielaj słowa przecinkami. Akcja naciska pierwszy przycisk, którego nazwa zawiera jedno ze słów. Aby zobaczyć prawdziwe nazwy, użyj akcji „skopiuj nazwy przycisków”.</string>
+    <string name="nika_cat_settings_title">Ustawienia</string>
+    <string name="nika_focus_category">Fokus</string>
+    <string name="nika_act_focus_toggle">Przełącz fokus: pole tekstowe i klawiatura</string>
 </resources>

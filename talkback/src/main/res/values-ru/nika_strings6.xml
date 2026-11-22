@@ -45,4 +45,7 @@
     <string name="nika_gem_not_found">Кнопка не найдена. Сначала откройте приложение Gemini.</string>
     <string name="nika_gem_dumped">Скопировано названий кнопок: %1$d</string>
     <string name="nika_gem_summary">Слова разделяйте запятыми. Действие нажимает первую кнопку, в названии которой есть одно из слов. Чтобы увидеть настоящие названия, используйте действие «скопировать названия кнопок».</string>
+    <string name="nika_cat_settings_title">Настройки</string>
+    <string name="nika_focus_category">Фокус</string>
+    <string name="nika_act_focus_toggle">Переключить фокус: поле ввода и клавиатура</string>
 </resources>

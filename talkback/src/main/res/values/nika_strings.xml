@@ -2,7 +2,7 @@
 <resources>
     <string name="nika_whats_new_title">What\'s new</string>
     <string name="nika_whats_new_summary">Changes in this version</string>
-    <string name="nika_whats_new_message">Nika is a screen reader based on Backtalk and Google TalkBack.\n\nNew in this version:\n\u2022 The app is now called Nika.\n\u2022 New items: What\'s new and Send feedback.\n\u2022 Updates come from the Nika page on GitHub.\n\u2022 A permanent signing key, so new versions install over the old one.</string>
+    <string name="nika_whats_new_message">Nika is a screen reader based on Backtalk and Google TalkBack.\n\nNew in this version:\n\u2022 Action "Switch focus: text field and keyboard" (section Focus in the gesture list).\n\u2022 Gemini buttons: the words match the real names in the Gemini app.\n\u2022 The volume keys screen no longer has the diagnostics switch.\n\u2022 The main settings heading "Feedback" is now "Settings".</string>
     <string name="nika_feedback_title">Send feedback</string>
     <string name="nika_feedback_summary">Write to the developer: report a problem or suggest an idea</string>
     <string name="nika_feedback_subject">Nika feedback (build %1$d)</string>
