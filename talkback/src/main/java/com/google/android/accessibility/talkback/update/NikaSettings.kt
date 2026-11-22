@@ -93,21 +93,15 @@ object NikaSettings {
         .putExtra(Intent.EXTRA_EMAIL, arrayOf(FEEDBACK_EMAIL))
         .putExtra(Intent.EXTRA_SUBJECT, subject)
         .putExtra(Intent.EXTRA_TEXT, body)
-    val labels =
-      arrayOf(
-        activity.getString(R.string.nika_feedback_by_email),
-        activity.getString(R.string.nika_feedback_by_telegram),
-      )
     A11yAlertDialogWrapper.materialDialogBuilder(activity)
       .setTitle(R.string.nika_feedback_choose_title)
-      .setItems(labels) { _, which ->
-        if (which == 1) {
-          try {
-            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_TELEGRAM)))
-          } catch (e: ActivityNotFoundException) {
-            sendEmail(activity, intent)
-          }
-        } else {
+      .setPositiveButton(activity.getString(R.string.nika_feedback_by_email)) { _, _ ->
+        sendEmail(activity, intent)
+      }
+      .setNeutralButton(activity.getString(R.string.nika_feedback_by_telegram)) { _, _ ->
+        try {
+          activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_TELEGRAM)))
+        } catch (e: ActivityNotFoundException) {
           sendEmail(activity, intent)
         }
       }
