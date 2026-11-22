@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nika_whats_new_page_title">Nika is a screen reader built on Backtalk and Google TalkBack</string>
-    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 Action "Switch focus: text field and keyboard" (section Focus in the gesture list).\n\u2022 Gemini buttons: the words match the real names in the Gemini app.\n\u2022 The volume keys screen no longer has the diagnostics switch.\n\u2022 The main settings heading "Feedback" is now "Settings".</string>
+    <string name="nika_whats_new_page_title">Nika \u2014 a screen reader for Android</string>
+    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 New section \"Artificial intelligence\": the Nika AI agent and macros.\n\u2022 Macros: your own sets of steps (press a button, pause, say, type, open an app, system buttons). Record buttons by focus, then assign the macro to any gesture or key.\n\u2022 The separate Gemini items are replaced by macros.\n\u2022 Macros can hold a button and release it after moving the finger up, down, left or right by 0-40 mm (for example, Telegram voice messages).</string>
     <string name="nika_update_available">Update available: build %1$d</string>
     <string name="nika_update_tap">Tap to download and install</string>
     <string name="nika_telegram_title">Nika on Telegram</string>
-    <string name="nika_telegram_summary">Channel of the developer: news, questions, ideas</string>
+    <string name="nika_telegram_summary">Nika group in Telegram: chat, questions, ideas</string>
     <string name="nika_keys_title">For button phones</string>
     <string name="nika_keys_summary">Actions for volume keys, number keys, arrows and other keys</string>
     <string name="nika_keys_enabled_title">Key actions</string>

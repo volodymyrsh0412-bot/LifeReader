@@ -48,4 +48,10 @@
     <string name="nika_cat_settings_title">Налаштування</string>
     <string name="nika_focus_category">Фокус</string>
     <string name="nika_act_focus_toggle">Перемкнути фокус: поле введення і клавіатура</string>
+    <string name="nika_act_gem_learn_live">Gemini: запам’ятати кнопку у фокусі як Live</string>
+    <string name="nika_act_gem_learn_video">Gemini: запам’ятати кнопку у фокусі як відео</string>
+    <string name="nika_act_gem_learn_screen">Gemini: запам’ятати кнопку у фокусі як показати екран</string>
+    <string name="nika_act_gem_learn_text">Gemini: запам’ятати поле у фокусі як текст</string>
+    <string name="nika_gem_learned">Запам’ятав кнопку: %1$s</string>
+    <string name="nika_gem_learn_none">Немає кнопки у фокусі. Спершу наведіть фокус на кнопку в додатку Gemini.</string>
 </resources>

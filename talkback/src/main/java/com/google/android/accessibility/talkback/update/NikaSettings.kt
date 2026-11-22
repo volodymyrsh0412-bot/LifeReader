@@ -19,6 +19,7 @@ import com.google.android.accessibility.utils.material.A11yAlertDialogWrapper
 
 /** Nika: the "What's new" and "Send feedback" items in the main settings. */
 object NikaSettings {
+  private const val FEEDBACK_TELEGRAM = "https://t.me/Volodymyr0412sh"
   private const val FEEDBACK_EMAIL = "volodymyrsh0412@gmail.com"
   private const val KEY_WHATS_NEW = "pref_nika_whats_new"
   private const val KEY_FEEDBACK = "pref_nika_feedback"
@@ -36,6 +37,14 @@ object NikaSettings {
     fragment
       .findPreference<AccessibilitySuitePreferenceCategory>(
         fragment.getString(R.string.pref_category_advanced_key)
+      )
+      ?.setCollapsible(
+        fragment.getString(R.string.category_collapsed),
+        fragment.getString(R.string.category_expanded),
+      )
+    fragment
+      .findPreference<AccessibilitySuitePreferenceCategory>(
+        fragment.getString(R.string.pref_category_apps_key)
       )
       ?.setCollapsible(
         fragment.getString(R.string.category_collapsed),
@@ -84,6 +93,12 @@ object NikaSettings {
         .putExtra(Intent.EXTRA_EMAIL, arrayOf(FEEDBACK_EMAIL))
         .putExtra(Intent.EXTRA_SUBJECT, subject)
         .putExtra(Intent.EXTRA_TEXT, body)
+    try {
+      activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(FEEDBACK_TELEGRAM)))
+      return
+    } catch (e: ActivityNotFoundException) {
+      // no Telegram or browser: write by e-mail
+    }
     try {
       activity.startActivity(intent)
     } catch (e: ActivityNotFoundException) {

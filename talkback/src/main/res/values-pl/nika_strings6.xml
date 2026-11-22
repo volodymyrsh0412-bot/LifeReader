@@ -48,4 +48,10 @@
     <string name="nika_cat_settings_title">Ustawienia</string>
     <string name="nika_focus_category">Fokus</string>
     <string name="nika_act_focus_toggle">Przełącz fokus: pole tekstowe i klawiatura</string>
+    <string name="nika_act_gem_learn_live">Gemini: zapamiętaj przycisk w fokusie jako Live</string>
+    <string name="nika_act_gem_learn_video">Gemini: zapamiętaj przycisk w fokusie jako wideo</string>
+    <string name="nika_act_gem_learn_screen">Gemini: zapamiętaj przycisk w fokusie jako pokaż ekran</string>
+    <string name="nika_act_gem_learn_text">Gemini: zapamiętaj pole w fokusie jako tekst</string>
+    <string name="nika_gem_learned">Zapamiętano przycisk: %1$s</string>
+    <string name="nika_gem_learn_none">Żaden przycisk nie ma fokusu. Najpierw ustaw fokus na przycisku w aplikacji Gemini.</string>
 </resources>

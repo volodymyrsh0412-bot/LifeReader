@@ -32,16 +32,22 @@ import com.google.android.accessibility.utils.SharedPreferencesUtils
  */
 object NikaGeminiActions {
 
+  private const val GEMINI_PACKAGE = "com.google.android.googlequicksearchbox"
+
   /** [value] is saved in the gesture preference, so it must never change once released. */
   class Action(val value: String, @StringRes val labelRes: Int, val defaults: String)
 
   @JvmField
   val ACTIONS: List<Action> =
     listOf(
-      Action("nika_gem_live", R.string.nika_act_gem_live, "live,лайв,розмов,conversation,voice,голос"),
-      Action("nika_gem_video", R.string.nika_act_gem_video, "камер,відео,видео,camera,video"),
-      Action("nika_gem_screen", R.string.nika_act_gem_screen, "екран,экран,screen,share,поділитися,показати"),
-      Action("nika_gem_text", R.string.nika_act_gem_text, "запитайте,спросите,ask gemini,ask,введіть,type"),
+      Action("nika_gem_live", R.string.nika_act_gem_live, "live,лайв"),
+      Action("nika_gem_video", R.string.nika_act_gem_video, "камеру,камера,camera"),
+      Action("nika_gem_screen", R.string.nika_act_gem_screen, "показати екран,поділитися екраном,share screen,show screen"),
+      Action("nika_gem_text", R.string.nika_act_gem_text, "запитайте gemini,ask gemini,спросите gemini"),
+      Action("nika_gem_learn_live", R.string.nika_act_gem_learn_live, ""),
+      Action("nika_gem_learn_video", R.string.nika_act_gem_learn_video, ""),
+      Action("nika_gem_learn_screen", R.string.nika_act_gem_learn_screen, ""),
+      Action("nika_gem_learn_text", R.string.nika_act_gem_learn_text, ""),
       Action("nika_gem_dump", R.string.nika_act_gem_dump, ""),
     )
 
@@ -59,41 +65,96 @@ object NikaGeminiActions {
   @JvmStatic
   fun defaultsOf(value: String): String = find(value)?.defaults ?: ""
 
+  private fun learnedKey(value: String) = "${value}_learned"
+
+  private fun prefsRead(service: TalkBackService, key: String): String? =
+    android.preference.PreferenceManager.getDefaultSharedPreferences(service).getString(key, null)
+      ?: SharedPreferencesUtils.getSharedPreferences(service).getString(key, null)
+
+  /** The roots to search: the windows of the Google app (Gemini), or the active window. */
+  private fun roots(service: TalkBackService): List<AccessibilityNodeInfo> {
+    val result = ArrayList<AccessibilityNodeInfo>()
+    try {
+      for (w in service.windows) {
+        val r = w.root ?: continue
+        if (r.packageName?.toString() == GEMINI_PACKAGE) result.add(r)
+      }
+    } catch (e: RuntimeException) {
+      // use the active window below
+    }
+    if (result.isEmpty()) service.rootInActiveWindow?.let { result.add(it) }
+    return result
+  }
+
   @JvmStatic
   fun perform(service: TalkBackService, value: String): Boolean {
     val action = find(value) ?: return false
     try {
-      val root = service.rootInActiveWindow
-      if (root == null) {
+      val roots = roots(service)
+      if (roots.isEmpty()) {
         say(service, service.getString(R.string.nika_gem_not_found))
         return true
       }
       if (value == "nika_gem_dump") {
-        dump(service, root)
+        dump(service, roots)
         return true
       }
-      val saved =
-        android.preference.PreferenceManager.getDefaultSharedPreferences(service)
-          .getString(keywordsKey(value), null)
-          ?: SharedPreferencesUtils.getSharedPreferences(service).getString(keywordsKey(value), null)
+      if (value.startsWith("nika_gem_learn_")) {
+        learn(service, value.removePrefix("nika_gem_learn_"), roots)
+        return true
+      }
+      val editOnly = value == "nika_gem_text"
+      val saved = prefsRead(service, keywordsKey(value))
       val words =
         (saved?.takeIf { it.isNotBlank() } ?: action.defaults)
           .lowercase()
           .split(",")
           .map { it.trim() }
           .filter { it.isNotEmpty() }
-      val found = findNode(root, words, value == "nika_gem_text")
+      val all = ArrayList<AccessibilityNodeInfo>()
+      for (r in roots) collect(r, all)
+      var found: AccessibilityNodeInfo? = null
+      // 1. The button that was remembered by the "remember the button" action.
+      val learned = prefsRead(service, learnedKey(value))
+      if (!learned.isNullOrEmpty()) {
+        val id = learned.substringBefore("|")
+        val name = learned.substringAfter("|", "")
+        found =
+          all.firstOrNull { n ->
+            n.isVisibleToUser &&
+              ((id.isNotEmpty() && n.viewIdResourceName == id && (name.isEmpty() || labelOf(n) == name)) ||
+                (id.isEmpty() && name.isNotEmpty() && labelOf(n) == name))
+          }
+          ?: all.firstOrNull { n -> n.isVisibleToUser && id.isNotEmpty() && n.viewIdResourceName == id }
+      }
+      // 2. The words from the settings.
+      if (found == null) {
+        loop@ for (w in words) {
+          for (n in all) {
+            if (!n.isVisibleToUser) continue
+            if (editOnly && !n.isEditable && n.className?.toString()?.contains("EditText") != true) continue
+            if (labelOf(n).contains(w)) {
+              found = n
+              break@loop
+            }
+          }
+        }
+      }
       if (found == null) {
         say(service, service.getString(R.string.nika_gem_not_found))
         return true
       }
-      if (value == "nika_gem_text") {
+      if (editOnly) {
         found.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
         found.performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS)
         found.performAction(AccessibilityNodeInfo.ACTION_CLICK)
       } else {
-        clickable(found)?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-          ?: say(service, service.getString(R.string.nika_gem_not_found))
+        val target = clickable(found)
+        if (target == null) {
+          say(service, service.getString(R.string.nika_gem_not_found))
+        } else {
+          target.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+        }
       }
     } catch (e: RuntimeException) {
       say(service, service.getString(R.string.nika_gem_not_found))
@@ -101,31 +162,48 @@ object NikaGeminiActions {
     return true
   }
 
+  /** Remembers the button that has the screen reader focus, as the button for this action. */
+  private fun learn(service: TalkBackService, name: String, roots: List<AccessibilityNodeInfo>) {
+    var focused: AccessibilityNodeInfo? = null
+    for (r in roots) {
+      focused = r.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
+      if (focused != null) break
+    }
+    if (focused == null) {
+      say(service, service.getString(R.string.nika_gem_learn_none))
+      return
+    }
+    val id = focused.viewIdResourceName ?: ""
+    val label = labelOf(focused)
+    val value = "nika_gem_$name"
+    try {
+      android.preference.PreferenceManager.getDefaultSharedPreferences(service)
+        .edit()
+        .putString(learnedKey(value), "$id|$label")
+        .apply()
+      SharedPreferencesUtils.getSharedPreferences(service)
+        .edit()
+        .putString(learnedKey(value), "$id|$label")
+        .apply()
+    } catch (e: RuntimeException) {
+      // skip
+    }
+    say(service, service.getString(R.string.nika_gem_learned, label.ifEmpty { id }))
+  }
+
   private fun labelOf(node: AccessibilityNodeInfo): String =
     ((node.contentDescription ?: node.text ?: node.hintText ?: "").toString()).lowercase()
 
-  /** Walks the screen; the first node whose name has one of the words wins (earlier words first). */
-  private fun findNode(
-    root: AccessibilityNodeInfo,
-    words: List<String>,
-    editOnly: Boolean,
-  ): AccessibilityNodeInfo? {
-    val all = ArrayList<AccessibilityNodeInfo>()
+  private fun collect(root: AccessibilityNodeInfo, out: MutableList<AccessibilityNodeInfo>) {
     val stack = ArrayDeque<AccessibilityNodeInfo>()
     stack.addLast(root)
-    while (stack.isNotEmpty() && all.size < 1500) {
-      val n = stack.removeFirst()
-      all.add(n)
-      for (i in 0 until n.childCount) n.getChild(i)?.let { stack.addLast(it) }
+    var n = 0
+    while (stack.isNotEmpty() && n < 1500) {
+      val node = stack.removeFirst()
+      n++
+      out.add(node)
+      for (i in 0 until node.childCount) node.getChild(i)?.let { stack.addLast(it) }
     }
-    for (w in words) {
-      for (n in all) {
-        if (!n.isVisibleToUser) continue
-        if (editOnly && !n.isEditable && n.className?.toString()?.contains("EditText") != true) continue
-        if (labelOf(n).contains(w)) return n
-      }
-    }
-    return null
   }
 
   private fun clickable(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
@@ -140,24 +218,20 @@ object NikaGeminiActions {
   }
 
   /** Copies the names of all buttons on the screen, so the words in the settings can be chosen. */
-  private fun dump(service: TalkBackService, root: AccessibilityNodeInfo) {
+  private fun dump(service: TalkBackService, roots: List<AccessibilityNodeInfo>) {
     val lines = ArrayList<String>()
-    val stack = ArrayDeque<AccessibilityNodeInfo>()
-    stack.addLast(root)
-    var visited = 0
-    while (stack.isNotEmpty() && visited < 1500) {
-      val n = stack.removeFirst()
-      visited++
+    val all = ArrayList<AccessibilityNodeInfo>()
+    for (r in roots) collect(r, all)
+    for (n in all) {
       val label = labelOf(n)
-      if (n.isVisibleToUser && (n.isClickable || n.isEditable) && label.isNotEmpty()) {
-        lines.add(label)
+      if (n.isVisibleToUser && (n.isClickable || n.isEditable) && (label.isNotEmpty() || n.viewIdResourceName != null)) {
+        lines.add((n.viewIdResourceName ?: "") + " | " + label)
       }
-      for (i in 0 until n.childCount) n.getChild(i)?.let { stack.addLast(it) }
     }
     try {
       service
         .getSystemService(ClipboardManager::class.java)
-        ?.setPrimaryClip(ClipData.newPlainText("nika-gemini", root.packageName.toString() + "\n" + lines.joinToString("\n")))
+        ?.setPrimaryClip(ClipData.newPlainText("nika-gemini", lines.joinToString("\n")))
     } catch (e: RuntimeException) {
       // skip
     }

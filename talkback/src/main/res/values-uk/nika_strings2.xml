@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nika_whats_new_page_title">Nika \u2014 скрінрідер, створений на основі Backtalk і Google TalkBack</string>
-    <string name="nika_whats_new_page_text">Що нового:\n\u2022 Дія «Перемкнути фокус: поле введення і клавіатура» (розділ «Фокус» у списку дій жестів).\n\u2022 Кнопки Gemini: слова підібрані за справжніми назвами в додатку Gemini.\n\u2022 У налаштуваннях кнопок гучності прибрано діагностику.\n\u2022 Заголовок «Зворотний зв’язок» у головних налаштуваннях тепер «Налаштування».</string>
+    <string name="nika_whats_new_page_title">Nika \u2014 скрінрідер для Android</string>
+    <string name="nika_whats_new_page_text">Що нового:\n\u2022 Новий розділ «Штучний інтелект»: агент Nika AI і макроси.\n\u2022 Макроси: власні набори кроків (натиснути кнопку, пауза, сказати, ввести текст, відкрити програму, системні кнопки). Кнопки записуються за фокусом, готовий макрос призначається на будь-який жест чи клавішу.\n\u2022 Окремі пункти Gemini замінено макросами.\n\u2022 Макроси вміють утримувати кнопку і відпускати її, протягнувши палець вгору, вниз, вліво чи вправо на 0-40 мм (наприклад, голосові повідомлення в Telegram).</string>
     <string name="nika_update_available">Є оновлення: збірка %1$d</string>
     <string name="nika_update_tap">Натисніть, щоб завантажити й встановити</string>
     <string name="nika_telegram_title">Nika в Telegram</string>
-    <string name="nika_telegram_summary">Канал розробника: новини, питання, ідеї</string>
+    <string name="nika_telegram_summary">Група Nika в Telegram: спілкування, питання, ідеї</string>
     <string name="nika_keys_title">Для кнопкових смартфонів</string>
     <string name="nika_keys_summary">Дії для клавіш гучності, цифр, стрілок та інших клавіш</string>
     <string name="nika_keys_enabled_title">Дії клавіш</string>

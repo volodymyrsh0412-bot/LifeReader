@@ -1,0 +1,314 @@
+/*
+ * Copyright 2026 Nika contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package com.google.android.accessibility.talkback.macros
+
+import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
+import android.graphics.Path
+import android.graphics.Rect
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.accessibility.AccessibilityNodeInfo
+import androidx.annotation.StringRes
+import com.google.android.accessibility.talkback.R
+import com.google.android.accessibility.talkback.TalkBackService
+import com.google.android.accessibility.utils.output.FeedbackItem
+import com.google.android.accessibility.utils.output.SpeechController
+
+/** Nika: runs macros and records buttons into them. Used as actions of gestures and keys. */
+object NikaMacroActions {
+  private const val PREFIX = "nika_macro:"
+  const val REC_CLICK = "nika_macro_rec_click"
+  const val REC_STOP = "nika_macro_rec_stop"
+  const val REC_HOLD = "nika_macro_rec_hold"
+
+  class Fixed(val value: String, @StringRes val labelRes: Int)
+
+  @JvmField
+  val FIXED: List<Fixed> =
+    listOf(
+      Fixed(REC_CLICK, R.string.nika_act_mac_rec),
+      Fixed(REC_HOLD, R.string.nika_act_mac_rec_hold),
+      Fixed(REC_STOP, R.string.nika_act_mac_stop),
+    )
+
+  private val handler = Handler(Looper.getMainLooper())
+  private var runToken = 0
+
+  // The finger that is being held down by a "hold" step, until a "release" step lifts it.
+  private var heldStroke: GestureDescription.StrokeDescription? = null
+  private var heldX = 0f
+  private var heldY = 0f
+
+  @JvmStatic fun actionOf(id: String): String = PREFIX + id
+
+  @JvmStatic
+  fun isAction(value: String?): Boolean =
+    value != null && (value.startsWith(PREFIX) || FIXED.any { it.value == value })
+
+  @JvmStatic
+  fun label(context: Context, value: String?): String? {
+    if (value == null) return null
+    FIXED.firstOrNull { it.value == value }?.let { return context.getString(it.labelRes) }
+    if (!value.startsWith(PREFIX)) return null
+    val macro = NikaMacros.find(context, value.removePrefix(PREFIX))
+    return context.getString(R.string.nika_mac_prefix, macro?.name ?: "?")
+  }
+
+  @JvmStatic
+  fun perform(service: TalkBackService, value: String): Boolean {
+    try {
+      when {
+        value == REC_CLICK -> recordFocused(service, NikaMacros.CLICK)
+        value == REC_HOLD -> recordFocused(service, NikaMacros.HOLD)
+        value == REC_STOP -> {
+          NikaMacros.setRecording(service, "")
+          say(service, service.getString(R.string.nika_mac_rec_stopped))
+        }
+        value.startsWith(PREFIX) -> start(service, value.removePrefix(PREFIX))
+        else -> return false
+      }
+    } catch (e: RuntimeException) {
+      // a macro never breaks the screen reader
+    }
+    return true
+  }
+
+  // ---------------------------------------------------------------- recording
+
+  private fun recordFocused(service: TalkBackService, type: String) {
+    val id = NikaMacros.recordingId(service)
+    if (id.isEmpty() || NikaMacros.find(service, id) == null) {
+      say(service, service.getString(R.string.nika_mac_rec_off))
+      return
+    }
+    var focused: AccessibilityNodeInfo? = null
+    for (w in service.windows) {
+      focused = w.root?.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
+      if (focused != null) break
+    }
+    if (focused == null) {
+      say(service, service.getString(R.string.nika_mac_rec_nofocus))
+      return
+    }
+    val label = labelOf(focused)
+    NikaMacros.addStep(
+      service,
+      id,
+      NikaMacros.Step(type, focused.viewIdResourceName ?: "", label, 0),
+    )
+    say(service, service.getString(R.string.nika_mac_recorded, label.ifEmpty { focused.viewIdResourceName ?: "" }))
+  }
+
+  // ---------------------------------------------------------------- running
+
+  private fun start(service: TalkBackService, id: String) {
+    val macro = NikaMacros.find(service, id) ?: return
+    runToken += 1
+    val token = runToken
+    runStep(service, macro.steps.toList(), 0, token, 0)
+  }
+
+  private fun runStep(service: TalkBackService, steps: List<NikaMacros.Step>, index: Int, token: Int, tries: Int) {
+    if (token != runToken || index >= steps.size) return
+    val step = steps[index]
+    fun next(delay: Long = 400L) {
+      handler.postDelayed({ runStep(service, steps, index + 1, token, 0) }, delay)
+    }
+    try {
+      when (step.type) {
+        NikaMacros.WAIT -> next(step.n.coerceIn(0, 60) * 1000L)
+        NikaMacros.SAY -> {
+          say(service, step.a)
+          next(900L)
+        }
+        NikaMacros.TYPE -> {
+          typeText(service, step.a)
+          next()
+        }
+        NikaMacros.APP -> {
+          val intent = service.packageManager.getLaunchIntentForPackage(step.a)
+          if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            service.startActivity(intent)
+          }
+          next(1500L)
+        }
+        NikaMacros.GLOBAL -> {
+          service.performGlobalAction(step.n)
+          next(700L)
+        }
+        NikaMacros.HOLD -> {
+          if (holdStep(service, step)) {
+            next(600L)
+          } else if (tries < 8) {
+            handler.postDelayed({ runStep(service, steps, index, token, tries + 1) }, 500L)
+          } else {
+            say(service, service.getString(R.string.nika_mac_not_found))
+          }
+        }
+        NikaMacros.RELEASE -> {
+          releaseStep(service, step)
+          next()
+        }
+        NikaMacros.CLICK, NikaMacros.CLICK_TEXT -> {
+          if (clickStep(service, step)) {
+            next()
+          } else if (tries < 8) {
+            // the screen may still be opening: try again
+            handler.postDelayed({ runStep(service, steps, index, token, tries + 1) }, 500L)
+          } else {
+            say(service, service.getString(R.string.nika_mac_not_found))
+          }
+        }
+        else -> next(0L)
+      }
+    } catch (e: RuntimeException) {
+      say(service, service.getString(R.string.nika_mac_not_found))
+    }
+  }
+
+  private fun labelOf(node: AccessibilityNodeInfo): String =
+    ((node.contentDescription ?: node.text ?: node.hintText ?: "").toString()).lowercase()
+
+  private fun collect(service: AccessibilityService): List<AccessibilityNodeInfo> {
+    val out = ArrayList<AccessibilityNodeInfo>()
+    val stack = ArrayDeque<AccessibilityNodeInfo>()
+    for (w in service.windows) w.root?.let { stack.addLast(it) }
+    var n = 0
+    while (stack.isNotEmpty() && n < 3000) {
+      val node = stack.removeFirst()
+      n++
+      out.add(node)
+      for (i in 0 until node.childCount) node.getChild(i)?.let { stack.addLast(it) }
+    }
+    return out
+  }
+
+  private fun clickStep(service: AccessibilityService, step: NikaMacros.Step): Boolean {
+    val all = collect(service)
+    val found: AccessibilityNodeInfo? =
+      if (step.type == NikaMacros.CLICK_TEXT) {
+        val word = step.a.lowercase()
+        all.firstOrNull { it.isVisibleToUser && word.isNotEmpty() && labelOf(it).contains(word) }
+      } else {
+        val id = step.a
+        val name = step.b
+        all.firstOrNull { it.isVisibleToUser && id.isNotEmpty() && it.viewIdResourceName == id && (name.isEmpty() || labelOf(it) == name) }
+          ?: all.firstOrNull { it.isVisibleToUser && id.isEmpty() && name.isNotEmpty() && labelOf(it) == name }
+          ?: all.firstOrNull { it.isVisibleToUser && id.isNotEmpty() && it.viewIdResourceName == id }
+      }
+    if (found == null) return false
+    var n: AccessibilityNodeInfo? = found
+    var depth = 0
+    while (n != null && depth < 6) {
+      if (n.isClickable) return n.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+      n = n.parent
+      depth++
+    }
+    return false
+  }
+
+  private fun findNode(all: List<AccessibilityNodeInfo>, step: NikaMacros.Step, byText: Boolean): AccessibilityNodeInfo? =
+    if (byText) {
+      val word = step.a.lowercase()
+      all.firstOrNull { it.isVisibleToUser && word.isNotEmpty() && labelOf(it).contains(word) }
+    } else {
+      val id = step.a
+      val name = step.b
+      all.firstOrNull { it.isVisibleToUser && id.isNotEmpty() && it.viewIdResourceName == id && (name.isEmpty() || labelOf(it) == name) }
+        ?: all.firstOrNull { it.isVisibleToUser && id.isEmpty() && name.isNotEmpty() && labelOf(it) == name }
+        ?: all.firstOrNull { it.isVisibleToUser && id.isNotEmpty() && it.viewIdResourceName == id }
+    }
+
+  /** Puts a finger on the button and keeps it there. A "release" step lifts it. */
+  private fun holdStep(service: AccessibilityService, step: NikaMacros.Step): Boolean {
+    // A hold step that has a recorded button has an id or a label in b; a hold step by name has
+    // only the name in a and no b.
+    val byText = step.b.isEmpty() && step.a.isNotEmpty() && !step.a.contains(":id/")
+    val node = findNode(collect(service), step, byText) ?: return false
+    val r = Rect()
+    node.getBoundsInScreen(r)
+    val x = r.exactCenterX()
+    val y = r.exactCenterY()
+    val path = Path()
+    path.moveTo(x, y)
+    val stroke = GestureDescription.StrokeDescription(path, 0L, 400L, true)
+    heldStroke = stroke
+    heldX = x
+    heldY = y
+    return service.dispatchGesture(GestureDescription.Builder().addStroke(stroke).build(), null, null)
+  }
+
+  /** Lifts the held finger, after moving it [Step.n] millimetres in the direction [Step.a]. */
+  private fun releaseStep(service: TalkBackService, step: NikaMacros.Step) {
+    val prev = heldStroke
+    if (prev == null) {
+      say(service, service.getString(R.string.nika_mac_no_held))
+      return
+    }
+    heldStroke = null
+    val m = service.resources.displayMetrics
+    val mm = step.n.coerceIn(0, 40)
+    val xdpi = if (m.xdpi > 0f) m.xdpi else m.densityDpi.toFloat()
+    val ydpi = if (m.ydpi > 0f) m.ydpi else m.densityDpi.toFloat()
+    var dx = 0f
+    var dy = 0f
+    when (step.a) {
+      "up" -> dy = -mm * ydpi / 25.4f
+      "down" -> dy = mm * ydpi / 25.4f
+      "left" -> dx = -mm * xdpi / 25.4f
+      "right" -> dx = mm * xdpi / 25.4f
+    }
+    val endX = (heldX + dx).coerceIn(1f, (m.widthPixels - 1).toFloat())
+    val endY = (heldY + dy).coerceIn(1f, (m.heightPixels - 1).toFloat())
+    val path = Path()
+    path.moveTo(heldX, heldY)
+    if (endX != heldX || endY != heldY) path.lineTo(endX, endY)
+    val duration = (mm * 15L).coerceAtLeast(100L)
+    val stroke = prev.continueStroke(path, 0L, duration, false)
+    service.dispatchGesture(GestureDescription.Builder().addStroke(stroke).build(), null, null)
+  }
+
+  private fun typeText(service: AccessibilityService, text: String) {
+    for (w in service.windows) {
+      val field = w.root?.findFocus(AccessibilityNodeInfo.FOCUS_INPUT) ?: continue
+      val old = field.text?.toString() ?: ""
+      val args = Bundle()
+      args.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, old + text)
+      field.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
+      return
+    }
+  }
+
+  private fun say(service: TalkBackService, text: String) {
+    try {
+      service.speechController.speak(
+        text,
+        SpeechController.QUEUE_MODE_FLUSH_ALL,
+        FeedbackItem.FLAG_NO_HISTORY or FeedbackItem.FLAG_FORCE_FEEDBACK_ALL,
+        null,
+        com.google.android.accessibility.utils.Performance.EVENT_ID_UNTRACKED,
+      )
+    } catch (e: RuntimeException) {
+      // skip
+    }
+  }
+}

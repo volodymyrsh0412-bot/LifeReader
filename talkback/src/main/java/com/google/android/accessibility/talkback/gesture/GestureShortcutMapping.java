@@ -1187,6 +1187,10 @@ public class GestureShortcutMapping implements GestureShortcutProvider {
     if (clockLabel != null) {
       return clockLabel;
     }
+    @Nullable String macroLabel = com.google.android.accessibility.talkback.macros.NikaMacroActions.label(context, actionKeyString);
+    if (macroLabel != null) {
+      return macroLabel;
+    }
     @Nullable String focusLabel = com.google.android.accessibility.talkback.nikafocus.NikaFocusActions.label(context, actionKeyString);
     if (focusLabel != null) {
       return focusLabel;

@@ -48,4 +48,10 @@
     <string name="nika_cat_settings_title">Settings</string>
     <string name="nika_focus_category">Focus</string>
     <string name="nika_act_focus_toggle">Switch focus: text field and keyboard</string>
+    <string name="nika_act_gem_learn_live">Gemini: remember the focused button as Live</string>
+    <string name="nika_act_gem_learn_video">Gemini: remember the focused button as video</string>
+    <string name="nika_act_gem_learn_screen">Gemini: remember the focused button as show screen</string>
+    <string name="nika_act_gem_learn_text">Gemini: remember the focused field as text</string>
+    <string name="nika_gem_learned">Remembered the button: %1$s</string>
+    <string name="nika_gem_learn_none">No button has the focus. Move the focus to the button in the Gemini app first.</string>
 </resources>

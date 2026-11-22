@@ -615,6 +615,14 @@
       get: () => call('clipboard.get') ?? null,
       set: (text) => send('clipboard.set', { text: String(text) }),
     }),
+    voice: Object.freeze({
+      listen: async (options = {}) => {
+        const text = await promised(
+          call('voice.listen', { seconds: Number(options.seconds) || 12 }),
+        );
+        return text ? String(text) : null;
+      },
+    }),
     system: Object.freeze(system),
     ui,
   });

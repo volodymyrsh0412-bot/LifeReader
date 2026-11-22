@@ -6,22 +6,22 @@
         android:title="@string/nika_gem_cat_title">
     <EditTextPreference
         android:key="nika_gem_live_words"
-        android:defaultValue="live,лайв,розмов,conversation,voice,голос"
+        android:defaultValue="live,лайв"
         android:title="@string/nika_gem_w_live"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         android:key="nika_gem_video_words"
-        android:defaultValue="камер,відео,видео,camera,video"
+        android:defaultValue="камеру,камера,camera"
         android:title="@string/nika_gem_w_video"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         android:key="nika_gem_screen_words"
-        android:defaultValue="екран,экран,screen,share,поділитися,показати"
+        android:defaultValue="показати екран,поділитися екраном,share screen,show screen"
         android:title="@string/nika_gem_w_screen"
         app:useSimpleSummaryProvider="true" />
     <EditTextPreference
         android:key="nika_gem_text_words"
-        android:defaultValue="запитайте,спросите,ask gemini,ask,введіть,type"
+        android:defaultValue="запитайте gemini,ask gemini,спросите gemini"
         android:title="@string/nika_gem_w_text"
         app:useSimpleSummaryProvider="true" />
   </com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory>

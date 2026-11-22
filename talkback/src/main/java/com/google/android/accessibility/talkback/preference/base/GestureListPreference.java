@@ -180,8 +180,8 @@ public final class GestureListPreference extends AccessibilitySuiteDialogPrefere
       addActionItemsToList(builder, createNavigationCategory(category));
     }
     addActionItemsToList(builder, createNikaClockCategory());
+    addActionItemsToList(builder, createNikaMacroCategory());
     addActionItemsToList(builder, createNikaFocusCategory());
-    addActionItemsToList(builder, createNikaGeminiCategory());
     addActionItemsToList(builder, createNikaTranslatorCategory());
     addActionItemsToList(builder, createSystemActions());
     addActionItemsToList(builder, createReadingControl());
@@ -287,6 +287,25 @@ public final class GestureListPreference extends AccessibilitySuiteDialogPrefere
       builder.add(
           new ActionItem(
               resources.getString(action.getLabelRes()), action.getValue(), TYPE_ACTION_ITEM));
+    }
+    return builder.build();
+  }
+
+  private ImmutableList<ActionItem> createNikaMacroCategory() {
+    ImmutableList.Builder<ActionItem> builder =
+        createActionListBuilder(R.string.nika_mac_category, 0, 0);
+    Resources resources = getContext().getResources();
+    for (com.google.android.accessibility.talkback.macros.NikaMacroActions.Fixed fixed : com.google.android.accessibility.talkback.macros.NikaMacroActions.FIXED) {
+      builder.add(
+          new ActionItem(
+              resources.getString(fixed.getLabelRes()), fixed.getValue(), TYPE_ACTION_ITEM));
+    }
+    for (com.google.android.accessibility.talkback.macros.NikaMacros.Macro macro : com.google.android.accessibility.talkback.macros.NikaMacros.load(getContext())) {
+      builder.add(
+          new ActionItem(
+              resources.getString(R.string.nika_mac_prefix, macro.getName()),
+              com.google.android.accessibility.talkback.macros.NikaMacroActions.actionOf(macro.getId()),
+              TYPE_ACTION_ITEM));
     }
     return builder.build();
   }

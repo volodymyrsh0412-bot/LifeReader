@@ -159,6 +159,11 @@
         android:summary="@string/nika_app_summary"
         android:title="@string/nika_app_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.AiSettingsFragment"
+        android:key="pref_nika_ai"
+        android:summary="@string/nika_ai_summary"
+        android:title="@string/nika_ai_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:fragment="com.google.android.accessibility.talkback.preference.base.GeminiSettingsFragment"
         android:key="pref_nika_gemini"
         android:summary="@string/nika_gem_summary"
@@ -169,7 +174,7 @@
         android:title="@string/nika_telegram_title">
       <intent
           android:action="android.intent.action.VIEW"
-          android:data="https://t.me/Volodymyr0412sh" />
+          android:data="https://t.me/+Yb0tYhVnUHhkOWIy" />
     </com.google.android.accessibility.material.preference.AccessibilitySuitePreference>
     <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
         android:defaultValue="@bool/pref_auto_update_check_default"

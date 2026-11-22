@@ -313,6 +313,8 @@ public class GestureController {
                   .setDefaultToInputFocus(true)
                   .setScroll(true)
                   .setWrap(true));
+    } else if (com.google.android.accessibility.talkback.macros.NikaMacroActions.isAction(action)) {
+      result = com.google.android.accessibility.talkback.macros.NikaMacroActions.perform(service, action);
     } else if (com.google.android.accessibility.talkback.nikafocus.NikaFocusActions.isAction(action)) {
       result = com.google.android.accessibility.talkback.nikafocus.NikaFocusActions.perform(service, action);
     } else if (com.google.android.accessibility.talkback.gemini.NikaGeminiActions.isAction(action)) {

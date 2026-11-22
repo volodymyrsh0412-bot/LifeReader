@@ -72,6 +72,7 @@ class ScriptRuntime(
   private val nodes = NodeBridge(script.has(PASSWORDS))
   private val timers = HashMap<Int, Runnable>()
   private val fetches = HashSet<Future<*>>()
+  private var speechInput: ScriptVoice? = null
   private val warned = HashSet<String>()
   private var nextPromise = 1
   // When the script's current call runs out of time. QuickJS only stops JavaScript, so host calls
@@ -132,6 +133,7 @@ class ScriptRuntime(
     timers.clear()
     fetches.forEach { it.cancel(true) }
     fetches.clear()
+    speechInput?.cancel()
     js?.close()
     js = null
   }
@@ -321,6 +323,11 @@ class ScriptRuntime(
       val packageName =
         args.optString("package").ifEmpty { apiError("openApp needs a package name") }
       promise { settle -> manager.feedback.openApp(packageName) { settle(true, it) } }
+    }
+    on("voice.listen", SYSTEM) { args ->
+      val seconds = args.optInt("seconds", 12).coerceIn(3, 30)
+      val input = speechInput ?: ScriptVoice(manager.service).also { speechInput = it }
+      promise { settle -> input.listen(seconds) { ok, value -> settle(ok, value) } }
     }
     on("ui.choose", DIALOGS) { args ->
       val options = args.optJSONArray("options").options()

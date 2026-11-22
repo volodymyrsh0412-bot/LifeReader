@@ -58,6 +58,7 @@ class LazyScriptHost(
     }
 
   init {
+    NikaBuiltInAgent.ensureInstalled(service, store)
     store.addListener(this)
     val screenChanges =
       IntentFilter().apply {
