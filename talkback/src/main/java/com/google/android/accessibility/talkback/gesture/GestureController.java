@@ -313,6 +313,8 @@ public class GestureController {
                   .setDefaultToInputFocus(true)
                   .setScroll(true)
                   .setWrap(true));
+    } else if (com.google.android.accessibility.talkback.gemini.NikaGeminiActions.isAction(action)) {
+      result = com.google.android.accessibility.talkback.gemini.NikaGeminiActions.perform(service, action);
     } else if (com.google.android.accessibility.talkback.translate.NikaTranslatorActions.isAction(action)) {
       result = com.google.android.accessibility.talkback.translate.NikaTranslatorActions.perform(service, action);
     } else if (com.google.android.accessibility.talkback.clock.NikaClockActions.isAction(action)) {
@@ -835,6 +837,7 @@ public class GestureController {
         gestureId,
         GestureShortcutMapping.getGestureString(service, gestureId),
         action);
+    action = com.google.android.accessibility.talkback.gesture.NikaAppGestures.override(service, gestureId, action);
     String fallbackAction = action;
     if (!turnsScriptsOff(action)
         && Scripts.onGesture(gestureId, () -> performAction(fallbackAction, eventId))) {

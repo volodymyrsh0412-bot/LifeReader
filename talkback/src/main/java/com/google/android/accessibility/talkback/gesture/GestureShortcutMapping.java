@@ -1187,6 +1187,10 @@ public class GestureShortcutMapping implements GestureShortcutProvider {
     if (clockLabel != null) {
       return clockLabel;
     }
+    @Nullable String geminiLabel = com.google.android.accessibility.talkback.gemini.NikaGeminiActions.label(context, actionKeyString);
+    if (geminiLabel != null) {
+      return geminiLabel;
+    }
     @Nullable String translatorLabel = com.google.android.accessibility.talkback.translate.NikaTranslatorActions.label(context, actionKeyString);
     if (translatorLabel != null) {
       return translatorLabel;

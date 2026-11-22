@@ -363,5 +363,6 @@ public class ContextMenu implements Menu {
   public void sortItemsByOrder() {
     Collections.sort(
         items, (item1, item2) -> Integer.valueOf(item1.getOrder()).compareTo(item2.getOrder()));
+    NikaMenuOrder.apply(getContext(), items);
   }
 }
