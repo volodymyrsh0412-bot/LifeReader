@@ -31,6 +31,11 @@
       android:key="pref_nika_motion"
       android:summary="@string/nika_motion_summary"
       android:title="@string/nika_motion_title" />
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+      android:fragment="com.google.android.accessibility.talkback.preference.base.GestureProfilesFragment"
+      android:key="pref_nika_profiles"
+      android:summary="@string/nika_prof_summary"
+      android:title="@string/nika_prof_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:fragment="com.google.android.accessibility.talkback.preference.base.PerAppGesturesFragment"
         android:key="pref_nika_perapp"

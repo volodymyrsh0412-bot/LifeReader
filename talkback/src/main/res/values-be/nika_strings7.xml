@@ -78,4 +78,67 @@
         <item>Сярэдняя</item>
         <item>Высокая</item>
     </string-array>
+    <string name="nika_mac_too_long">Макрос остановлен: слишком много шагов</string>
+    <string name="nika_mac_wait_timeout">Макрос остановлен: не дождался</string>
+    <string name="nika_mac_t_if">Если…</string>
+    <string name="nika_mac_t_elseif">Иначе, если…</string>
+    <string name="nika_mac_t_else">Иначе</string>
+    <string name="nika_mac_t_endif">Конец «Если»</string>
+    <string name="nika_mac_t_repeat">Повторять (количество раз)</string>
+    <string name="nika_mac_t_repeatwhile">Повторять, пока…</string>
+    <string name="nika_mac_t_endrepeat">Конец повтора</string>
+    <string name="nika_mac_t_break">Выйти из цикла</string>
+    <string name="nika_mac_t_stop">Остановить макрос</string>
+    <string name="nika_mac_t_waituntil">Ждать, пока…</string>
+    <string name="nika_mac_d_if">Если: %1$s</string>
+    <string name="nika_mac_d_elseif">Иначе, если: %1$s</string>
+    <string name="nika_mac_d_repeat">Повторять, раз: %1$d</string>
+    <string name="nika_mac_d_repeatwhile">Повторять, пока: %1$s</string>
+    <string name="nika_mac_d_waituntil">Ждать, пока: %1$s (до %2$d с)</string>
+    <string name="nika_mac_c_title">Условие</string>
+    <string name="nika_mac_c_see">Вижу кнопку или текст</string>
+    <string name="nika_mac_c_notsee">Не вижу кнопку или текст</string>
+    <string name="nika_mac_c_app">Открыто приложение</string>
+    <string name="nika_mac_c_notapp">Открыто другое приложение</string>
+    <string name="nika_mac_c_see_d">вижу «%1$s»</string>
+    <string name="nika_mac_c_notsee_d">не вижу «%1$s»</string>
+    <string name="nika_mac_c_app_d">открыто приложение %1$s</string>
+    <string name="nika_mac_c_notapp_d">открыто не приложение %1$s</string>
+    <string name="nika_mac_wait_seconds">Сколько секунд ждать</string>
+    <string name="nika_mac_run_now">Запустить сейчас</string>
+    <string name="nika_mac_run_now_summary">Макрос запустится через 3 секунды: перейдите на нужный экран</string>
+    <string name="nika_mac_export">Экспортировать в файл</string>
+    <string name="nika_mac_export_all">Экспортировать все в файл</string>
+    <string name="nika_mac_import">Импортировать из файла</string>
+    <string name="nika_mac_exported">Сохранено в файл</string>
+    <string name="nika_mac_imported">Добавлено макросов: %1$d</string>
+    <string name="nika_mac_file_error">Не удалось прочитать или записать файл</string>
+    <string name="nika_notif_template">Шаблон речи</string>
+    <string name="nika_notif_template_help">Свободный текст из меток: {app} приложение, {category} тип, {title} заголовок, {text} текст, {time} время. Например: {app}: {title}. {text}</string>
+    <string name="nika_notif_template_reset">Сбросить</string>
+    <string name="nika_notif_template_none">Обычная речь (по выбранным пунктам выше)</string>
+    <string name="nika_notif_muted">Не читать уведомления приложений</string>
+    <string name="nika_notif_muted_count">Отключено приложений: %1$d</string>
+    <string name="nika_notif_history">История уведомлений</string>
+    <string name="nika_notif_history_empty">История пуста</string>
+    <string name="nika_notif_history_clear">Очистить историю</string>
+    <string name="nika_notif_noemoji">Пропускать эмодзи</string>
+    <string name="nika_notif_maxwords">Ограничить длину</string>
+    <string name="nika_notif_history_on">Вести историю уведомлений</string>
+    <string-array name="nika_notif_maxwords_entries">
+        <item>Без ограничения</item>
+        <item>10 слов</item>
+        <item>20 слов</item>
+        <item>40 слов</item>
+    </string-array>
+    <string name="nika_prof_title">Профили жестов</string>
+    <string name="nika_prof_save">Сохранить текущие жесты как профиль</string>
+    <string name="nika_prof_save_summary">Запоминает действия всех жестов, жестов для приложений, боковых и встряхивания</string>
+    <string name="nika_prof_empty">Профилей пока нет</string>
+    <string name="nika_prof_apply">Применить</string>
+    <string name="nika_prof_update">Обновить из текущих жестов</string>
+    <string name="nika_prof_applied">Профиль %1$s применён</string>
+    <string name="nika_prof_updated">Профиль обновлён</string>
+    <string name="nika_prof_name_hint">Название профиля</string>
+    <string name="nika_prof_summary">Сохраните жесты под названием и переключайтесь между наборами</string>
 </resources>

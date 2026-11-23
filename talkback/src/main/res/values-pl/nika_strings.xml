@@ -2,7 +2,7 @@
 <resources>
     <string name="nika_whats_new_title">Co nowego</string>
     <string name="nika_whats_new_summary">Zmiany w tej wersji</string>
-    <string name="nika_whats_new_message">Nika — czytnik ekranu dla Androida.\n\nNowości w tej wersji:\n\u2022 Naprawiono puste ekrany „Kolejność pozycji menu” i „Makra”.\n\u2022 Nowy motyw dźwięków „Nika iPhone” jest teraz domyślny.\n\u2022 Nowe gesty: jedno potrząśnięcie, dwa potrząśnięcia i trzy stuknięcia w tył telefonu (Gesty, „Potrząśnięcie i stuknięcie w tył”).\n\u2022 Zegar, Tłumacz i Sztuczna inteligencja przeniesiono do grupy „Aplikacje”; „Gesty dla aplikacji” przeniesiono do gestów.\n\u2022 Ustawienia Gemini przeniesiono do „Sztucznej inteligencji”.\n\u2022 Gesty dla wybranych aplikacji: lista odświeża się po wyborze innej aplikacji.</string>
+    <string name="nika_whats_new_message">Nika — czytnik ekranu dla Androida.\n\nNowości w tej wersji:\n\u2022 Makra: warunki („Jeśli / W przeciwnym razie”), pętle („Powtarzaj”, „Powtarzaj, dopóki”), „Czekaj, aż”, „Uruchom teraz”, eksport i import makr.\n\u2022 Powiadomienia: szablon mowy, pomijanie emoji, ograniczenie długości, aplikacje bez czytania, historia powiadomień.\n\u2022 Profile gestów: zapisz ustawienia gestów pod nazwą i przełączaj się między zestawami.</string>
     <string name="nika_feedback_title">Wyślij opinię</string>
     <string name="nika_feedback_summary">Napisz do twórcy na Telegramie: zgłoś problem lub zaproponuj pomysł</string>
     <string name="nika_feedback_subject">Opinia o Nice (kompilacja %1$d)</string>

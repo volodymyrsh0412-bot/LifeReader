@@ -40,6 +40,26 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
   override fun getTitle(): CharSequence =
     context?.let { NikaMacros.find(it, macroId)?.name } ?: getText(R.string.nika_mac_title)
 
+  private var exportName = ""
+
+  private val exportFile =
+    registerForActivityResult(
+      androidx.activity.result.contract.ActivityResultContracts.CreateDocument("application/json")
+    ) { uri ->
+      val ctx = context
+      if (uri != null && ctx != null) {
+        try {
+          val m = NikaMacros.find(ctx, macroId)
+          if (m != null) {
+            ctx.contentResolver.openOutputStream(uri)?.use { it.write(NikaMacros.toJson(listOf(m)).toByteArray()) }
+            android.widget.Toast.makeText(ctx, R.string.nika_mac_exported, android.widget.Toast.LENGTH_SHORT).show()
+          }
+        } catch (e: Exception) {
+          android.widget.Toast.makeText(ctx, R.string.nika_mac_file_error, android.widget.Toast.LENGTH_SHORT).show()
+        }
+      }
+    }
+
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     super.onCreatePreferences(savedInstanceState, rootKey)
     rebuild()
@@ -68,6 +88,14 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
       NikaMacros.setRecording(ctx, if (recording) "" else macro.id)
       rebuild()
     }
+    row(group, getString(R.string.nika_mac_run_now), getString(R.string.nika_mac_run_now_summary)) {
+      val id = macro.id
+      android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
+        { com.google.android.accessibility.talkback.macros.NikaMacroActions.runNow(id) },
+        3000L,
+      )
+      android.widget.Toast.makeText(ctx, R.string.nika_mac_run_now_summary, android.widget.Toast.LENGTH_SHORT).show()
+    }
     row(group, getString(R.string.nika_mac_add_step), null) { chooseStepType() }
 
     for ((i, step) in macro.steps.withIndex()) {
@@ -82,6 +110,10 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
         true
       }
       group.addPreference(p)
+    }
+    row(group, getString(R.string.nika_mac_export), null) {
+      exportName = macro.name
+      exportFile.launch(macro.name + ".json")
     }
     row(group, getString(R.string.nika_mac_delete_macro), null) {
       val act = activity
@@ -150,8 +182,52 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
         } else {
           getString(R.string.nika_mac_d_release_move, dirName(s.a), s.n)
         }
+      NikaMacros.IF -> getString(R.string.nika_mac_d_if, condText(s))
+      NikaMacros.ELSE_IF -> getString(R.string.nika_mac_d_elseif, condText(s))
+      NikaMacros.ELSE -> getString(R.string.nika_mac_t_else)
+      NikaMacros.END_IF -> getString(R.string.nika_mac_t_endif)
+      NikaMacros.REPEAT -> getString(R.string.nika_mac_d_repeat, s.n)
+      NikaMacros.REPEAT_WHILE -> getString(R.string.nika_mac_d_repeatwhile, condText(s))
+      NikaMacros.END_REPEAT -> getString(R.string.nika_mac_t_endrepeat)
+      NikaMacros.BREAK -> getString(R.string.nika_mac_t_break)
+      NikaMacros.STOP -> getString(R.string.nika_mac_t_stop)
+      NikaMacros.WAIT_UNTIL -> getString(R.string.nika_mac_d_waituntil, condText(s), s.n)
       else -> s.type
     }
+
+  private fun condText(s: NikaMacros.Step): String =
+    when (s.a) {
+      NikaMacros.COND_SEE -> getString(R.string.nika_mac_c_see_d, s.b)
+      NikaMacros.COND_NOT_SEE -> getString(R.string.nika_mac_c_notsee_d, s.b)
+      NikaMacros.COND_APP -> getString(R.string.nika_mac_c_app_d, appLabel(s.b))
+      NikaMacros.COND_NOT_APP -> getString(R.string.nika_mac_c_notapp_d, appLabel(s.b))
+      else -> s.a
+    }
+
+  /** Asks for a condition and gives its kind and value. */
+  private fun chooseCondition(done: (String, String) -> Unit) {
+    val act = activity ?: return
+    val kinds = arrayOf(NikaMacros.COND_SEE, NikaMacros.COND_NOT_SEE, NikaMacros.COND_APP, NikaMacros.COND_NOT_APP)
+    val labels =
+      arrayOf(
+        getString(R.string.nika_mac_c_see),
+        getString(R.string.nika_mac_c_notsee),
+        getString(R.string.nika_mac_c_app),
+        getString(R.string.nika_mac_c_notapp),
+      )
+    AlertDialog.Builder(act)
+      .setTitle(R.string.nika_mac_c_title)
+      .setItems(labels) { _, which ->
+        val kind = kinds[which]
+        if (kind == NikaMacros.COND_SEE || kind == NikaMacros.COND_NOT_SEE) {
+          askText(labels[which], "", false) { v -> done(kind, v) }
+        } else {
+          chooseApp { pkg -> done(kind, pkg) }
+        }
+      }
+      .setNegativeButton(android.R.string.cancel, null)
+      .show()
+  }
 
   private fun dirName(dir: String): String =
     when (dir) {
@@ -226,6 +302,16 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
         getString(R.string.nika_mac_t_global),
         getString(R.string.nika_mac_t_hold),
         getString(R.string.nika_mac_t_release),
+        getString(R.string.nika_mac_t_if),
+        getString(R.string.nika_mac_t_elseif),
+        getString(R.string.nika_mac_t_else),
+        getString(R.string.nika_mac_t_endif),
+        getString(R.string.nika_mac_t_repeat),
+        getString(R.string.nika_mac_t_repeatwhile),
+        getString(R.string.nika_mac_t_endrepeat),
+        getString(R.string.nika_mac_t_break),
+        getString(R.string.nika_mac_t_stop),
+        getString(R.string.nika_mac_t_waituntil),
       )
     AlertDialog.Builder(act)
       .setTitle(R.string.nika_mac_add_step)
@@ -234,11 +320,26 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
           0 -> askText(labels[0], "2", true) { v -> add(NikaMacros.Step(NikaMacros.WAIT, n = v.toIntOrNull() ?: 1)) }
           1 -> askText(labels[1], "", false) { v -> add(NikaMacros.Step(NikaMacros.SAY, a = v)) }
           2 -> askText(labels[2], "", false) { v -> add(NikaMacros.Step(NikaMacros.TYPE, a = v)) }
-          3 -> chooseApp()
+          3 -> chooseApp { pkg -> add(NikaMacros.Step(NikaMacros.APP, a = pkg)) }
           4 -> askText(labels[4], "", false) { v -> add(NikaMacros.Step(NikaMacros.CLICK_TEXT, a = v)) }
           5 -> chooseGlobal()
           6 -> askText(labels[6], "", false) { v -> add(NikaMacros.Step(NikaMacros.HOLD, a = v)) }
           7 -> chooseRelease()
+          8 -> chooseCondition { k, v -> add(NikaMacros.Step(NikaMacros.IF, a = k, b = v)) }
+          9 -> chooseCondition { k, v -> add(NikaMacros.Step(NikaMacros.ELSE_IF, a = k, b = v)) }
+          10 -> add(NikaMacros.Step(NikaMacros.ELSE))
+          11 -> add(NikaMacros.Step(NikaMacros.END_IF))
+          12 -> askText(labels[12], "3", true) { v -> add(NikaMacros.Step(NikaMacros.REPEAT, n = (v.toIntOrNull() ?: 1).coerceIn(1, 1000))) }
+          13 -> chooseCondition { k, v -> add(NikaMacros.Step(NikaMacros.REPEAT_WHILE, a = k, b = v)) }
+          14 -> add(NikaMacros.Step(NikaMacros.END_REPEAT))
+          15 -> add(NikaMacros.Step(NikaMacros.BREAK))
+          16 -> add(NikaMacros.Step(NikaMacros.STOP))
+          17 ->
+            chooseCondition { k, v ->
+              askText(getString(R.string.nika_mac_wait_seconds), "10", true) { sec ->
+                add(NikaMacros.Step(NikaMacros.WAIT_UNTIL, a = k, b = v, n = (sec.toIntOrNull() ?: 10).coerceIn(1, 120)))
+              }
+            }
         }
       }
       .setNegativeButton(android.R.string.cancel, null)
@@ -256,7 +357,7 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
       .show()
   }
 
-  private fun chooseApp() {
+  private fun chooseApp(onPick: (String) -> Unit) {
     val act = activity ?: return
     val pm = act.packageManager
     val found = ArrayList<Pair<String, String>>()
@@ -274,7 +375,7 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
     AlertDialog.Builder(act)
       .setTitle(R.string.nika_mac_t_app)
       .setItems(found.map { it.first }.toTypedArray()) { _, which ->
-        add(NikaMacros.Step(NikaMacros.APP, a = found[which].second))
+        onPick(found[which].second)
       }
       .setNegativeButton(android.R.string.cancel, null)
       .show()

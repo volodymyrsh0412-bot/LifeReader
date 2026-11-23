@@ -34,6 +34,28 @@ object NikaNotificationFormat {
   const val PREF_TYPE = "nika_notif_type"
   const val PREF_HEAD = "nika_notif_head"
   const val PREF_TEXT = "nika_notif_text"
+  const val PREF_TEMPLATE = "nika_notif_template"
+  const val PREF_NO_EMOJI = "nika_notif_noemoji"
+  const val PREF_MAX_WORDS = "nika_notif_maxwords"
+  const val PREF_MUTED = "nika_notif_muted"
+  const val PREF_HISTORY_ON = "nika_notif_history_on"
+
+  private val EMOJI = Regex("[\\p{So}\\p{Sk}\\uFE0F\\u200D]+")
+
+  /** Packages whose notifications are not read. */
+  @JvmStatic
+  fun mutedApps(context: Context): MutableSet<String> {
+    val raw = SharedPreferencesUtils.getSharedPreferences(context).getString(PREF_MUTED, "") ?: ""
+    return raw.split("\n").filter { it.isNotEmpty() }.toMutableSet()
+  }
+
+  @JvmStatic
+  fun saveMutedApps(context: Context, apps: Set<String>) {
+    SharedPreferencesUtils.getSharedPreferences(context)
+      .edit()
+      .putString(PREF_MUTED, apps.joinToString("\n"))
+      .apply()
+  }
 
   @JvmStatic
   fun compose(
@@ -47,42 +69,82 @@ object NikaNotificationFormat {
       return defaultText
     }
     val prefs = SharedPreferencesUtils.getSharedPreferences(context)
+    val extras = notification.extras
+    val title = extras?.getCharSequence("android.title")
+    val body = extras?.getCharSequence("android.text")
+    val millis = if (notification.`when` > 0) notification.`when` else System.currentTimeMillis()
+    if (prefs.getBoolean(PREF_HISTORY_ON, true)) {
+      NikaNotificationHistory.add(
+        context,
+        packageName?.toString() ?: "",
+        appLabel(context, packageName)?.toString() ?: "",
+        listOf(title, body).filter { !TextUtils.isEmpty(it) }.joinToString(". "),
+        millis,
+      )
+    }
+    if (packageName != null && mutedApps(context).contains(packageName.toString())) {
+      return ""
+    }
     val app = prefs.getBoolean(PREF_APP, false)
     val time = prefs.getBoolean(PREF_TIME, false)
     val typeOn = prefs.getBoolean(PREF_TYPE, true)
     val head = prefs.getBoolean(PREF_HEAD, true)
     val text = prefs.getBoolean(PREF_TEXT, true)
-    if (!app && !time && typeOn && head && text) {
+    val template = prefs.getString(PREF_TEMPLATE, "") ?: ""
+    val noEmoji = prefs.getBoolean(PREF_NO_EMOJI, false)
+    val maxWords = (prefs.getString(PREF_MAX_WORDS, "0") ?: "0").toIntOrNull() ?: 0
+    if (!app && !time && typeOn && head && text && template.isEmpty() && !noEmoji && maxWords <= 0) {
       return defaultText
     }
-    val parts = ArrayList<CharSequence>()
-    if (app) {
-      appLabel(context, packageName)?.let { parts.add(it) }
-    }
-    if (time) {
-      val millis = if (notification.`when` > 0) notification.`when` else System.currentTimeMillis()
-      parts.add(DateFormat.getTimeFormat(context).format(Date(millis)))
-    }
-    if (typeOn && !TextUtils.isEmpty(type)) {
-      parts.add(type)
-    }
-    val extras = notification.extras
-    val title = extras?.getCharSequence("android.title")
-    val body = extras?.getCharSequence("android.text")
-    if (head && !TextUtils.isEmpty(title)) {
-      parts.add(title!!)
-    }
-    if (text) {
+    val bodyText: CharSequence? =
       if (!TextUtils.isEmpty(body)) {
-        parts.add(body!!)
+        body
       } else if (
         !TextUtils.isEmpty(notification.tickerText) &&
           notification.tickerText.toString().trim() != title?.toString()?.trim()
       ) {
-        parts.add(notification.tickerText)
+        notification.tickerText
+      } else {
+        null
       }
+    val timeText = DateFormat.getTimeFormat(context).format(Date(millis))
+    var result: CharSequence
+    if (template.isNotEmpty()) {
+      result =
+        template
+          .replace("{app}", appLabel(context, packageName)?.toString() ?: "")
+          .replace("{time}", timeText)
+          .replace("{category}", type.toString())
+          .replace("{title}", title?.toString() ?: "")
+          .replace("{text}", bodyText?.toString() ?: "")
+          .replace(Regex("\\s+"), " ")
+          .trim()
+    } else {
+      val parts = ArrayList<CharSequence>()
+      if (app) {
+        appLabel(context, packageName)?.let { parts.add(it) }
+      }
+      if (time) {
+        parts.add(timeText)
+      }
+      if (typeOn && !TextUtils.isEmpty(type)) {
+        parts.add(type)
+      }
+      if (head && !TextUtils.isEmpty(title)) {
+        parts.add(title!!)
+      }
+      if (text && bodyText != null) {
+        parts.add(bodyText)
+      }
+      result = TextUtils.join(". ", parts)
     }
-    return TextUtils.join(". ", parts)
+    var out = result.toString()
+    if (noEmoji) out = EMOJI.replace(out, " ").replace(Regex("\\s+"), " ").trim()
+    if (maxWords > 0) {
+      val words = out.split(" ").filter { it.isNotEmpty() }
+      if (words.size > maxWords) out = words.take(maxWords).joinToString(" ")
+    }
+    return out
   }
 
   private fun appLabel(context: Context, packageName: CharSequence?): CharSequence? {

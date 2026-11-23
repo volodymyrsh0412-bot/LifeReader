@@ -123,17 +123,164 @@ object NikaMacroActions {
     val macro = NikaMacros.find(service, id) ?: return
     runToken += 1
     val token = runToken
-    runStep(service, macro.steps.toList(), 0, token, 0)
+    runStep(service, Run(macro.steps.toList()), 0, token, 0)
   }
 
-  private fun runStep(service: TalkBackService, steps: List<NikaMacros.Step>, index: Int, token: Int, tries: Int) {
-    if (token != runToken || index >= steps.size) return
-    val step = steps[index]
-    fun next(delay: Long = 400L) {
-      handler.postDelayed({ runStep(service, steps, index + 1, token, 0) }, delay)
+  /** Runs a macro that the person started from its settings screen. */
+  @JvmStatic
+  fun runNow(id: String) {
+    val service = TalkBackService.getInstance() ?: return
+    start(service, id)
+  }
+
+  /** The state of one run: the loops that are open and how many steps were done. */
+  private class Run(val steps: List<NikaMacros.Step>) {
+    class Loop(val start: Int, val end: Int, var left: Int, val isWhile: Boolean)
+
+    val loops = ArrayList<Loop>()
+    var done = 0
+  }
+
+  private const val MAX_STEPS = 3000
+  /** Index of the step that closes the block opened at [from], or -1. */
+  private fun blockEnd(steps: List<NikaMacros.Step>, from: Int): Int {
+    var depth = 0
+    for (i in from until steps.size) {
+      when (steps[i].type) {
+        NikaMacros.IF, NikaMacros.REPEAT, NikaMacros.REPEAT_WHILE -> depth++
+        NikaMacros.END_IF, NikaMacros.END_REPEAT -> {
+          depth--
+          if (depth == 0) return i
+        }
+      }
     }
+    return -1
+  }
+
+  /** The next ELSE_IF, ELSE or END_IF at the same level after the IF at [from]. */
+  private fun nextBranch(steps: List<NikaMacros.Step>, from: Int): Int {
+    var depth = 0
+    for (i in from + 1 until steps.size) {
+      when (steps[i].type) {
+        NikaMacros.IF, NikaMacros.REPEAT, NikaMacros.REPEAT_WHILE -> depth++
+        NikaMacros.END_REPEAT -> depth--
+        NikaMacros.END_IF -> {
+          if (depth == 0) return i
+          depth--
+        }
+        NikaMacros.ELSE_IF, NikaMacros.ELSE -> if (depth == 0) return i
+      }
+    }
+    return -1
+  }
+
+  private fun condition(service: AccessibilityService, kind: String, value: String): Boolean {
+    val word = value.lowercase()
+    return when (kind) {
+      NikaMacros.COND_SEE, NikaMacros.COND_NOT_SEE -> {
+        val seen = word.isNotEmpty() && collect(service).any { it.isVisibleToUser && labelOf(it).contains(word) }
+        if (kind == NikaMacros.COND_SEE) seen else !seen
+      }
+      NikaMacros.COND_APP, NikaMacros.COND_NOT_APP -> {
+        val pkg = service.rootInActiveWindow?.packageName?.toString() ?: ""
+        if (kind == NikaMacros.COND_APP) pkg == value else pkg != value
+      }
+      else -> false
+    }
+  }
+
+  private fun runStep(
+    service: TalkBackService,
+    run: Run,
+    index: Int,
+    token: Int,
+    tries: Int,
+    jumped: Boolean = false,
+  ) {
+    val steps = run.steps
+    if (token != runToken || index < 0 || index >= steps.size) return
+    if (++run.done > MAX_STEPS) {
+      say(service, service.getString(R.string.nika_mac_too_long))
+      return
+    }
+    val step = steps[index]
+    fun goto(target: Int, delay: Long = 0L, jump: Boolean = false) {
+      handler.postDelayed({ runStep(service, run, target, token, 0, jump) }, delay)
+    }
+    fun next(delay: Long = 400L) = goto(index + 1, delay)
     try {
       when (step.type) {
+        NikaMacros.IF, NikaMacros.ELSE_IF -> {
+          if (step.type == NikaMacros.ELSE_IF && !jumped) {
+            // reached by running through the branch before it: skip the rest of the chain
+            goto(chainEnd(steps, index))
+          } else if (condition(service, step.a, step.b)) {
+            next(0L)
+          } else {
+            val to = nextBranch(steps, index)
+            if (to < 0) return
+            if (steps[to].type == NikaMacros.ELSE_IF) goto(to, 0L, true) else goto(to + 1)
+          }
+        }
+        NikaMacros.ELSE -> goto(chainEnd(steps, index))
+        NikaMacros.END_IF -> next(0L)
+        NikaMacros.REPEAT, NikaMacros.REPEAT_WHILE -> {
+          val end = blockEnd(steps, index)
+          if (end < 0) return
+          val isWhile = step.type == NikaMacros.REPEAT_WHILE
+          val loop = run.loops.lastOrNull()?.takeIf { it.start == index }
+          if (loop == null) {
+            val count = if (isWhile) 0 else step.n.coerceIn(0, 1000)
+            if ((isWhile && !condition(service, step.a, step.b)) || (!isWhile && count <= 0)) {
+              goto(end + 1)
+            } else {
+              run.loops.add(Run.Loop(index, end, count - 1, isWhile))
+              next(0L)
+            }
+          } else {
+            // back at the top of a while loop
+            if (condition(service, step.a, step.b)) {
+              next(0L)
+            } else {
+              run.loops.removeAt(run.loops.size - 1)
+              goto(end + 1)
+            }
+          }
+        }
+        NikaMacros.END_REPEAT -> {
+          val loop = run.loops.lastOrNull { it.end == index }
+          if (loop == null) {
+            next(0L)
+          } else if (loop.isWhile) {
+            goto(loop.start, 300L)
+          } else if (loop.left > 0) {
+            loop.left -= 1
+            goto(loop.start + 1, 300L)
+          } else {
+            run.loops.remove(loop)
+            next(0L)
+          }
+        }
+        NikaMacros.BREAK -> {
+          val loop = run.loops.lastOrNull()
+          if (loop == null) {
+            next(0L)
+          } else {
+            run.loops.remove(loop)
+            goto(loop.end + 1)
+          }
+        }
+        NikaMacros.STOP -> return
+        NikaMacros.WAIT_UNTIL -> {
+          val limit = step.n.coerceIn(1, 120) * 2
+          if (condition(service, step.a, step.b)) {
+            next(300L)
+          } else if (tries < limit) {
+            handler.postDelayed({ runStep(service, run, index, token, tries + 1) }, 500L)
+          } else {
+            say(service, service.getString(R.string.nika_mac_wait_timeout))
+          }
+        }
         NikaMacros.WAIT -> next(step.n.coerceIn(0, 60) * 1000L)
         NikaMacros.SAY -> {
           say(service, step.a)
@@ -159,7 +306,7 @@ object NikaMacroActions {
           if (holdStep(service, step)) {
             next(600L)
           } else if (tries < 8) {
-            handler.postDelayed({ runStep(service, steps, index, token, tries + 1) }, 500L)
+            handler.postDelayed({ runStep(service, run, index, token, tries + 1) }, 500L)
           } else {
             say(service, service.getString(R.string.nika_mac_not_found))
           }
@@ -173,7 +320,7 @@ object NikaMacroActions {
             next()
           } else if (tries < 8) {
             // the screen may still be opening: try again
-            handler.postDelayed({ runStep(service, steps, index, token, tries + 1) }, 500L)
+            handler.postDelayed({ runStep(service, run, index, token, tries + 1) }, 500L)
           } else {
             say(service, service.getString(R.string.nika_mac_not_found))
           }
@@ -183,6 +330,17 @@ object NikaMacroActions {
     } catch (e: RuntimeException) {
       say(service, service.getString(R.string.nika_mac_not_found))
     }
+  }
+
+  /** The END_IF that closes the chain of IF, ELSE_IF and ELSE that contains the step at [index]. */
+  private fun chainEnd(steps: List<NikaMacros.Step>, index: Int): Int {
+    var at = index
+    while (at in steps.indices && steps[at].type != NikaMacros.END_IF) {
+      val n = nextBranch(steps, at)
+      if (n < 0) return steps.size
+      at = n
+    }
+    return at
   }
 
   private fun labelOf(node: AccessibilityNodeInfo): String =

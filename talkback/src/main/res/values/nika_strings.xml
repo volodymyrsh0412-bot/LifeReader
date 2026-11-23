@@ -2,7 +2,7 @@
 <resources>
     <string name="nika_whats_new_title">What\'s new</string>
     <string name="nika_whats_new_summary">Changes in this version</string>
-    <string name="nika_whats_new_message">Nika is a screen reader for Android.\n\nWhat\'s new in this version:\n\u2022 Fixed the empty \"Menu items order\" and \"Macros\" screens.\n\u2022 New sound theme \"Nika iPhone\" is the default sound theme.\n\u2022 New gestures: shakes (one, two, long) and taps on the back (one, two, three) of the phone (Gestures, \"Shake and back tap\").\n\u2022 Clock, Translator and Artificial intelligence moved to the \"Apps\" group; Gestures for apps moved to Gestures.\n\u2022 Gemini settings moved to \"Artificial intelligence\".\n\u2022 Per-app gestures: the list refreshes when you pick another app.</string>
+    <string name="nika_whats_new_message">Nika is a screen reader for Android.\n\nWhat\'s new in this version:\n\u2022 Macros: conditions (If / Else), loops (Repeat, Repeat while), \"Wait until\", \"Run now\", export and import of macros.\n\u2022 Notifications: speech template, skip emoji, limit the length, apps that are not read, notification history.\n\u2022 Gesture profiles: save the gesture settings under a name and switch between sets.</string>
     <string name="nika_feedback_title">Send feedback</string>
     <string name="nika_feedback_summary">Write to the developer in Telegram: report a problem or suggest an idea</string>
     <string name="nika_feedback_subject">Nika feedback (build %1$d)</string>

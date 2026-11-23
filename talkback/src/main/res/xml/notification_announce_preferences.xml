@@ -38,5 +38,22 @@
         android:defaultValue="true"
         android:title="@string/nika_notif_text_title"
         android:dependency="@string/pref_speak_notifications_key" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
+        android:key="nika_notif_noemoji"
+        android:defaultValue="false"
+        android:title="@string/nika_notif_noemoji"
+        android:dependency="@string/pref_speak_notifications_key" />
+    <ListPreference
+        android:key="nika_notif_maxwords"
+        android:defaultValue="0"
+        android:title="@string/nika_notif_maxwords"
+        android:summary="%s"
+        android:entries="@array/nika_notif_maxwords_entries"
+        android:entryValues="@array/nika_notif_maxwords_values"
+        android:dependency="@string/pref_speak_notifications_key" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
+        android:key="nika_notif_history_on"
+        android:defaultValue="true"
+        android:title="@string/nika_notif_history_on" />
   </PreferenceCategory>
 </PreferenceScreen>
