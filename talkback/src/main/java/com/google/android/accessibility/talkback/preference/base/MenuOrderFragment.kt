@@ -39,7 +39,8 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
 
   private fun rebuild() {
     val ctx = context ?: return
-    val group = findPreference<PreferenceGroup>("nika_mo_cat") ?: return
+    // An empty group from the XML is removed by the settings filter, so the rows go on the screen itself.
+    val group: PreferenceGroup = preferenceScreen ?: return
     group.removeAll()
     val list = NikaMenuOrder.listForScreen(ctx)
     val order = list.map { it.first }

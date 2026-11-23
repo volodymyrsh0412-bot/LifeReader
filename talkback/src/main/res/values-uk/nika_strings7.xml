@@ -64,4 +64,18 @@
     <string name="nika_feedback_choose_title">Як написати розробнику?</string>
     <string name="nika_feedback_by_email">Електронною поштою</string>
     <string name="nika_feedback_by_telegram">У Telegram (@Volodymyr0412sh)</string>
+    <string name="nika_motion_title">Струшування і дотик до задньої кришки</string>
+    <string name="nika_motion_summary">Струшування телефона й три дотики по задній кришці</string>
+    <string name="nika_motion_shake1">Одне струшування</string>
+    <string name="nika_motion_shake2">Двічі струснути</string>
+    <string name="nika_motion_back3">Три дотики по задній кришці (дослідне)</string>
+    <string name="nika_motion_shakel">Довге струшування</string>
+    <string name="nika_motion_back1">Один дотик по задній кришці (дослідне)</string>
+    <string name="nika_motion_back2">Два дотики по задній кришці (дослідне)</string>
+    <string name="nika_motion_sens_title">Чутливість</string>
+    <string-array name="nika_motion_sens_entries">
+        <item>Низька</item>
+        <item>Середня</item>
+        <item>Висока</item>
+    </string-array>
 </resources>

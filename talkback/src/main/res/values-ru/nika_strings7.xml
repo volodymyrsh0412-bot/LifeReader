@@ -64,4 +64,18 @@
     <string name="nika_feedback_choose_title">Как написать разработчику?</string>
     <string name="nika_feedback_by_email">По электронной почте</string>
     <string name="nika_feedback_by_telegram">В Telegram (@Volodymyr0412sh)</string>
+    <string name="nika_motion_title">Встряхивание и касание задней крышки</string>
+    <string name="nika_motion_summary">Встряхивание телефона и три касания задней крышки</string>
+    <string name="nika_motion_shake1">Одно встряхивание</string>
+    <string name="nika_motion_shake2">Два встряхивания</string>
+    <string name="nika_motion_back3">Три касания задней крышки (экспериментально)</string>
+    <string name="nika_motion_shakel">Долгое встряхивание</string>
+    <string name="nika_motion_back1">Одно касание задней крышки (экспериментально)</string>
+    <string name="nika_motion_back2">Два касания задней крышки (экспериментально)</string>
+    <string name="nika_motion_sens_title">Чувствительность</string>
+    <string-array name="nika_motion_sens_entries">
+        <item>Низкая</item>
+        <item>Средняя</item>
+        <item>Высокая</item>
+    </string-array>
 </resources>

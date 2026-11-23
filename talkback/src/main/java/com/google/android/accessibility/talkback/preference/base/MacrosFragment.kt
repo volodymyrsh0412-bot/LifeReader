@@ -42,7 +42,8 @@ class MacrosFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
 
   private fun rebuild() {
     val ctx = context ?: return
-    val group = findPreference<PreferenceGroup>("nika_list_cat") ?: return
+    // An empty group from the XML is removed by the settings filter, so the rows go on the screen itself.
+    val group: PreferenceGroup = preferenceScreen ?: return
     group.removeAll()
     val add = Preference(ctx)
     add.title = getString(R.string.nika_mac_add)

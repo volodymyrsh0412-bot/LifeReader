@@ -82,9 +82,10 @@ class PerAppGesturesFragment : NikaKeysBaseFragment(R.xml.per_app_preferences) {
         } else if (p is GestureListPreference) {
           val orig = p.extras.getString(ORIG) ?: (p.key ?: continue).also { p.extras.putString(ORIG, it) }
           val id = NikaAppGestures.GESTURES[orig] ?: continue
-          p.isEnabled = !pkg.isNullOrEmpty()
           p.key = NikaAppGestures.prefKey(pkg ?: "none", id)
-          p.summary = p.summary
+          // Toggling makes the row draw again with the actions of the chosen application.
+          p.isEnabled = false
+          p.isEnabled = !pkg.isNullOrEmpty()
         }
       }
     }

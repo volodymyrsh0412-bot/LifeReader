@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika \u2014 a screen reader for Android</string>
-    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 Fixed the empty \"Menu items order\" screen: it now lists the items you switched on in the menu settings, you can move them up and down, and the menu follows that order.\n\u2022 The agent has its own page without the word \"script\": settings, and folding \"Permissions\" and \"Commands\".\n\u2022 The agent speaks the language of the phone and understands answers from Vivo (NVDACN) better.\n\u2022 \"Send feedback\" lets you choose e-mail or Telegram.\n\u2022 The talking clock is more exact.</string>
+    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 Fixed the empty \"Menu items order\" and \"Macros\" screens.\n\u2022 New sound theme \"Nika iPhone\" is the default sound theme.\n\u2022 New gestures: shakes (one, two, long) and taps on the back (one, two, three) of the phone (Gestures, \"Shake and back tap\").\n\u2022 Clock, Translator and Artificial intelligence moved to the \"Apps\" group; Gestures for apps moved to Gestures.\n\u2022 Gemini settings moved to \"Artificial intelligence\".\n\u2022 Per-app gestures: the list refreshes when you pick another app.</string>
     <string name="nika_update_available">Update available: build %1$d</string>
     <string name="nika_update_tap">Tap to download and install</string>
     <string name="nika_telegram_title">Nika on Telegram</string>

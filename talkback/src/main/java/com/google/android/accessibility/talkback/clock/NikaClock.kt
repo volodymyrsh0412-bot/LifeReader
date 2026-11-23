@@ -86,6 +86,8 @@ class NikaClock private constructor(private val service: TalkBackService) {
     }
 
   fun start() {
+    com.google.android.accessibility.talkback.soundthemes.NikaDefaultTheme.ensureInstalled(service)
+    com.google.android.accessibility.talkback.gesture.NikaMotion.get(service).start()
     if (started) return
     started = true
     val filter = IntentFilter().apply {
@@ -102,6 +104,7 @@ class NikaClock private constructor(private val service: TalkBackService) {
   }
 
   fun stop() {
+    com.google.android.accessibility.talkback.gesture.NikaMotion.get(service).stop()
     if (!started) return
     started = false
     try {

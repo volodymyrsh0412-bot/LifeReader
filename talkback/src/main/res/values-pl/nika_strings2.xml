@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika \u2014 czytnik ekranu dla Androida</string>
-    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Naprawiono pusty ekran „Kolejność pozycji menu”: teraz są tam pozycje włączone w ustawieniach menu, można je przesuwać w górę i w dół, a menu stosuje tę kolejność.\n\u2022 Agent ma własną stronę bez słowa „skrypt”: ustawienia, a „Uprawnienia” i „Polecenia” się zwijają.\n\u2022 Agent mówi w języku telefonu i lepiej rozumie odpowiedzi Vivo (NVDACN).\n\u2022 „Wyślij opinię” pozwala wybrać e-mail lub Telegram.\n\u2022 Mówiący zegar jest dokładniejszy.</string>
+    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Naprawiono puste ekrany „Kolejność pozycji menu” i „Makra”.\n\u2022 Nowy motyw dźwięków „Nika iPhone” jest teraz domyślny.\n\u2022 Nowe gesty: jedno potrząśnięcie, dwa potrząśnięcia i trzy stuknięcia w tył telefonu (Gesty, „Potrząśnięcie i stuknięcie w tył”).\n\u2022 Zegar, Tłumacz i Sztuczna inteligencja przeniesiono do grupy „Aplikacje”; „Gesty dla aplikacji” przeniesiono do gestów.\n\u2022 Ustawienia Gemini przeniesiono do „Sztucznej inteligencji”.\n\u2022 Gesty dla wybranych aplikacji: lista odświeża się po wyborze innej aplikacji.</string>
     <string name="nika_update_available">Dost\u0119pna aktualizacja: kompilacja %1$d</string>
     <string name="nika_update_tap">Dotknij, aby pobra\u0107 i zainstalowa\u0107</string>
     <string name="nika_telegram_title">Nika na Telegramie</string>

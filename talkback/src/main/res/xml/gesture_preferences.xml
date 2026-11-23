@@ -26,6 +26,16 @@
       android:key="pref_nika_side"
       android:summary="@string/nika_side_summary"
       android:title="@string/nika_side_title" />
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+      android:fragment="com.google.android.accessibility.talkback.preference.base.MotionGesturesFragment"
+      android:key="pref_nika_motion"
+      android:summary="@string/nika_motion_summary"
+      android:title="@string/nika_motion_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.PerAppGesturesFragment"
+        android:key="pref_nika_perapp"
+        android:summary="@string/nika_app_summary"
+        android:title="@string/nika_app_title" />
   <!-- One finger gestures -->
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory
       android:key="@string/pref_category_1finger_shortcuts_key"

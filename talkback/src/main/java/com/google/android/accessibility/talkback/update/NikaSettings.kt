@@ -50,6 +50,10 @@ object NikaSettings {
         fragment.getString(R.string.category_collapsed),
         fragment.getString(R.string.category_expanded),
       )
+    // Gemini settings live in the "Artificial intelligence" section now.
+    fragment
+      .findPreference<Preference>(fragment.getString(R.string.pref_gemini_settings_key))
+      ?.isVisible = false
     fragment.findPreference<Preference>(KEY_WHATS_NEW)?.setOnPreferenceClickListener {
       fragment.activity?.let { showWhatsNew(it) }
       true

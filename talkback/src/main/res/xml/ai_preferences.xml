@@ -15,4 +15,9 @@
         android:key="pref_nika_macros"
         android:summary="@string/nika_mac_summary"
         android:title="@string/nika_mac_title" />
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.GeminiSettingsFragment"
+        android:key="pref_nika_gemini_settings"
+        android:summary="@string/summary_pref_gemini_support_disabled"
+        android:title="@string/title_pref_gemini_settings" />
 </PreferenceScreen>

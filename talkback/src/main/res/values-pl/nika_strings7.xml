@@ -64,4 +64,18 @@
     <string name="nika_feedback_choose_title">Jak napisać do twórcy?</string>
     <string name="nika_feedback_by_email">E-mailem</string>
     <string name="nika_feedback_by_telegram">W Telegramie (@Volodymyr0412sh)</string>
+    <string name="nika_motion_title">Potrząśnięcie i stuknięcie w tył</string>
+    <string name="nika_motion_summary">Potrząśnięcie telefonem i trzy stuknięcia w tylną obudowę</string>
+    <string name="nika_motion_shake1">Jedno potrząśnięcie</string>
+    <string name="nika_motion_shake2">Dwa potrząśnięcia</string>
+    <string name="nika_motion_back3">Trzy stuknięcia w tył (eksperymentalne)</string>
+    <string name="nika_motion_shakel">Długie potrząśnięcie</string>
+    <string name="nika_motion_back1">Jedno stuknięcie w tył (eksperymentalne)</string>
+    <string name="nika_motion_back2">Dwa stuknięcia w tył (eksperymentalne)</string>
+    <string name="nika_motion_sens_title">Czułość</string>
+    <string-array name="nika_motion_sens_entries">
+        <item>Niska</item>
+        <item>Średnia</item>
+        <item>Wysoka</item>
+    </string-array>
 </resources>

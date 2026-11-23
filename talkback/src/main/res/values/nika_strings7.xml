@@ -64,4 +64,23 @@
     <string name="nika_feedback_choose_title">How do you want to write?</string>
     <string name="nika_feedback_by_email">By e-mail</string>
     <string name="nika_feedback_by_telegram">In Telegram (@Volodymyr0412sh)</string>
+    <string name="nika_motion_title">Shake and back tap</string>
+    <string name="nika_motion_summary">Phone shake and taps on the back: one or two shakes, three taps</string>
+    <string name="nika_motion_shake1">One shake</string>
+    <string name="nika_motion_shake2">Two shakes</string>
+    <string name="nika_motion_back3">Three taps on the back (experimental)</string>
+    <string name="nika_motion_shakel">Long shake</string>
+    <string name="nika_motion_back1">One tap on the back (experimental)</string>
+    <string name="nika_motion_back2">Two taps on the back (experimental)</string>
+    <string name="nika_motion_sens_title">Sensitivity</string>
+    <string-array name="nika_motion_sens_entries">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+    <string-array name="nika_motion_sens_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

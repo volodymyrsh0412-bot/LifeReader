@@ -52,11 +52,21 @@ object NikaAppGestures {
   @JvmStatic
   fun prefKey(pkg: String, gestureId: Int): String = "nika_app:$pkg:$gestureId"
 
+  private fun openPackage(service: AccessibilityService): String? {
+    service.rootInActiveWindow?.packageName?.toString()?.let { return it }
+    for (w in service.windows) {
+      if (w.isActive || w.isFocused) {
+        w.root?.packageName?.toString()?.let { return it }
+      }
+    }
+    return null
+  }
+
   /** Returns the action for this gesture in the open application, or [action] if none is set. */
   @JvmStatic
   fun override(service: AccessibilityService, gestureId: Int, action: String): String {
     try {
-      val pkg = service.rootInActiveWindow?.packageName?.toString() ?: return action
+      val pkg = openPackage(service) ?: return action
       val value =
         SharedPreferencesUtils.getSharedPreferences(service)
           .getString(prefKey(pkg, gestureId), null) ?: return action
