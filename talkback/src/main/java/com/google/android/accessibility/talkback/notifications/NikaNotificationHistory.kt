@@ -67,6 +67,17 @@ object NikaNotificationHistory {
     SharedPreferencesUtils.getSharedPreferences(context).edit().putString(KEY, array.toString()).apply()
   }
 
+  /** Removes one entry (the same time and text). */
+  @JvmStatic
+  @Synchronized
+  fun remove(context: Context, entry: Entry) {
+    try {
+      save(context, load(context).filter { !(it.time == entry.time && it.text == entry.text && it.pkg == entry.pkg) })
+    } catch (e: RuntimeException) {
+      // skip
+    }
+  }
+
   @JvmStatic
   fun clear(context: Context) {
     SharedPreferencesUtils.getSharedPreferences(context).edit().remove(KEY).apply()

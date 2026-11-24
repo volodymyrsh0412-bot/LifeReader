@@ -70,6 +70,24 @@ class NotificationHistoryFragment : NikaKeysBaseFragment(R.xml.nika_list_prefere
           )
           .joinToString(", ")
       p.isPersistent = false
+      p.setOnPreferenceClickListener {
+        val act = activity
+        if (act != null) {
+          android.app.AlertDialog.Builder(act)
+            .setTitle(e.text)
+            .setPositiveButton(R.string.nika_notif_delete_one) { _, _ ->
+              NikaNotificationHistory.remove(ctx, e)
+              rebuild()
+            }
+            .setNeutralButton(R.string.nika_notif_history_clear) { _, _ ->
+              NikaNotificationHistory.clear(ctx)
+              rebuild()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+        }
+        true
+      }
       group.addPreference(p)
     }
   }

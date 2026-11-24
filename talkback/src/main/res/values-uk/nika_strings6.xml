@@ -46,7 +46,7 @@
     <string name="nika_gem_dumped">Скопійовано назв кнопок: %1$d</string>
     <string name="nika_gem_summary">Слова розділяйте комами. Дія натискає першу кнопку, в назві якої є одне зі слів. Щоб побачити справжні назви, скористайтесь дією «скопіювати назви кнопок».</string>
     <string name="nika_cat_settings_title">Налаштування</string>
-    <string name="nika_focus_category">Фокус</string>
+    <string name="nika_focus_category">Фокус і швидкі налаштування</string>
     <string name="nika_act_focus_toggle">Перемкнути фокус: поле введення і клавіатура</string>
     <string name="nika_act_gem_learn_live">Gemini: запам’ятати кнопку у фокусі як Live</string>
     <string name="nika_act_gem_learn_video">Gemini: запам’ятати кнопку у фокусі як відео</string>

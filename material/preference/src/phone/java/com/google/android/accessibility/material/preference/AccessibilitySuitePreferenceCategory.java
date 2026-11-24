@@ -148,6 +148,7 @@ public class AccessibilitySuitePreferenceCategory extends PreferenceCategory {
   public void onBindViewHolder(PreferenceViewHolder holder) {
     super.onBindViewHolder(holder);
     View view = holder.itemView;
+    ViewCompat.setAccessibilityHeading(view, false);
     if (!collapsible) {
       return;
     }
@@ -186,20 +187,9 @@ public class AccessibilitySuitePreferenceCategory extends PreferenceCategory {
       } else {
         super.onInitializeAccessibilityNodeInfo(host, info);
       }
-      info.setClassName(Button.class.getName());
+      info.setHeading(false); // NikaQuiet
       if (!isToggleable()) {
         return;
-      }
-      info.addAction(
-          collapsed
-              ? AccessibilityActionCompat.ACTION_EXPAND
-              : AccessibilityActionCompat.ACTION_COLLAPSE);
-      if (Build.VERSION.SDK_INT >= 36) {
-        info.unwrap()
-            .setExpandedState(
-                collapsed
-                    ? AccessibilityNodeInfo.EXPANDED_STATE_COLLAPSED
-                    : AccessibilityNodeInfo.EXPANDED_STATE_FULL);
       }
     }
 

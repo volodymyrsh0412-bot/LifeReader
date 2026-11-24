@@ -2,7 +2,7 @@
 <resources>
     <string name="nika_whats_new_title">Co nowego</string>
     <string name="nika_whats_new_summary">Zmiany w tej wersji</string>
-    <string name="nika_whats_new_message">Nika — czytnik ekranu dla Androida.\n\nNowości w tej wersji:\n\u2022 Makra są teraz osobną pozycją obok „Sztucznej inteligencji”; nowe kroki (dotknij miejsca, wybierz i wypowiedz obiekt) i warunek „Uruchamiaj tylko gdy”.\n\u2022 Głosy według języka i alfabetu (cyrylica, łacinka) w ustawieniach syntezy.\n\u2022 Diagnostyka: dziennik pracy zapisywany w Pobrane/Nika.\n\u2022 Naprawiono: stuknięcie w tył przy odwracaniu telefonu (pojedyncze stuknięcie usunięto); „Dotyk bezpośredni” jest teraz w sekcji dotyku.</string>
+    <string name="nika_whats_new_message">Nika — czytnik ekranu dla Androida.\n\nNowości w tej wersji:\n\u2022 Szybkie ustawienia gestami: następne/poprzednie ustawienie i wartość (echo klawiatury, interpunkcja, emoji).\n\u2022 Klawisze głośności: suwak w fokusie, kursor w polu, bez panelu głośności.\n\u2022 Kopia zapasowa jest teraz w zip z wyborem, co przywrócić.\n\u2022 Historię powiadomień można czyścić po jednym wpisie; postęp poza fokusem jest odczytywany; usunięto słowa „zwinięte”, „przycisk”, „nagłówek” w ustawieniach.</string>
     <string name="nika_feedback_title">Wyślij opinię</string>
     <string name="nika_feedback_summary">Napisz do twórcy na Telegramie: zgłoś problem lub zaproponuj pomysł</string>
     <string name="nika_feedback_subject">Opinia o Nice (kompilacja %1$d)</string>

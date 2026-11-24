@@ -30,7 +30,18 @@ object NikaFocusActions {
   class Action(val value: String, @StringRes val labelRes: Int)
 
   @JvmField
-  val ACTIONS: List<Action> = listOf(Action("nika_focus_toggle", R.string.nika_act_focus_toggle))
+  val ACTIONS: List<Action> =
+    listOf(
+      Action("nika_focus_toggle", R.string.nika_act_focus_toggle),
+      Action(NikaValueActions.SETTING_NEXT, R.string.nika_act_setting_next),
+      Action(NikaValueActions.SETTING_PREV, R.string.nika_act_setting_prev),
+      Action(NikaValueActions.VALUE_NEXT, R.string.nika_act_value_next),
+      Action(NikaValueActions.VALUE_PREV, R.string.nika_act_value_prev),
+      Action(NikaValueActions.SLIDER_UP, R.string.nika_act_slider_up),
+      Action(NikaValueActions.SLIDER_DOWN, R.string.nika_act_slider_down),
+      Action(NikaValueActions.CURSOR_RIGHT, R.string.nika_act_cursor_right),
+      Action(NikaValueActions.CURSOR_LEFT, R.string.nika_act_cursor_left),
+    )
 
   private fun find(value: String?): Action? = ACTIONS.firstOrNull { it.value == value }
 
@@ -42,6 +53,7 @@ object NikaFocusActions {
 
   @JvmStatic
   fun perform(service: TalkBackService, value: String): Boolean {
+    if (NikaValueActions.isAction(value)) return NikaValueActions.perform(service, value)
     if (value != "nika_focus_toggle") return false
     try {
       toggle(service)

@@ -46,7 +46,7 @@
     <string name="nika_gem_dumped">Copied %1$d names of buttons</string>
     <string name="nika_gem_summary">Separate the words with commas. The action presses the first button whose name has one of the words. Use the action that copies the names of the buttons to see the real names.</string>
     <string name="nika_cat_settings_title">Settings</string>
-    <string name="nika_focus_category">Focus</string>
+    <string name="nika_focus_category">Focus and quick settings</string>
     <string name="nika_act_focus_toggle">Switch focus: text field and keyboard</string>
     <string name="nika_act_gem_learn_live">Gemini: remember the focused button as Live</string>
     <string name="nika_act_gem_learn_video">Gemini: remember the focused button as video</string>

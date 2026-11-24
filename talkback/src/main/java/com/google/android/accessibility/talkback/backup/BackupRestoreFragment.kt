@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Backtalk contributors
+ * Copyright 2026 Nika contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.google.android.accessibility.talkback.backup
 
 import android.content.Context
@@ -26,10 +25,10 @@ import androidx.preference.Preference
 import com.google.android.accessibility.talkback.R
 import com.google.android.accessibility.talkback.preference.base.TalkbackBaseFragment
 
-/** Saves all settings to a file, and restores them from one. */
+/** Nika: saves a full copy to a zip file, and restores the groups the person chooses. */
 class BackupRestoreFragment : TalkbackBaseFragment() {
   private val createBackup =
-    registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+    registerForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri ->
       if (uri != null) {
         writeBackup(uri)
       }
@@ -49,12 +48,12 @@ class BackupRestoreFragment : TalkbackBaseFragment() {
     val screen = preferenceManager.createPreferenceScreen(context)
     screen.addPreference(
       actionPreference(context, R.string.settings_backup_export, R.string.settings_backup_export_summary) {
-        createBackup.launch(SettingsBackup.FILE_NAME)
+        createBackup.launch(NikaBackup.FILE_NAME)
       }
     )
     screen.addPreference(
       actionPreference(context, R.string.settings_backup_import, R.string.settings_backup_import_summary) {
-        openBackup.launch(arrayOf("application/json", "text/plain"))
+        openBackup.launch(arrayOf("application/zip", "application/json", "text/plain", "application/octet-stream"))
       }
     )
     preferenceScreen = screen
@@ -76,10 +75,14 @@ class BackupRestoreFragment : TalkbackBaseFragment() {
     val context = requireContext()
     val written =
       try {
-        context.contentResolver.openOutputStream(uri)?.use {
-          it.write(SettingsBackup.export(SettingsBackup.stores(context)).toByteArray())
-        } != null
-      } catch (_: java.io.IOException) {
+        val out = context.contentResolver.openOutputStream(uri)
+        if (out != null) {
+          NikaBackup.export(context, out)
+          true
+        } else {
+          false
+        }
+      } catch (e: Exception) {
         false
       }
     toast(if (written) R.string.settings_backup_export_done else R.string.settings_backup_export_failed)
@@ -87,26 +90,44 @@ class BackupRestoreFragment : TalkbackBaseFragment() {
 
   private fun readBackup(uri: Uri) {
     val context = requireContext()
-    val json =
+    val content =
       try {
-        context.contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() }
-      } catch (_: java.io.IOException) {
+        context.contentResolver.openInputStream(uri)?.use { NikaBackup.read(it) }
+      } catch (e: Exception) {
         null
       }
-    val result =
-      if (json == null) SettingsBackup.ImportResult.FAILED
-      else SettingsBackup.import(SettingsBackup.stores(context), json)
-    when (result) {
-      SettingsBackup.ImportResult.FAILED -> toast(R.string.settings_backup_import_failed)
-      SettingsBackup.ImportResult.RESTORED -> toast(R.string.settings_backup_import_done)
-      // A dialog, because a toast is gone before a screen reader user has heard all of it.
-      SettingsBackup.ImportResult.RESTORED_NEEDS_RESTART ->
-        AlertDialog.Builder(context)
-          .setTitle(R.string.settings_backup_import_done)
-          .setMessage(R.string.settings_backup_import_restart)
-          .setPositiveButton(android.R.string.ok, null)
-          .show()
+    if (content == null) {
+      toast(R.string.settings_backup_import_failed)
+      return
     }
+    val groups = NikaBackup.available(content)
+    if (groups.isEmpty()) {
+      toast(R.string.settings_backup_import_failed)
+      return
+    }
+    val names = groups.map { g -> getString(NikaBackup.GROUPS.first { it.first == g }.second) }.toTypedArray()
+    val checked = BooleanArray(groups.size) { true }
+    AlertDialog.Builder(context)
+      .setTitle(R.string.nika_bk_pick_title)
+      .setMultiChoiceItems(names, checked) { _, which, isChecked -> checked[which] = isChecked }
+      .setPositiveButton(R.string.nika_bk_restore) { _, _ ->
+        val chosen = groups.filterIndexed { i, _ -> checked[i] }.toSet()
+        if (chosen.isEmpty()) {
+          return@setPositiveButton
+        }
+        val ok = NikaBackup.restore(context, content, chosen)
+        if (ok) {
+          AlertDialog.Builder(context)
+            .setTitle(R.string.settings_backup_import_done)
+            .setMessage(R.string.settings_backup_import_restart)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+        } else {
+          toast(R.string.settings_backup_import_failed)
+        }
+      }
+      .setNegativeButton(android.R.string.cancel, null)
+      .show()
   }
 
   private fun toast(message: Int) {

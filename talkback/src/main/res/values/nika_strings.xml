@@ -2,7 +2,7 @@
 <resources>
     <string name="nika_whats_new_title">What\'s new</string>
     <string name="nika_whats_new_summary">Changes in this version</string>
-    <string name="nika_whats_new_message">Nika is a screen reader for Android.\n\nWhat\'s new in this version:\n\u2022 Macros are now their own item next to \"Artificial intelligence\"; new steps (tap a place, select and speak an object) and the condition \"Run only when\".\n\u2022 Voices by language and alphabet (Cyrillic, Latin) in speech settings.\n\u2022 Diagnostics: a diary of what the app does, saved to Downloads/Nika.\n\u2022 Fixed: back tap firing when the phone is turned over (single tap removed); Direct touch is now with the touch settings.</string>
+    <string name="nika_whats_new_message">Nika is a screen reader for Android.\n\nWhat\'s new in this version:\n\u2022 Quick settings with gestures: next/previous setting and value (keyboard echo, punctuation, emoji).\n\u2022 Volume keys: slider in focus, cursor in a field, no volume panel.\n\u2022 The backup is now a zip, and you choose what to restore.\n\u2022 The notification history can be cleared one entry at a time; progress out of focus is spoken; the words collapsed, button and heading are no longer said in settings.</string>
     <string name="nika_feedback_title">Send feedback</string>
     <string name="nika_feedback_summary">Write to the developer in Telegram: report a problem or suggest an idea</string>
     <string name="nika_feedback_subject">Nika feedback (build %1$d)</string>

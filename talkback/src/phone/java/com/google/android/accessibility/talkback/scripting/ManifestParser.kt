@@ -59,7 +59,7 @@ class ManifestParser(private val strict: Boolean) {
       name = obj.requiredString("name"),
       version = obj.optString("version", "1"),
       description = obj.optionalString("description"),
-      author = if (strict) obj.requiredString("author") else obj.optionalString("author") ?: "?",
+      author = (if (strict) obj.requiredString("author") else obj.optionalString("author") ?: "?").replace("Backtalk", "Nika"),
       homepage = homepage,
       minBuild = minBuild,
       apps = apps(obj.opt("apps")),

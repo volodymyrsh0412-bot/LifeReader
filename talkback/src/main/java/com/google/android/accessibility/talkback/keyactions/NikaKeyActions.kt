@@ -268,7 +268,9 @@ class NikaKeyActions(private val service: TalkBackService) {
       ?.adjustSuggestedStreamVolume(
         direction,
         AudioManager.USE_DEFAULT_STREAM_TYPE,
-        AudioManager.FLAG_SHOW_UI,
+        if (com.google.android.accessibility.utils.SharedPreferencesUtils.getSharedPreferences(service)
+            .getBoolean("nika_vol_hide_panel", false)
+        ) 0 else AudioManager.FLAG_SHOW_UI,
       )
   }
 }

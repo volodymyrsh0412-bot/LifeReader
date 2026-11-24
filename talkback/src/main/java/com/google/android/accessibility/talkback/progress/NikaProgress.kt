@@ -25,6 +25,11 @@ import com.google.android.accessibility.talkback.TalkBackService
 import com.google.android.accessibility.utils.AccessibilityNodeInfoUtils
 import com.google.android.accessibility.utils.Role
 import com.google.android.accessibility.utils.SharedPreferencesUtils
+import android.os.SystemClock
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityNodeInfo
+import com.google.android.accessibility.utils.output.FeedbackItem
+import com.google.android.accessibility.utils.output.SpeechController
 import java.util.Optional
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -41,6 +46,9 @@ object NikaProgress {
   private const val PREF_STEP = "nika_progress_step"
 
   private var lastSpoken = -1000
+  private var lastBackgroundSpoken = -1000
+  private var lastBackgroundAt = 0L
+  private var lastBackgroundTone = 0L
 
   private fun stores(context: Context): List<SharedPreferences> {
     val list = ArrayList<SharedPreferences>(2)
@@ -122,5 +130,60 @@ object NikaProgress {
   ): Optional<CharSequence> {
     val out = speech(node, text.orElse(null))
     return if (out == null) text else Optional.of(out)
+  }
+
+  /**
+   * A progress indicator that is not in focus (a download, an install) is not announced by the
+   * usual rules. Here it is announced by the same mode: a tone, or the percent, or both.
+   */
+  @JvmStatic
+  fun onEvent(service: TalkBackService, event: AccessibilityEvent?) {
+    if (event == null) return
+    val type = event.eventType
+    if (type != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED && type != AccessibilityEvent.TYPE_VIEW_SELECTED) return
+    val m = mode()
+    if (m == "off") return
+    val source: AccessibilityNodeInfo = event.source ?: return
+    try {
+      val node = AccessibilityNodeInfoCompat.wrap(source)
+      if (Role.getRole(node) != Role.ROLE_PROGRESS_BAR) return
+      // The ones in focus or live are announced by the usual rules.
+      if (node.isAccessibilityFocused || node.isFocused || node.liveRegion != 0) return
+      val percent = AccessibilityNodeInfoUtils.getProgressPercent(node)
+      if (percent.isNaN() || percent < 0f || percent > 100.5f) return
+      val value = percent.roundToInt()
+      val now = SystemClock.uptimeMillis()
+      if ((m == "sound" || m == "both") && now - lastBackgroundTone > 400L) {
+        lastBackgroundTone = now
+        val rate = Math.pow(2.0, (value / 50.0) - 1).toFloat()
+        service.feedbackController.playAuditory(R.raw.scroll_tone, rate, 0.5f, null)
+      }
+      if (m == "voice" || m == "both") {
+        val step = string(PREF_STEP, "5").toIntOrNull() ?: 5
+        val due =
+          lastBackgroundSpoken < 0 ||
+            value >= 100 ||
+            value < lastBackgroundSpoken ||
+            abs(value - lastBackgroundSpoken) >= step
+        if (due && now - lastBackgroundAt > 1000L) {
+          lastBackgroundSpoken = value
+          lastBackgroundAt = now
+          val text =
+            if (bool(PREF_PERCENT, true)) service.getString(R.string.nika_progress_percent_fmt, value)
+            else (node.stateDescription ?: node.text ?: "").toString()
+          if (text.isNotEmpty()) {
+            service.speechController.speak(
+              text,
+              SpeechController.QUEUE_MODE_QUEUE,
+              FeedbackItem.FLAG_NO_HISTORY,
+              null,
+              com.google.android.accessibility.utils.Performance.EVENT_ID_UNTRACKED,
+            )
+          }
+        }
+      }
+    } catch (e: RuntimeException) {
+      // an indicator is only a help
+    }
   }
 }
