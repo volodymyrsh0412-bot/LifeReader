@@ -1032,6 +1032,10 @@ public class FailoverTextToSpeech {
     requestRate = effectiveRate;
     synchronized (ttsLock) {
       locale = localeToSpeak(locale);
+      com.google.android.accessibility.utils.NikaDiag.log("speak", String.valueOf(text));
+      if (nikaApplyVoice(text, locale)) {
+        mLastUtteranceLocale = locale;
+      }
       String utteranceId = params.get(Engine.KEY_PARAM_UTTERANCE_ID);
       boolean isLocaleAttached = locale != null;
       Locale previousLocale = getUsedLocale();
@@ -2597,6 +2601,50 @@ public class FailoverTextToSpeech {
    * float, HashMap, int, float, boolean, boolean)}.
    */
   private @Nullable Locale mLastUtteranceLocale = null;
+
+  private @Nullable String nikaCurrentVoice = null;
+  private @Nullable TextToSpeech nikaVoiceTts = null;
+
+  /** Nika: puts the voice of a rule by language or alphabet. Call with ttsLock. */
+  private boolean nikaApplyVoice(CharSequence text, @Nullable Locale locale) {
+    try {
+      if (nikaVoiceTts != tts) {
+        nikaVoiceTts = tts;
+        nikaCurrentVoice = null;
+      }
+      String wanted = NikaVoiceRules.voiceFor(context, text, locale);
+      if (wanted != null) {
+        if (wanted.equals(nikaCurrentVoice)) {
+          return true;
+        }
+        Voice voice = findVoice(wanted);
+        if (voice != null && tts.setVoice(voice) == TextToSpeech.SUCCESS) {
+          nikaCurrentVoice = wanted;
+          cachedTtsLocale = voice.getLocale();
+          return true;
+        }
+        return false;
+      }
+      if (nikaCurrentVoice != null) {
+        nikaCurrentVoice = null;
+        mLastUtteranceLocale = null;
+        cachedTtsLocale = null;
+        VoiceProfile activeProfile = VoiceProfiles.active();
+        if (activeProfile != null) {
+          attemptSetProfileVoice(activeProfile);
+        } else {
+          Voice engineDefault = tts.getDefaultVoice();
+          if (engineDefault != null) {
+            tts.setVoice(engineDefault);
+          }
+        }
+        localeInUse = ensureSupportedLocale();
+      }
+    } catch (RuntimeException e) {
+      nikaCurrentVoice = null;
+    }
+    return false;
+  }
 
   // TODO: Replace it with cachedTtsLocale.
   /**

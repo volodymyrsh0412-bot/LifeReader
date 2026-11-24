@@ -45,6 +45,9 @@ object NikaMacros {
   const val BREAK = "break"
   const val STOP = "stop"
   const val WAIT_UNTIL = "waituntil"
+  const val TAP_POS = "tappos"
+  const val SELECT = "select"
+  const val SAY_OBJECT = "sayobject"
 
   // Conditions are kept in Step.a (the kind) and Step.b (the value).
   const val COND_SEE = "see"
@@ -55,7 +58,13 @@ object NikaMacros {
   /** One step. [a] and [b] are texts, [n] is a number; what they mean depends on [type]. */
   data class Step(val type: String, val a: String = "", val b: String = "", val n: Int = 0)
 
-  class Macro(val id: String, var name: String, val steps: MutableList<Step> = ArrayList())
+  /** [conds] are the conditions "run only when": each is a Step with the kind in a and the value in b. */
+  class Macro(
+    val id: String,
+    var name: String,
+    val steps: MutableList<Step> = ArrayList(),
+    val conds: MutableList<Step> = ArrayList(),
+  )
 
   private fun prefs(context: Context) = SharedPreferencesUtils.getSharedPreferences(context)
 
@@ -78,6 +87,13 @@ object NikaMacros {
           val s = steps.getJSONObject(j)
           macro.steps.add(Step(s.optString("t"), s.optString("a"), s.optString("b"), s.optInt("n")))
         }
+        val conds = o.optJSONArray("cond")
+        if (conds != null) {
+          for (j in 0 until conds.length()) {
+            val c = conds.getJSONObject(j)
+            macro.conds.add(Step("cond", c.optString("a"), c.optString("b")))
+          }
+        }
         result.add(macro)
       }
     } catch (e: Exception) {
@@ -98,6 +114,9 @@ object NikaMacros {
         steps.put(JSONObject().put("t", s.type).put("a", s.a).put("b", s.b).put("n", s.n))
       }
       o.put("steps", steps)
+      val conds = JSONArray()
+      for (c in m.conds) conds.put(JSONObject().put("a", c.a).put("b", c.b))
+      o.put("cond", conds)
       array.put(o)
     }
     return array.toString(1)
@@ -120,7 +139,7 @@ object NikaMacros {
     val all = load(context)
     var n = 0
     for (m in incoming) {
-      all.add(Macro(newId() + n, m.name, m.steps))
+      all.add(Macro(newId() + n, m.name, m.steps, m.conds))
       n++
     }
     save(context, all)

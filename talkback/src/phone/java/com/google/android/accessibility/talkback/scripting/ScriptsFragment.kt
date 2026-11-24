@@ -76,7 +76,7 @@ class ScriptsFragment : ScriptInstallFragment() {
         read { store.exampleBytes() }
       }
     }
-    val (global, app) = store.all().partition { it.manifest.isGlobal }
+    val (global, app) = store.all().filter { it.id != "ai-agent" }.partition { it.manifest.isGlobal }
     if (global.isEmpty() && app.isEmpty()) screen.info(getString(R.string.scripts_none))
     for ((title, scripts) in
       listOf(R.string.scripts_category_app to app, R.string.scripts_category_global to global)) {

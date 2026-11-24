@@ -97,6 +97,24 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
       android.widget.Toast.makeText(ctx, R.string.nika_mac_run_now_summary, android.widget.Toast.LENGTH_SHORT).show()
     }
     row(group, getString(R.string.nika_mac_add_step), null) { chooseStepType() }
+    row(
+      group,
+      getString(R.string.nika_mac_conds),
+      if (macro.conds.isEmpty()) getString(R.string.nika_mac_conds_none)
+      else macro.conds.joinToString("; ") { condText(it) },
+    ) {
+      manageConditions(macro)
+    }
+    row(group, getString(R.string.nika_mac_gest_title), getString(R.string.nika_mac_gest_summary)) {
+      val act = activity
+      if (act != null) {
+        AlertDialog.Builder(act)
+          .setTitle(R.string.nika_mac_gest_title)
+          .setMessage(R.string.nika_mac_gest_info)
+          .setPositiveButton(android.R.string.ok, null)
+          .show()
+      }
+    }
 
     for ((i, step) in macro.steps.withIndex()) {
       val p = StepPreference(ctx)
@@ -192,6 +210,11 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
       NikaMacros.BREAK -> getString(R.string.nika_mac_t_break)
       NikaMacros.STOP -> getString(R.string.nika_mac_t_stop)
       NikaMacros.WAIT_UNTIL -> getString(R.string.nika_mac_d_waituntil, condText(s), s.n)
+      NikaMacros.TAP_POS -> getString(R.string.nika_mac_d_tappos, s.a, s.b)
+      NikaMacros.SELECT -> getString(R.string.nika_mac_d_select, s.a)
+      NikaMacros.SAY_OBJECT ->
+        if (s.a.isEmpty()) getString(R.string.nika_mac_d_sayobject_focus)
+        else getString(R.string.nika_mac_d_sayobject, s.a)
       else -> s.type
     }
 
@@ -227,6 +250,21 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
       }
       .setNegativeButton(android.R.string.cancel, null)
       .show()
+  }
+
+  /** The conditions "run only when": add one, or remove them all. */
+  private fun manageConditions(macro: NikaMacros.Macro) {
+    val act = activity ?: return
+    val b = AlertDialog.Builder(act).setTitle(R.string.nika_mac_conds)
+    if (macro.conds.isNotEmpty()) {
+      b.setMessage(macro.conds.joinToString("\n") { condText(it) })
+      b.setNeutralButton(R.string.nika_mac_conds_clear) { _, _ -> update { it.conds.clear() } }
+    }
+    b.setPositiveButton(R.string.nika_mac_conds_add) { _, _ ->
+      chooseCondition { k, v -> update { it.conds.add(NikaMacros.Step("cond", k, v)) } }
+    }
+    b.setNegativeButton(android.R.string.cancel, null)
+    b.show()
   }
 
   private fun dirName(dir: String): String =
@@ -312,6 +350,9 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
         getString(R.string.nika_mac_t_break),
         getString(R.string.nika_mac_t_stop),
         getString(R.string.nika_mac_t_waituntil),
+        getString(R.string.nika_mac_t_tappos),
+        getString(R.string.nika_mac_t_select),
+        getString(R.string.nika_mac_t_sayobject),
       )
     AlertDialog.Builder(act)
       .setTitle(R.string.nika_mac_add_step)
@@ -334,6 +375,20 @@ class MacroEditFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) {
           14 -> add(NikaMacros.Step(NikaMacros.END_REPEAT))
           15 -> add(NikaMacros.Step(NikaMacros.BREAK))
           16 -> add(NikaMacros.Step(NikaMacros.STOP))
+          18 ->
+            askText(getString(R.string.nika_mac_tappos_x), "50", true) { x ->
+              askText(getString(R.string.nika_mac_tappos_y), "50", true) { y ->
+                add(
+                  NikaMacros.Step(
+                    NikaMacros.TAP_POS,
+                    a = (x.toIntOrNull() ?: 50).coerceIn(0, 100).toString(),
+                    b = (y.toIntOrNull() ?: 50).coerceIn(0, 100).toString(),
+                  )
+                )
+              }
+            }
+          19 -> askText(labels[19], "", false) { v -> add(NikaMacros.Step(NikaMacros.SELECT, a = v)) }
+          20 -> askText(labels[20], "", false) { v -> add(NikaMacros.Step(NikaMacros.SAY_OBJECT, a = v)) }
           17 ->
             chooseCondition { k, v ->
               askText(getString(R.string.nika_mac_wait_seconds), "10", true) { sec ->

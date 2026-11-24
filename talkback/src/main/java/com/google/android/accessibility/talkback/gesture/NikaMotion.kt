@@ -72,6 +72,10 @@ class NikaMotion private constructor(private val service: TalkBackService) : Sen
 
   private var lastFired = 0L
 
+  // A slower average of gravity along the screen axis; a big gap to the quick one means the phone is turning.
+  private var gzSlow = 0f
+  private var turnUntil = 0L
+
   private val prefListener =
     SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
       if (key != null && key.startsWith("nika_motion_")) handler.post { update() }
@@ -128,7 +132,6 @@ class NikaMotion private constructor(private val service: TalkBackService) : Sen
         (action(SHAKE1) != null ||
           action(SHAKE2) != null ||
           action(SHAKEL) != null ||
-          action(BACK1) != null ||
           action(BACK2) != null ||
           action(BACK3) != null)
     listen(wanted)
@@ -175,6 +178,8 @@ class NikaMotion private constructor(private val service: TalkBackService) : Sen
       val z = event.values[2]
       if (!haveGravity) {
         gx = x; gy = y; gz = z
+        gzSlow = z
+        turnUntil = now + 1000
         haveGravity = true
         return
       }
@@ -183,6 +188,8 @@ class NikaMotion private constructor(private val service: TalkBackService) : Sen
       gx += k * (x - gx)
       gy += k * (y - gy)
       gz += k * (z - gz)
+      gzSlow += 0.02f * (z - gzSlow)
+      if (abs(gz - gzSlow) > 2.5f) turnUntil = now + 1200
       val dx = x - gx
       val dy = y - gy
       val dz = z - gz
@@ -251,7 +258,14 @@ class NikaMotion private constructor(private val service: TalkBackService) : Sen
   // ----- three taps on the back -----
 
   private fun detectBackTap(now: Long, dx: Float, dy: Float, dz: Float, strength: Float, lv: Int) {
-    if (action(BACK1) == null && action(BACK2) == null && action(BACK3) == null) return
+    if (action(BACK2) == null && action(BACK3) == null) return
+    // Turning the phone over (for example screen down on the table) gives a push that looks like
+    // a tap, so taps are not counted while the phone turns or lies with the screen down.
+    if (now < turnUntil || gz < -4f) {
+      tapCount = 0
+      handler.removeCallbacks(tapDone)
+      return
+    }
     // A tap on the back is a short push along the axis that goes through the screen.
     val threshold = floatArrayOf(5.5f, 4f, 2.8f)[lv]
     val side = max(abs(dx), abs(dy))
@@ -279,7 +293,6 @@ class NikaMotion private constructor(private val service: TalkBackService) : Sen
     val count = tapCount
     tapCount = 0
     when (count) {
-      1 -> fire(BACK1)
       2 -> fire(BACK2)
       else -> if (count >= 3) fire(BACK3)
     }
@@ -303,7 +316,6 @@ class NikaMotion private constructor(private val service: TalkBackService) : Sen
     const val SHAKE1 = "nika_motion_shake1"
     const val SHAKE2 = "nika_motion_shake2"
     const val SHAKEL = "nika_motion_shakel"
-    const val BACK1 = "nika_motion_back1"
     const val BACK2 = "nika_motion_back2"
     const val BACK3 = "nika_motion_back3"
     const val SENS = "nika_motion_sens"

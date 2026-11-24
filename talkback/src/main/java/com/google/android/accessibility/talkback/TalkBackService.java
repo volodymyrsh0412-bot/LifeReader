@@ -1165,6 +1165,7 @@ public class TalkBackService extends AccessibilityServiceCompat
 
   @Override
   public void onAccessibilityEvent(AccessibilityEvent event) {
+    com.google.android.accessibility.utils.NikaDiag.event(this, event);
     if (screenOnSpeechSuppression != null) {
       screenOnSpeechSuppression.onAccessibilityEvent(event);
     }

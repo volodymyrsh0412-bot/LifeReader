@@ -11,6 +11,12 @@
       android:persistent="false"
       android:title="@string/title_pref_voice_profiles" />
   <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+      android:fragment="com.google.android.accessibility.talkback.preference.base.VoiceRulesFragment"
+      android:key="pref_nika_voice_rules"
+      android:persistent="false"
+      android:summary="@string/nika_vr_summary"
+      android:title="@string/nika_vr_title" />
+  <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
       android:key="@string/pref_system_tts_settings_key"
       android:title="@string/title_pref_system_tts_settings"
       android:summary="@string/summary_tts_settings" />

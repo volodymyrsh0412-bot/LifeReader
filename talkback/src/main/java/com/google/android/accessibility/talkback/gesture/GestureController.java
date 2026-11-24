@@ -271,6 +271,7 @@ public class GestureController {
   }
 
   public void performAction(String action, EventId eventId) {
+    com.google.android.accessibility.utils.NikaDiag.log("gesture", String.valueOf(action));
     RecentUserInput.mark();
     Performance.getInstance().onPerformAction(eventId, action);
     TalkbackAction actionEvent = gestureShortcutMapping.getActionEvent(action);

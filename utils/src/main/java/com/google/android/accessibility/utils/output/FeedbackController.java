@@ -273,6 +273,7 @@ public class FeedbackController {
 
   /** Plays a vibration pattern in the format {@link HapticPatternParser} reads. */
   private boolean vibratePattern(int[] patternArray, @Nullable EventId eventId) {
+    com.google.android.accessibility.utils.NikaDiag.vibration(java.util.Arrays.toString(patternArray));
     if (!mHapticEnabled || patternArray.length == 0) {
       return false;
     }

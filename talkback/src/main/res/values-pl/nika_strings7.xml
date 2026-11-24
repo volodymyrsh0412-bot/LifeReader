@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_ai_title">Sztuczna inteligencja</string>
-    <string name="nika_ai_summary">Agent Nika AI i makra</string>
+    <string name="nika_ai_summary">Agent Nika AI</string>
     <string name="nika_ai_agent_title">Nika AI (agent)</string>
     <string name="nika_ai_agent_summary">Zadania głosem i tekstem, klucze usług, gesty</string>
     <string name="nika_mac_title">Makra</string>

@@ -64,10 +64,6 @@
         android:key="@string/pref_status_readout_key"
         android:title="@string/title_pref_status_readout" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:fragment="com.google.android.accessibility.talkback.directtouch.DirectTouchFragment"
-        android:key="@string/pref_direct_touch_key"
-        android:title="@string/title_pref_direct_touch" />
-    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:key="@string/pref_category_manage_keyboard_shortcut_key"
         android:title="@string/title_pref_manage_keyboard_shortcuts"
         android:fragment="com.google.android.accessibility.talkback.preference.base.TalkBackKeyboardShortcutPreferenceFragment" />
@@ -106,6 +102,21 @@
       android:key="@string/pref_category_apps_key"
       android:title="@string/title_pref_category_apps">
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.AiSettingsFragment"
+        android:key="pref_nika_ai"
+        android:summary="@string/nika_ai_summary"
+        android:title="@string/nika_ai_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.MacrosFragment"
+        android:key="pref_nika_macros"
+        android:summary="@string/nika_mac_summary"
+        android:title="@string/nika_mac_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.DiagnosticsFragment"
+        android:key="pref_nika_diag"
+        android:summary="@string/nika_diag_summary"
+        android:title="@string/nika_diag_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:fragment="com.google.android.accessibility.talkback.preference.base.ClockSettingsFragment"
         android:key="pref_nika_clock"
         android:summary="@string/nika_clock_summary"
@@ -115,11 +126,6 @@
         android:key="pref_nika_translator"
         android:summary="@string/nika_tr_summary"
         android:title="@string/nika_tr_title" />
-    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:fragment="com.google.android.accessibility.talkback.preference.base.AiSettingsFragment"
-        android:key="pref_nika_ai"
-        android:summary="@string/nika_ai_summary"
-        android:title="@string/nika_ai_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:key="@string/pref_scripts_key"
         android:title="@string/title_pref_scripts"
@@ -158,11 +164,6 @@
         android:key="pref_nika_feedback"
         android:summary="@string/nika_feedback_summary"
         android:title="@string/nika_feedback_title" />
-    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:fragment="com.google.android.accessibility.talkback.preference.base.GeminiSettingsFragment"
-        android:key="pref_nika_gemini"
-        android:summary="@string/nika_gem_summary"
-        android:title="@string/nika_gem_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:key="pref_nika_telegram"
         android:summary="@string/nika_telegram_summary"

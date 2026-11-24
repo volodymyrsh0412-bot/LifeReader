@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_ai_title">Искусственный интеллект</string>
-    <string name="nika_ai_summary">Агент Nika AI и макросы</string>
+    <string name="nika_ai_summary">Агент Nika AI</string>
     <string name="nika_ai_agent_title">Nika AI (агент)</string>
     <string name="nika_ai_agent_summary">Задачи голосом и текстом, ключи сервисов, жесты</string>
     <string name="nika_mac_title">Макросы</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika \u2014 czytnik ekranu dla Androida</string>
-    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Makra: warunki („Jeśli / W przeciwnym razie”), pętle („Powtarzaj”, „Powtarzaj, dopóki”), „Czekaj, aż”, „Uruchom teraz”, eksport i import makr.\n\u2022 Powiadomienia: szablon mowy, pomijanie emoji, ograniczenie długości, aplikacje bez czytania, historia powiadomień.\n\u2022 Profile gestów: zapisz ustawienia gestów pod nazwą i przełączaj się między zestawami.</string>
+    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Makra są teraz osobną pozycją obok „Sztucznej inteligencji”; nowe kroki (dotknij miejsca, wybierz i wypowiedz obiekt) i warunek „Uruchamiaj tylko gdy”.\n\u2022 Głosy według języka i alfabetu (cyrylica, łacinka) w ustawieniach syntezy.\n\u2022 Diagnostyka: dziennik pracy zapisywany w Pobrane/Nika.\n\u2022 Naprawiono: stuknięcie w tył przy odwracaniu telefonu (pojedyncze stuknięcie usunięto); „Dotyk bezpośredni” jest teraz w sekcji dotyku.</string>
     <string name="nika_update_available">Dost\u0119pna aktualizacja: kompilacja %1$d</string>
     <string name="nika_update_tap">Dotknij, aby pobra\u0107 i zainstalowa\u0107</string>
     <string name="nika_telegram_title">Nika na Telegramie</string>

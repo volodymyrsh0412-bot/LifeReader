@@ -121,6 +121,13 @@ object NikaMacroActions {
 
   private fun start(service: TalkBackService, id: String) {
     val macro = NikaMacros.find(service, id) ?: return
+    // "Run only when": every condition must hold, otherwise the macro does not start.
+    for (c in macro.conds) {
+      if (!condition(service, c.a, c.b)) {
+        say(service, service.getString(R.string.nika_mac_cond_failed))
+        return
+      }
+    }
     runToken += 1
     val token = runToken
     runStep(service, Run(macro.steps.toList()), 0, token, 0)
@@ -311,6 +318,19 @@ object NikaMacroActions {
             say(service, service.getString(R.string.nika_mac_not_found))
           }
         }
+        NikaMacros.TAP_POS -> {
+          tapPosition(service, step)
+          next(600L)
+        }
+        NikaMacros.SELECT, NikaMacros.SAY_OBJECT -> {
+          if (selectStep(service, step)) {
+            next(if (step.type == NikaMacros.SAY_OBJECT) 900L else 400L)
+          } else if (tries < 8) {
+            handler.postDelayed({ runStep(service, run, index, token, tries + 1) }, 500L)
+          } else {
+            say(service, service.getString(R.string.nika_mac_not_found))
+          }
+        }
         NikaMacros.RELEASE -> {
           releaseStep(service, step)
           next()
@@ -443,6 +463,42 @@ object NikaMacroActions {
     val duration = (mm * 15L).coerceAtLeast(100L)
     val stroke = prev.continueStroke(path, 0L, duration, false)
     service.dispatchGesture(GestureDescription.Builder().addStroke(stroke).build(), null, null)
+  }
+
+  /** Taps the place of the screen given in percents: a = across (0..100), b = down (0..100). */
+  private fun tapPosition(service: AccessibilityService, step: NikaMacros.Step) {
+    val m = service.resources.displayMetrics
+    val x = (step.a.toFloatOrNull() ?: 50f).coerceIn(0f, 100f) / 100f * (m.widthPixels - 1)
+    val y = (step.b.toFloatOrNull() ?: 50f).coerceIn(0f, 100f) / 100f * (m.heightPixels - 1)
+    val path = Path()
+    path.moveTo(x, y)
+    val stroke = GestureDescription.StrokeDescription(path, 0L, 60L)
+    service.dispatchGesture(GestureDescription.Builder().addStroke(stroke).build(), null, null)
+  }
+
+  /**
+   * Puts the screen reader's focus on the object that has the words in a (or on the one that is
+   * in focus now if a is empty). For "say object" it also speaks the object.
+   */
+  private fun selectStep(service: TalkBackService, step: NikaMacros.Step): Boolean {
+    val word = step.a.lowercase()
+    var node: AccessibilityNodeInfo? = null
+    if (word.isEmpty()) {
+      for (w in service.windows) {
+        node = w.root?.findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY)
+        if (node != null) break
+      }
+    } else {
+      node = collect(service).firstOrNull { it.isVisibleToUser && labelOf(it).contains(word) }
+    }
+    if (node == null) return false
+    if (step.type == NikaMacros.SELECT) {
+      return node.performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS)
+    }
+    node.performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS)
+    val text = (node.contentDescription ?: node.text ?: "").toString()
+    if (text.isNotEmpty()) say(service, text)
+    return true
   }
 
   private fun typeText(service: AccessibilityService, text: String) {
