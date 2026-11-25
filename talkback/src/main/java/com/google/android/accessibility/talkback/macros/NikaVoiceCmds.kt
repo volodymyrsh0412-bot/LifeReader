@@ -294,18 +294,54 @@ object NikaVoiceCmds {
     }
   }
 
+  /** True while the on-screen keyboard is open: it needs the microphone for voice typing. */
+  private fun keyboardShown(service: TalkBackService): Boolean =
+    try {
+      service.windows.any { it.type == android.view.accessibility.AccessibilityWindowInfo.TYPE_INPUT_METHOD }
+    } catch (e: Throwable) {
+      false
+    }
+
+  /**
+   * Listens for the wake word. The recognizer of Google beeps at each start, so the sound of the
+   * music stream is muted for these seconds, but only if nothing is playing.
+   */
+  private fun listenQuiet(service: TalkBackService, seconds: Int, done: (Boolean, String) -> Unit) {
+    var muted = false
+    val audio = service.getSystemService(Context.AUDIO_SERVICE) as? android.media.AudioManager
+    try {
+      if (audio != null && engine(service) == NikaVoiceEngines.ANDROID && !audio.isMusicActive) {
+        audio.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, android.media.AudioManager.ADJUST_MUTE, 0)
+        muted = true
+      }
+    } catch (e: Throwable) {
+      muted = false
+    }
+    NikaDiag.log("voicecmd", "wake listen, quiet: $muted")
+    recognize(service, seconds) { ok, text ->
+      if (muted) {
+        try {
+          audio?.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, android.media.AudioManager.ADJUST_UNMUTE, 0)
+        } catch (e: Throwable) {
+          // skip
+        }
+      }
+      done(ok, text)
+    }
+  }
+
   private fun wakeCycle(service: TalkBackService) {
     if (!wakeRunning || trigger(service) != TRIGGER_VOICE) {
       wakeRunning = false
       return
     }
     val power = service.getSystemService(Context.POWER_SERVICE) as PowerManager
-    if (busy || !power.isInteractive || NikaBeep.externalMic()) {
+    if (busy || !power.isInteractive || NikaBeep.externalMic() || keyboardShown(service)) {
       handler.postDelayed({ wakeCycle(service) }, 3000)
       return
     }
     busy = true
-    recognize(service, 4) { ok, text ->
+    listenQuiet(service, 4) { ok, text ->
       busy = false
       val word = norm(wakeWord(service))
       val heard = norm(text)
@@ -318,7 +354,7 @@ object NikaVoiceCmds {
           handler.postDelayed({ wakeCycle(service) }, 800)
         } else {
           busy = true
-          recognize(service, 6) { ok2, text2 ->
+          listenQuiet(service, 6) { ok2, text2 ->
             NikaBeep.play(service, NikaBeep.STOP)
             busy = false
             if (ok2 && text2.isNotBlank()) handle(service, text2)
@@ -326,7 +362,7 @@ object NikaVoiceCmds {
           }
         }
       } else {
-        handler.postDelayed({ wakeCycle(service) }, if (ok) 300 else 5000)
+        handler.postDelayed({ wakeCycle(service) }, if (ok) 1500 else 8000)
       }
     }
   }

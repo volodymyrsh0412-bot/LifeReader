@@ -15,8 +15,8 @@
       app:min="0"
       app:showSeekBarValue="true" />
   <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
-      android:defaultValue="true"
-      android:key="nika_mic_sounds"
+      android:defaultValue="false"
+      android:key="nika_mic_beeps"
       android:summary="@string/nika_mic_summary"
       android:title="@string/nika_mic_title" />
   <com.google.android.accessibility.material.preference.AccessibilitySuiteListPreference

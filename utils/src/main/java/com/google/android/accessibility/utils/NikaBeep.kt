@@ -29,7 +29,7 @@ import kotlin.math.sin
  * on the sound theme, play on the accessibility volume and follow the volume of the sounds.
  */
 object NikaBeep {
-  const val PREF_MIC = "nika_mic_sounds"
+  const val PREF_MIC = "nika_mic_beeps"
   const val PREF_VOLUME = "nika_soundback_vol"
   const val START = 1
   const val STOP = 2
@@ -39,6 +39,8 @@ object NikaBeep {
   private val handler = Handler(Looper.getMainLooper())
   @Volatile private var micOn = false
   @Volatile private var ownMic = false
+  @Volatile private var micSeq = 0
+  @Volatile private var beeped = false
   @Volatile private var ownUntil = 0L
   @Volatile private var externalSince = 0L
 
@@ -60,7 +62,7 @@ object NikaBeep {
 
   @JvmStatic
   fun micEnabled(context: Context): Boolean =
-    SharedPreferencesUtils.getSharedPreferences(context).getBoolean(PREF_MIC, true)
+    SharedPreferencesUtils.getSharedPreferences(context).getBoolean(PREF_MIC, false)
 
   /** The microphone started or stopped. Beeps only for voice input, and only if the switch is on. */
   @JvmStatic
@@ -71,10 +73,19 @@ object NikaBeep {
       NikaDiag.log("mic", (if (active) "on" else "off") + ", voice input: " + voiceInput)
       if (active) {
         micOn = voiceInput
-        if (voiceInput && micEnabled(context)) play(context, START)
+        micSeq++
+        val seq = micSeq
+        // A short flicker of the microphone (a failed start) must not beep.
+        if (voiceInput && micEnabled(context)) {
+          handler.postDelayed({ if (micOn && micSeq == seq) { beeped = true; play(context, START) } }, 500)
+        }
       } else if (micOn) {
         micOn = false
-        if (micEnabled(context)) play(context, STOP)
+        micSeq++
+        if (beeped) {
+          beeped = false
+          if (micEnabled(context)) play(context, STOP)
+        }
       }
     } catch (e: Throwable) {
       // skip
