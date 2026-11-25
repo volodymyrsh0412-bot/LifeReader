@@ -38,6 +38,25 @@ object NikaBeep {
   private const val RATE = 22050
   private val handler = Handler(Looper.getMainLooper())
   @Volatile private var micOn = false
+  @Volatile private var ownMic = false
+  @Volatile private var ownUntil = 0L
+  @Volatile private var externalSince = 0L
+
+  /** Nika's own recognizer (voice commands) uses the microphone: no beeps, it is not "outside". */
+  @JvmStatic
+  fun setOwnMic(on: Boolean) {
+    ownMic = on
+    if (!on) ownUntil = android.os.SystemClock.uptimeMillis() + 1000
+  }
+
+  private fun isOwnMic() = ownMic || android.os.SystemClock.uptimeMillis() < ownUntil
+
+  /** True while another app (the keyboard voice input, a call) holds the microphone. */
+  @JvmStatic
+  fun externalMic(): Boolean {
+    val since = externalSince
+    return since != 0L && android.os.SystemClock.uptimeMillis() - since < 120000
+  }
 
   @JvmStatic
   fun micEnabled(context: Context): Boolean =
@@ -47,6 +66,8 @@ object NikaBeep {
   @JvmStatic
   fun mic(context: Context, active: Boolean, voiceInput: Boolean) {
     try {
+      if (isOwnMic()) return
+      externalSince = if (active) android.os.SystemClock.uptimeMillis() else 0L
       NikaDiag.log("mic", (if (active) "on" else "off") + ", voice input: " + voiceInput)
       if (active) {
         micOn = voiceInput

@@ -300,7 +300,7 @@ object NikaVoiceCmds {
       return
     }
     val power = service.getSystemService(Context.POWER_SERVICE) as PowerManager
-    if (busy || !power.isInteractive) {
+    if (busy || !power.isInteractive || NikaBeep.externalMic()) {
       handler.postDelayed({ wakeCycle(service) }, 3000)
       return
     }
@@ -334,7 +334,12 @@ object NikaVoiceCmds {
   // ---------------------------------------------------------------- recognition
 
   /** [done] gets true and the text (maybe empty), or false and a message. Runs on the main thread. */
-  private fun recognize(service: TalkBackService, seconds: Int, done: (Boolean, String) -> Unit) {
+  private fun recognize(service: TalkBackService, seconds: Int, doneOuter: (Boolean, String) -> Unit) {
+    NikaBeep.setOwnMic(true)
+    val done: (Boolean, String) -> Unit = { ok, text ->
+      NikaBeep.setOwnMic(false)
+      doneOuter(ok, text)
+    }
     val engine = engine(service)
     if (engine == NikaVoiceEngines.ANDROID) {
       recognizeAndroid(service, seconds, done)
