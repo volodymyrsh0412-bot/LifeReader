@@ -127,7 +127,14 @@ object NikaVoiceRules {
    * the detection is by Unicode and there are rules by alphabet. Otherwise null.
    */
   @JvmStatic
-  fun runStarts(context: Context, text: CharSequence?): List<Int>? {
+  fun runStarts(context: Context, text: CharSequence?): List<Int>? =
+    try {
+      runStartsUnsafe(context, text)
+    } catch (e: Throwable) {
+      null
+    }
+
+  private fun runStartsUnsafe(context: Context, text: CharSequence?): List<Int>? {
     if (text.isNullOrEmpty() || text.length > 3000) return null
     if (detectMode(context) != DETECT_UNICODE) return null
     if (load(context).none { it.kind == KIND_SCRIPT }) return null

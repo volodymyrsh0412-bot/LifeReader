@@ -278,13 +278,18 @@ object NikaVoiceCmds {
   @JvmStatic
   fun applyTrigger(service: TalkBackService) {
     handler.post {
-      if (trigger(service) == TRIGGER_VOICE) {
-        if (!wakeRunning) {
-          wakeRunning = true
-          wakeCycle(service)
+      try {
+        if (trigger(service) == TRIGGER_VOICE) {
+          if (!wakeRunning) {
+            wakeRunning = true
+            wakeCycle(service)
+          }
+        } else {
+          wakeRunning = false
         }
-      } else {
+      } catch (e: Throwable) {
         wakeRunning = false
+        NikaDiag.log("voicecmd", "wake failed: $e")
       }
     }
   }

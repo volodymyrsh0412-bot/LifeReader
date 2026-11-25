@@ -55,7 +55,7 @@ object NikaBeep {
         micOn = false
         if (micEnabled(context)) play(context, STOP)
       }
-    } catch (e: RuntimeException) {
+    } catch (e: Throwable) {
       // skip
     }
   }
@@ -106,13 +106,13 @@ object NikaBeep {
         {
           try {
             track.release()
-          } catch (e: RuntimeException) {
+          } catch (e: Throwable) {
             // skip
           }
         },
         (perTone * tones.size + 300).toLong(),
       )
-    } catch (e: RuntimeException) {
+    } catch (e: Throwable) {
       // skip
     }
   }

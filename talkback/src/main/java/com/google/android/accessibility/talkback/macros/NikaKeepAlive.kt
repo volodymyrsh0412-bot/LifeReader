@@ -36,19 +36,19 @@ object NikaKeepAlive {
   private const val CHANNEL = "nika_keepalive"
 
   fun enabled(service: Service): Boolean =
-    SharedPreferencesUtils.getSharedPreferences(service).getBoolean(PREF, true)
+    SharedPreferencesUtils.getSharedPreferences(service).getBoolean(PREF, false)
 
   /** Starts or stops the notification as the setting says, and starts the voice trigger. */
   @JvmStatic
   fun apply(service: Service) {
     try {
       if (enabled(service)) start(service) else stop(service)
-    } catch (e: RuntimeException) {
+    } catch (e: Throwable) {
       NikaDiag.log("keepalive", "failed: $e")
     }
     try {
       if (service is TalkBackService) NikaVoiceCmds.applyTrigger(service)
-    } catch (e: RuntimeException) {
+    } catch (e: Throwable) {
       NikaDiag.log("voicecmd", "trigger failed: $e")
     }
   }
@@ -60,7 +60,7 @@ object NikaKeepAlive {
     )
     val notification =
       Notification.Builder(service, CHANNEL)
-        .setSmallIcon(service.applicationInfo.icon)
+        .setSmallIcon(android.R.drawable.ic_menu_info_details)
         .setContentTitle(service.getString(R.string.nika_ka_notification))
         .setOngoing(true)
         .build()
