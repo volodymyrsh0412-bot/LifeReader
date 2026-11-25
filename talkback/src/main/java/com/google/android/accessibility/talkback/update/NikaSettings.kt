@@ -81,7 +81,8 @@ object NikaSettings {
       .show()
   }
 
-  private fun sendFeedback(activity: Activity) {
+  @JvmStatic
+  fun sendFeedback(activity: Activity) {
     val subject = activity.getString(R.string.nika_feedback_subject, BuildConfig.COMMIT_COUNT)
     val body =
       activity.getString(

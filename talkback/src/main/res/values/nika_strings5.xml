@@ -27,14 +27,14 @@
     <string name="nika_tr_gemini_model_title">Model: Gemini</string>
     <string name="nika_tr_openai_key_title">Key: GPT</string>
     <string name="nika_tr_openai_model_title">Model: GPT</string>
-    <string name="nika_tr_grok_key_title">Key: Grok</string>
-    <string name="nika_tr_grok_model_title">Model: Grok</string>
+    <string name="nika_tr_grok_key_title">Key: xAI Grok (Elon Musk)</string>
+    <string name="nika_tr_grok_model_title">Model: xAI Grok (Elon Musk)</string>
     <string name="nika_tr_deepseek_key_title">Key: DeepSeek</string>
     <string name="nika_tr_deepseek_model_title">Model: DeepSeek</string>
     <string name="nika_tr_mistral_key_title">Key: Mistral</string>
     <string name="nika_tr_mistral_model_title">Model: Mistral</string>
-    <string name="nika_tr_groq_key_title">Key: Groq</string>
-    <string name="nika_tr_groq_model_title">Model: Groq</string>
+    <string name="nika_tr_groq_key_title">Key: Groq Llama</string>
+    <string name="nika_tr_groq_model_title">Model: Groq Llama</string>
     <string name="nika_tr_openrouter_key_title">Key: OpenRouter</string>
     <string name="nika_tr_openrouter_model_title">Model: OpenRouter</string>
     <string name="nika_tr_custom_key_title">Key: Own service (OpenAI compatible)</string>
@@ -72,10 +72,10 @@
         <item>Claude</item>
         <item>Gemini</item>
         <item>GPT</item>
-        <item>Grok</item>
+        <item>xAI Grok (Elon Musk)</item>
         <item>DeepSeek</item>
         <item>Mistral</item>
-        <item>Groq</item>
+        <item>Groq Llama</item>
         <item>OpenRouter</item>
         <item>Own service (OpenAI compatible)</item>
         <item>Vivo (NVDACN)</item>

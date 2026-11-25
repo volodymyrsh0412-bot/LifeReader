@@ -63,6 +63,11 @@ class NikaClock private constructor(private val service: TalkBackService) {
   private var timerLength = 0L
   private var ringsLeft = 0
 
+  // Spoken progress (every few seconds) of the stopwatch and of the timer.
+  private var progressLock: PowerManager.WakeLock? = null
+  private var lastSwSpoken = -1L
+  private var lastTimerSpoken = -1L
+
   private val receiver =
     object : BroadcastReceiver() {
       override fun onReceive(context: Context?, intent: Intent?) {
@@ -81,7 +86,10 @@ class NikaClock private constructor(private val service: TalkBackService) {
   private val prefListener =
     SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
       if (key != null && key.startsWith("nika_clock_")) {
-        handler.post { scheduleClock() }
+        handler.post {
+          scheduleClock()
+          scheduleProgress()
+        }
       }
     }
 
@@ -114,6 +122,7 @@ class NikaClock private constructor(private val service: TalkBackService) {
     }
     for (store in stores()) store.unregisterOnSharedPreferenceChangeListener(prefListener)
     handler.removeCallbacksAndMessages(null)
+    releaseProgressLock()
     cancel(pending(ACTION_CLOCK))
     cancel(pending(ACTION_TIMER))
   }
@@ -315,6 +324,8 @@ class NikaClock private constructor(private val service: TalkBackService) {
         true,
       )
     }
+    lastSwSpoken = -1L
+    scheduleProgress()
   }
 
   fun stopwatchSay() {
@@ -330,6 +341,8 @@ class NikaClock private constructor(private val service: TalkBackService) {
     swAccumulated = 0L
     swStartedAt = 0L
     speak(service.getString(R.string.nika_sw_reset_done), true)
+    lastSwSpoken = -1L
+    scheduleProgress()
   }
 
   // ----- countdown timer -----
@@ -338,6 +351,7 @@ class NikaClock private constructor(private val service: TalkBackService) {
     if (timerEndAt != 0L) {
       stopTimer()
       speak(service.getString(R.string.nika_timer_stopped), true)
+      scheduleProgress()
       return
     }
     val minutes = int("nika_clock_timer_minutes", 5).coerceIn(1, 600)
@@ -346,6 +360,8 @@ class NikaClock private constructor(private val service: TalkBackService) {
     ringsLeft = 0
     setAlarm(AlarmManager.ELAPSED_REALTIME_WAKEUP, timerEndAt, pending(ACTION_TIMER))
     speak(service.getString(R.string.nika_timer_started, durationText(timerLength)), true)
+    lastTimerSpoken = -1L
+    scheduleProgress()
   }
 
   fun timerSay() {
@@ -377,6 +393,7 @@ class NikaClock private constructor(private val service: TalkBackService) {
   private fun onTimerAlarm() {
     if (timerEndAt == 0L) return
     timerEndAt = 0L
+    scheduleProgress()
     val power = service.getSystemService(PowerManager::class.java)
     try {
       power?.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "nika:timer")?.acquire(20_000L)
@@ -401,6 +418,76 @@ class NikaClock private constructor(private val service: TalkBackService) {
       // skip
     }
     speak(service.getString(R.string.nika_timer_done), true)
+  }
+
+  // ----- spoken progress -----
+
+  private val progressTask = Runnable { progressTick() }
+
+  private fun releaseProgressLock() {
+    try {
+      progressLock?.let { if (it.isHeld) it.release() }
+    } catch (e: RuntimeException) {
+      // skip
+    }
+  }
+
+  /** Plans the next spoken progress. While it waits, the phone stays awake, also when locked. */
+  private fun scheduleProgress() {
+    handler.removeCallbacks(progressTask)
+    val swStep = if (swStartedAt != 0L) int("nika_clock_sw_progress", 0) * 1000L else 0L
+    val timerStep = if (timerEndAt != 0L) int("nika_clock_timer_progress", 0) * 1000L else 0L
+    var next = Long.MAX_VALUE
+    if (swStep > 0L) next = minOf(next, swStep - stopwatchElapsed() % swStep)
+    if (timerStep > 0L) {
+      val left = (timerEndAt - SystemClock.elapsedRealtime()).coerceAtLeast(0L)
+      val rest = left % timerStep
+      next = minOf(next, if (rest == 0L) timerStep else rest)
+    }
+    if (next == Long.MAX_VALUE) {
+      releaseProgressLock()
+      return
+    }
+    try {
+      if (progressLock == null) {
+        progressLock =
+          service.getSystemService(PowerManager::class.java)?.newWakeLock(
+            PowerManager.PARTIAL_WAKE_LOCK,
+            "nika:progress",
+          )
+        progressLock?.setReferenceCounted(false)
+      }
+      progressLock?.acquire(next + 5_000L)
+    } catch (e: RuntimeException) {
+      // skip
+    }
+    handler.postDelayed(progressTask, next.coerceAtLeast(50L))
+  }
+
+  private fun progressTick() {
+    try {
+      val swStep = int("nika_clock_sw_progress", 0) * 1000L
+      if (swStartedAt != 0L && swStep > 0L) {
+        val elapsed = stopwatchElapsed()
+        val rounded = (elapsed + swStep / 2) / swStep * swStep
+        if (rounded > 0L && Math.abs(elapsed - rounded) < 400L && rounded != lastSwSpoken) {
+          lastSwSpoken = rounded
+          speak(durationText(rounded), false)
+        }
+      }
+      val timerStep = int("nika_clock_timer_progress", 0) * 1000L
+      if (timerEndAt != 0L && timerStep > 0L) {
+        val left = (timerEndAt - SystemClock.elapsedRealtime()).coerceAtLeast(0L)
+        val rounded = (left + timerStep / 2) / timerStep * timerStep
+        if (rounded > 0L && Math.abs(left - rounded) < 400L && rounded != lastTimerSpoken) {
+          lastTimerSpoken = rounded
+          speak(durationText(rounded), false)
+        }
+      }
+    } catch (e: RuntimeException) {
+      // The clock must never break the screen reader.
+    }
+    scheduleProgress()
   }
 
   // ----- speech -----

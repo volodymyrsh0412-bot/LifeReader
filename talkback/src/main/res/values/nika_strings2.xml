@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika \u2014 a screen reader for Android</string>
-    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 Voices by language and alphabet are now the first item of speech synthesis: voices of any installed synthesizer, own speed and volume for each language, detection by alphabet or by Unicode. Ukrainian text is no longer read in English.\n\u2022 Sound feedback volume is a slider from 0 to 100; microphone on/off beeps and the translator beep are back, with a switch.\n\u2022 Settings groups that fold say collapsed and expanded again; only the word heading is removed there.\n\u2022 New: Protection from closing, and Nika voice commands (several recognition engines).</string>
+    <string name="nika_whats_new_page_text">What\'s new:\n\u2022 New items: Help and feedback (Telegram group, write to the developer, guide) and Updates (automatic check, check now).\n\u2022 Stopwatch and timer can say the time every 1 to 60 seconds, also on the lock screen (Clock settings).\n\u2022 Volume keys have their own actions for the lock screen.\n\u2022 The translator keys list names Grok (xAI) and Groq (Llama) differently.</string>
     <string name="nika_update_available">Update available: build %1$d</string>
     <string name="nika_update_tap">Tap to download and install</string>
     <string name="nika_telegram_title">Nika on Telegram</string>

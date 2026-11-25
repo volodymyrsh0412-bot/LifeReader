@@ -102,16 +102,6 @@
       android:key="@string/pref_category_apps_key"
       android:title="@string/title_pref_category_apps">
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:fragment="com.google.android.accessibility.talkback.preference.base.KeepAliveFragment"
-        android:key="pref_nika_keepalive"
-        android:summary="@string/nika_ka_menu_summary"
-        android:title="@string/nika_ka_title" />
-    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:fragment="com.google.android.accessibility.talkback.preference.base.VoiceCommandsFragment"
-        android:key="pref_nika_voicecmds"
-        android:summary="@string/nika_vc_menu_summary"
-        android:title="@string/nika_vc_title" />
-    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:fragment="com.google.android.accessibility.talkback.preference.base.AiSettingsFragment"
         android:key="pref_nika_ai"
         android:summary="@string/nika_ai_summary"
@@ -136,6 +126,16 @@
         android:key="pref_nika_translator"
         android:summary="@string/nika_tr_summary"
         android:title="@string/nika_tr_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.KeepAliveFragment"
+        android:key="pref_nika_keepalive"
+        android:summary="@string/nika_ka_menu_summary"
+        android:title="@string/nika_ka_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.VoiceCommandsFragment"
+        android:key="pref_nika_voicecmds"
+        android:summary="@string/nika_vc_menu_summary"
+        android:title="@string/nika_vc_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:key="@string/pref_scripts_key"
         android:title="@string/title_pref_scripts"
@@ -165,27 +165,14 @@
         android:key="@string/pref_backup_restore_key"
         android:title="@string/settings_backup_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:key="@string/pref_tutorial_and_help_key"
-        android:title="@string/title_pref_category_tutorial" />
+        android:fragment="com.google.android.accessibility.talkback.preference.base.HelpFeedbackFragment"
+        android:key="pref_nika_help_feedback"
+        android:summary="@string/nika_hf_summary"
+        android:title="@string/nika_hf_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:key="@string/pref_check_for_updates_key"
-        android:title="@string/title_pref_check_for_updates" />
-    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:key="pref_nika_feedback"
-        android:summary="@string/nika_feedback_summary"
-        android:title="@string/nika_feedback_title" />
-    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
-        android:key="pref_nika_telegram"
-        android:summary="@string/nika_telegram_summary"
-        android:title="@string/nika_telegram_title">
-      <intent
-          android:action="android.intent.action.VIEW"
-          android:data="https://t.me/+Yb0tYhVnUHhkOWIy" />
-    </com.google.android.accessibility.material.preference.AccessibilitySuitePreference>
-    <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
-        android:defaultValue="@bool/pref_auto_update_check_default"
-        android:key="@string/pref_auto_update_check_key"
-        android:summary="@string/summary_pref_auto_update_check"
-        android:title="@string/title_pref_auto_update_check" />
+        android:fragment="com.google.android.accessibility.talkback.preference.base.UpdatesFragment"
+        android:key="pref_nika_updates"
+        android:summary="@string/nika_up_summary"
+        android:title="@string/nika_up_title" />
   </com.google.android.accessibility.material.preference.AccessibilitySuitePreferenceCategory>
 </PreferenceScreen>

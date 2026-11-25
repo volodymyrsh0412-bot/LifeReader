@@ -27,14 +27,14 @@
     <string name="nika_tr_gemini_model_title">Мадэль: Gemini</string>
     <string name="nika_tr_openai_key_title">Ключ: GPT</string>
     <string name="nika_tr_openai_model_title">Мадэль: GPT</string>
-    <string name="nika_tr_grok_key_title">Ключ: Grok</string>
-    <string name="nika_tr_grok_model_title">Мадэль: Grok</string>
+    <string name="nika_tr_grok_key_title">Ключ: xAI Grok (Ілон Маск)</string>
+    <string name="nika_tr_grok_model_title">Мадэль: xAI Grok (Ілон Маск)</string>
     <string name="nika_tr_deepseek_key_title">Ключ: DeepSeek</string>
     <string name="nika_tr_deepseek_model_title">Мадэль: DeepSeek</string>
     <string name="nika_tr_mistral_key_title">Ключ: Mistral</string>
     <string name="nika_tr_mistral_model_title">Мадэль: Mistral</string>
-    <string name="nika_tr_groq_key_title">Ключ: Groq</string>
-    <string name="nika_tr_groq_model_title">Мадэль: Groq</string>
+    <string name="nika_tr_groq_key_title">Ключ: Groq Llama</string>
+    <string name="nika_tr_groq_model_title">Мадэль: Groq Llama</string>
     <string name="nika_tr_openrouter_key_title">Ключ: OpenRouter</string>
     <string name="nika_tr_openrouter_model_title">Мадэль: OpenRouter</string>
     <string name="nika_tr_custom_key_title">Ключ: Свой сэрвіс (сумяшчальны з OpenAI)</string>
@@ -72,10 +72,10 @@
         <item>Claude</item>
         <item>Gemini</item>
         <item>GPT</item>
-        <item>Grok</item>
+        <item>xAI Grok (Ілон Маск)</item>
         <item>DeepSeek</item>
         <item>Mistral</item>
-        <item>Groq</item>
+        <item>Groq Llama</item>
         <item>OpenRouter</item>
         <item>Свой сэрвіс (сумяшчальны з OpenAI)</item>
         <item>Vivo (NVDACN)</item>

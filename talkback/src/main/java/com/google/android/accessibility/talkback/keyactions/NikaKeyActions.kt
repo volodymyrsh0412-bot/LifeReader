@@ -16,6 +16,8 @@
 
 package com.google.android.accessibility.talkback.keyactions
 
+import android.app.KeyguardManager
+import android.content.Context
 import android.content.SharedPreferences
 import android.media.AudioManager
 import android.os.Handler
@@ -103,6 +105,21 @@ class NikaKeyActions(private val service: TalkBackService) {
     }
   }
 
+  private fun isLocked(): Boolean =
+    try {
+      (service.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager).isKeyguardLocked
+    } catch (e: RuntimeException) {
+      false
+    }
+
+  /** The actions of a key. On the lock screen the volume keys use their own actions, if any. */
+  private fun actionsFor(prefs: SharedPreferences, slot: String, isVolume: Boolean): Array<String> {
+    val normal = Array(4) { readAction(prefs, slot, TYPES[it]) }
+    if (!isVolume || !isLocked()) return normal
+    val locked = Array(4) { readAction(prefs, slot + "_lock", TYPES[it]) }
+    return if (locked.any { it != UNASSIGNED }) locked else normal
+  }
+
   /** Returns true if the key event was used. */
   fun onKeyEvent(event: KeyEvent, inEditField: Boolean): Boolean {
     val prefs = SharedPreferencesUtils.getSharedPreferences(service)
@@ -168,7 +185,7 @@ class NikaKeyActions(private val service: TalkBackService) {
         return false
       }
     }
-    val actions = Array(4) { readAction(prefs, slot, TYPES[it]) }
+    val actions = actionsFor(prefs, slot, isVolume)
     val hasTap1 = actions[0] != UNASSIGNED
     val hasHold = actions[1] != UNASSIGNED
     val hasTap2 = actions[2] != UNASSIGNED

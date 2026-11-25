@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika \u2014 czytnik ekranu dla Androida</string>
-    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Głosy według języka i alfabetu to teraz pierwsza pozycja syntezy mowy: głosy dowolnego zainstalowanego syntezatora, własna szybkość i głośność dla każdego języka, rozpoznawanie według alfabetu lub Unicode. Ukraiński tekst nie jest już czytany po angielsku.\n\u2022 Głośność dźwięków to suwak od 0 do 100; dźwięki mikrofonu i dźwięk przed tłumaczeniem wróciły, jest przełącznik.\n\u2022 Grupy ustawień, które się zwijają, znów mówią „zwinięte” i „rozwinięte”; usunięto tylko słowo „nagłówek”.\n\u2022 Nowe: „Ochrona przed zamknięciem” i „Polecenia głosowe Nika” (kilka silników rozpoznawania).</string>
+    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Nowe pozycje: „Pomoc i opinie” (grupa na Telegramie, napisz do twórcy, poradnik) i „Aktualizacje” (automatyczne sprawdzanie, sprawdź teraz).\n\u2022 Stoper i timer mogą podawać czas co 1–60 sekund, także na zablokowanym ekranie (ustawienia zegara).\n\u2022 Klawisze głośności mają osobne akcje na zablokowanym ekranie.\n\u2022 W kluczach tłumacza Grok (xAI) i Groq (Llama) mają teraz różne nazwy.</string>
     <string name="nika_update_available">Dost\u0119pna aktualizacja: kompilacja %1$d</string>
     <string name="nika_update_tap">Dotknij, aby pobra\u0107 i zainstalowa\u0107</string>
     <string name="nika_telegram_title">Nika na Telegramie</string>

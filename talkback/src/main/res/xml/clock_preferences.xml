@@ -49,6 +49,20 @@
           android:summary="%s"
           android:entries="@array/nika_clock_timer_entries"
           android:entryValues="@array/nika_clock_timer_values" />
+    <ListPreference
+          android:key="nika_clock_sw_progress"
+          android:defaultValue="0"
+          android:title="@string/nika_clock_sw_progress_title"
+          android:summary="%s"
+          android:entries="@array/nika_clock_progress_entries"
+          android:entryValues="@array/nika_clock_progress_values" />
+    <ListPreference
+          android:key="nika_clock_timer_progress"
+          android:defaultValue="0"
+          android:title="@string/nika_clock_timer_progress_title"
+          android:summary="%s"
+          android:entries="@array/nika_clock_progress_entries"
+          android:entryValues="@array/nika_clock_progress_values" />
     <Preference
           android:key="nika_clock_permission"
           android:title="@string/nika_clock_perm_title"
