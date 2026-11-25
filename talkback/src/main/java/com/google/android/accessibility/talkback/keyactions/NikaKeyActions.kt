@@ -70,6 +70,11 @@ class NikaKeyActions(private val service: TalkBackService) {
   @Volatile private var lastVolumeKey = 0L
   private var ignoreVolumeUntil = 0L
 
+  // A sequence of presses seen by the change of the volume: the stream and the volume before the first press.
+  private var viaVolume = false
+  private var viaType = AudioManager.STREAM_MUSIC
+  private var viaBase = 0
+
   /**
    * On some phones the volume keys do not reach a screen reader on the lock screen. The volume itself
    * still changes, so the change is taken as the key: the volume is put back and the action is done.
@@ -91,8 +96,11 @@ class NikaKeyActions(private val service: TalkBackService) {
           val slot = slotFor(prefs, code) ?: return
           val actions = actionsFor(prefs, slot, true)
           if (actions.all { it == UNASSIGNED }) return
-          ignoreVolumeUntil = now + 1500
-          service.getSystemService(AudioManager::class.java)?.setStreamVolume(type, prev, 0)
+          if (!viaVolume) {
+            viaVolume = true
+            viaType = type
+            viaBase = prev
+          }
           com.google.android.accessibility.utils.NikaDiag.log(
             "key",
             "lock screen: " + KeyEvent.keyCodeToString(code) + " seen by the change of the volume"
@@ -316,6 +324,8 @@ class NikaKeyActions(private val service: TalkBackService) {
   }
 
   private fun fire(state: State, actions: Array<String>, code: Int) {
+    val via = viaVolume
+    viaVolume = false
     val count = state.taps.coerceIn(1, 3)
     state.taps = 0
     state.tapTask = null
@@ -327,7 +337,16 @@ class NikaKeyActions(private val service: TalkBackService) {
       }
     if (action != UNASSIGNED) {
       perform(action)
-    } else if (count == 1) {
+      if (via) {
+        // The presses already changed the volume: put it back.
+        ignoreVolumeUntil = android.os.SystemClock.uptimeMillis() + 600
+        try {
+          service.getSystemService(AudioManager::class.java)?.setStreamVolume(viaType, viaBase, 0)
+        } catch (e: RuntimeException) {
+          // skip
+        }
+      }
+    } else if (count == 1 && !via) {
       fallback(code)
     }
   }
