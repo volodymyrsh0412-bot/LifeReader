@@ -41,7 +41,7 @@ object NikaKeepAlive {
   /** Starts or stops the notification as the setting says, and starts the voice trigger. */
   @JvmStatic
   fun apply(service: Service) {
-    NikaDiag.log("nika", "version 40 started")
+    NikaDiag.log("nika", "version 41 started")
     try {
       if (enabled(service)) start(service) else stop(service)
     } catch (e: Throwable) {

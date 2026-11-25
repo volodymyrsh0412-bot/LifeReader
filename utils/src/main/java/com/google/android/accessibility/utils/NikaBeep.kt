@@ -60,7 +60,6 @@ object NikaBeep {
     return since != 0L && android.os.SystemClock.uptimeMillis() - since < 120000
   }
 
-  @JvmStatic
   private const val MIC_BEEPS_AVAILABLE = false
 
   fun micEnabled(context: Context): Boolean =

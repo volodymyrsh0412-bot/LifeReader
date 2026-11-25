@@ -345,9 +345,14 @@ object NikaVoiceCmds {
       if (busy) return@post
       busy = true
       val name = userName(service)
+      val mode = greetMode(service)
       val hello =
-        if (name.isEmpty()) service.getString(R.string.nika_vc_greet_plain) else service.getString(R.string.nika_vc_greet, name)
-      say(service, hello)
+        when {
+          mode == GREET_BEEP -> ""
+          mode == GREET_NAME && name.isNotEmpty() -> service.getString(R.string.nika_vc_greet, name)
+          else -> service.getString(R.string.nika_vc_greet_plain)
+        }
+      if (hello.isNotEmpty()) say(service, hello)
       handler.postDelayed(
         {
           try {
@@ -362,13 +367,19 @@ object NikaVoiceCmds {
             NikaDiag.log("voicecmd", "listen failed: $e")
           }
         },
-        900L + hello.length * 65L,
+        if (hello.isEmpty()) 150L else 900L + hello.length * 65L,
       )
     }
   }
 
   const val PREF_POWER = "nika_vc_power"
   const val PREF_NAME = "nika_vc_name"
+  const val PREF_GREET = "nika_vc_greet_mode"
+  const val GREET_NAME = "name"
+  const val GREET_HELLO = "hello"
+  const val GREET_BEEP = "beep"
+
+  fun greetMode(context: Context): String = prefs(context).getString(PREF_GREET, GREET_NAME) ?: GREET_NAME
   const val POWER_OFF = "off"
   const val POWER_DOUBLE = "double"
   const val POWER_TRIPLE = "triple"

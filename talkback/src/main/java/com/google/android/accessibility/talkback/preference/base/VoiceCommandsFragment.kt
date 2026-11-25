@@ -101,6 +101,20 @@ class VoiceCommandsFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) 
       }
     }
 
+    row(
+      group,
+      getString(R.string.nika_vc_greet_mode),
+      getString(
+        when (NikaVoiceCmds.greetMode(ctx)) {
+          NikaVoiceCmds.GREET_HELLO -> R.string.nika_vc_greet_mode_hello
+          NikaVoiceCmds.GREET_BEEP -> R.string.nika_vc_greet_mode_beep
+          else -> R.string.nika_vc_greet_mode_name
+        }
+      ),
+    ) {
+      chooseGreet()
+    }
+
     val engine = NikaVoiceEngines.find(NikaVoiceCmds.engine(ctx))
     row(group, getString(R.string.nika_vc_engine), getString(engine.titleRes) + ". " + getString(engine.noteRes)) {
       chooseEngine()
@@ -157,6 +171,25 @@ class VoiceCommandsFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) 
       .setItems(names) { _, which ->
         pref().edit().putString(NikaVoiceCmds.PREF_POWER, ids[which]).apply()
         applyTrigger()
+        rebuild()
+      }
+      .setNegativeButton(android.R.string.cancel, null)
+      .show()
+  }
+
+  private fun chooseGreet() {
+    val act = activity ?: return
+    val ids = listOf(NikaVoiceCmds.GREET_NAME, NikaVoiceCmds.GREET_HELLO, NikaVoiceCmds.GREET_BEEP)
+    val names =
+      arrayOf(
+        getString(R.string.nika_vc_greet_mode_name),
+        getString(R.string.nika_vc_greet_mode_hello),
+        getString(R.string.nika_vc_greet_mode_beep),
+      )
+    AlertDialog.Builder(act)
+      .setTitle(R.string.nika_vc_greet_mode)
+      .setItems(names) { _, which ->
+        pref().edit().putString(NikaVoiceCmds.PREF_GREET, ids[which]).apply()
         rebuild()
       }
       .setNegativeButton(android.R.string.cancel, null)
