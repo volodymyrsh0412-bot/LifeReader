@@ -5,20 +5,10 @@
       android:defaultValue="@bool/pref_soundback_default"
       android:key="@string/pref_soundback_key"
       android:title="@string/title_pref_soundback" />
-  <androidx.preference.SeekBarPreference
-      android:defaultValue="50"
+  <com.google.android.accessibility.talkback.preference.base.NikaVolumePreference
       android:dependency="@string/pref_soundback_key"
       android:key="nika_soundback_vol"
-      android:max="100"
-      android:summary="@string/nika_sbvol_summary"
-      android:title="@string/nika_sbvol_title"
-      app:min="0"
-      app:showSeekBarValue="true" />
-  <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
-      android:defaultValue="false"
-      android:key="nika_mic_beeps"
-      android:summary="@string/nika_mic_summary"
-      android:title="@string/nika_mic_title" />
+      android:title="@string/nika_vol_title" />
   <com.google.android.accessibility.material.preference.AccessibilitySuiteListPreference
       android:defaultValue="@string/pref_audio_output_device_default"
       android:dialogTitle="@string/dialog_title_audio_output_device"

@@ -61,12 +61,16 @@ object NikaBeep {
   }
 
   @JvmStatic
+  private const val MIC_BEEPS_AVAILABLE = false
+
   fun micEnabled(context: Context): Boolean =
     SharedPreferencesUtils.getSharedPreferences(context).getBoolean(PREF_MIC, false)
 
   /** The microphone started or stopped. Beeps only for voice input, and only if the switch is on. */
   @JvmStatic
   fun mic(context: Context, active: Boolean, voiceInput: Boolean) {
+    // The sounds of the microphone were removed: the keyboard makes its own, and ours disturbed it.
+    if (!MIC_BEEPS_AVAILABLE) return
     try {
       if (isOwnMic()) return
       externalSince = if (active) android.os.SystemClock.uptimeMillis() else 0L

@@ -61,11 +61,12 @@ object NikaMacroActions {
 
   @JvmStatic
   fun isAction(value: String?): Boolean =
-    value != null && (value.startsWith(PREFIX) || FIXED.any { it.value == value })
+    value != null && (value.startsWith(PREFIX) || FIXED.any { it.value == value } || NikaVoiceCmds.isCmdAction(value))
 
   @JvmStatic
   fun label(context: Context, value: String?): String? {
     if (value == null) return null
+    NikaVoiceCmds.cmdLabel(context, value)?.let { return it }
     FIXED.firstOrNull { it.value == value }?.let { return context.getString(it.labelRes) }
     if (!value.startsWith(PREFIX)) return null
     val macro = NikaMacros.find(context, value.removePrefix(PREFIX))
@@ -82,6 +83,7 @@ object NikaMacroActions {
           NikaMacros.setRecording(service, "")
           say(service, service.getString(R.string.nika_mac_rec_stopped))
         }
+        NikaVoiceCmds.isCmdAction(value) -> NikaVoiceCmds.performCmd(service, value)
         value.startsWith(PREFIX) -> start(service, value.removePrefix(PREFIX))
         else -> return false
       }

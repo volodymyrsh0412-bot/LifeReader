@@ -128,6 +128,16 @@ class NikaKeyActions(private val service: TalkBackService) {
     if (
       event.action == KeyEvent.ACTION_DOWN &&
         event.repeatCount == 0 &&
+        (event.keyCode == KeyEvent.KEYCODE_VOLUME_UP || event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
+    ) {
+      com.google.android.accessibility.utils.NikaDiag.log(
+        "key",
+        KeyEvent.keyCodeToString(event.keyCode) + ", locked: " + isLocked() + ", " + (if (used) "used" else "passed on") + " (" + note + ")",
+      )
+    }
+    if (
+      event.action == KeyEvent.ACTION_DOWN &&
+        event.repeatCount == 0 &&
         (prefs.getBoolean(PREF_DEBUG, false) || userPrefs()?.getBoolean(PREF_DEBUG, false) == true)
     ) {
       val text =

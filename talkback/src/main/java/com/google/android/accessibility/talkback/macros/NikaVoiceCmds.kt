@@ -122,6 +122,7 @@ object NikaVoiceCmds {
 
   // ---------------------------------------------------------------- commands
 
+  @JvmStatic
   fun load(context: Context): MutableList<Cmd> {
     val list = ArrayList<Cmd>()
     try {
@@ -185,6 +186,62 @@ object NikaVoiceCmds {
     return 1.0 - prev[b.length].toDouble() / maxOf(a.length, b.length)
   }
 
+  /** A rough sound of a word in Latin letters, so "Джемени" and "Gemini" look alike. */
+  private fun phon(s: String): String {
+    val sb = StringBuilder()
+    val t = s.replace("дж", "j").replace("ph", "f").replace("ts", "c")
+    var i = 0
+    while (i < t.length) {
+      val ch = t[i]
+      val next = if (i + 1 < t.length) t[i + 1] else ' '
+      when (ch) {
+        'а', 'я' -> sb.append('a')
+        'е', 'є', 'э', 'e' -> sb.append('e')
+        'и', 'і', 'ї', 'ы', 'й', 'y', 'i' -> sb.append('i')
+        'о', 'o' -> sb.append('o')
+        'у', 'ю', 'u' -> sb.append('u')
+        'б', 'b' -> sb.append('b')
+        'в', 'w', 'v' -> sb.append('v')
+        'г', 'ґ', 'х', 'h' -> sb.append(if (ch == 'h') 'h' else 'g')
+        'g' -> sb.append(if (next == 'e' || next == 'i' || next == 'y') 'j' else 'g')
+        'д', 'd' -> sb.append('d')
+        'ж', 'з', 'z', 'j' -> sb.append('j')
+        'к', 'k', 'q' -> sb.append('k')
+        'c' -> sb.append(if (next == 'e' || next == 'i' || next == 'y') 's' else 'k')
+        'л', 'l' -> sb.append('l')
+        'м', 'm' -> sb.append('m')
+        'н', 'n' -> sb.append('n')
+        'п', 'p' -> sb.append('p')
+        'р', 'r' -> sb.append('r')
+        'с', 's', 'ц', 'ч', 'ш', 'щ' -> sb.append('s')
+        'т', 't' -> sb.append('t')
+        'ф', 'f' -> sb.append('f')
+        'x' -> sb.append("ks")
+        'ь', 'ъ' -> {}
+        ' ' -> sb.append(' ')
+        else -> if (ch.isLetterOrDigit()) sb.append(ch)
+      }
+      i++
+    }
+    return sb.toString()
+  }
+
+  private fun scoreFor(said: String, phrase: String): Double {
+    // The longer phrase that is really said wins, so "Открой" does not hide "Открой Телеграм".
+    if (said == phrase) return 2.0 + phrase.length / 1000.0
+    if (" $said ".contains(" $phrase ")) return 1.5 + phrase.length / 1000.0
+    var best = similarity(said, phrase)
+    val ps = phon(phrase)
+    val ss = phon(said)
+    best = maxOf(best, similarity(ss, ps))
+    val words = ss.split(' ').filter { it.isNotEmpty() }
+    val n = ps.split(' ').filter { it.isNotEmpty() }.size
+    if (n in 1..words.size) {
+      for (i in 0..words.size - n) best = maxOf(best, similarity(words.subList(i, i + n).joinToString(" "), ps))
+    }
+    return best
+  }
+
   fun match(context: Context, said: String): Cmd? {
     val t = norm(said)
     if (t.isEmpty()) return null
@@ -194,7 +251,7 @@ object NikaVoiceCmds {
       for (p in c.phrases) {
         val n = norm(p)
         if (n.isEmpty()) continue
-        val score = if (t == n || t.contains(n)) 1.0 else similarity(t, n)
+        val score = scoreFor(t, n)
         if (score > bestScore) {
           bestScore = score
           best = c
@@ -202,6 +259,28 @@ object NikaVoiceCmds {
       }
     }
     return if (bestScore >= 0.78) best else null
+  }
+
+  // ---------------------------------------------------------------- actions of gestures
+
+  const val ACT_PREFIX = "nika_vc:"
+
+  @JvmStatic fun actionOf(id: String): String = ACT_PREFIX + id
+
+  @JvmStatic fun isCmdAction(value: String?): Boolean = value != null && value.startsWith(ACT_PREFIX)
+
+  @JvmStatic
+  fun cmdLabel(context: Context, value: String?): String? {
+    if (!isCmdAction(value)) return null
+    val cmd = load(context).firstOrNull { it.id == value!!.removePrefix(ACT_PREFIX) }
+    return context.getString(R.string.nika_vc_prefix, cmd?.name ?: "?")
+  }
+
+  @JvmStatic
+  fun performCmd(service: TalkBackService, value: String): Boolean {
+    val cmd = load(service).firstOrNull { it.id == value.removePrefix(ACT_PREFIX) }
+    if (cmd != null) run(service, cmd)
+    return true
   }
 
   // ---------------------------------------------------------------- running
