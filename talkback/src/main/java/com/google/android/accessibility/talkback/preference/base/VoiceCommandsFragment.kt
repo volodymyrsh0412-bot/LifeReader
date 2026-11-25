@@ -80,18 +80,26 @@ class VoiceCommandsFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) 
     settings.isSelectable = false
     group.addPreference(settings)
 
-    val trigger = NikaVoiceCmds.trigger(ctx)
+    val power = NikaVoiceCmds.power(ctx)
     row(
       group,
-      getString(R.string.nika_vc_trigger),
-      getString(if (trigger == NikaVoiceCmds.TRIGGER_VOICE) R.string.nika_vc_trigger_voice else R.string.nika_vc_trigger_gesture),
+      getString(R.string.nika_vc_power),
+      getString(
+        when (power) {
+          NikaVoiceCmds.POWER_DOUBLE -> R.string.nika_vc_power_double
+          NikaVoiceCmds.POWER_TRIPLE -> R.string.nika_vc_power_triple
+          else -> R.string.nika_vc_power_off
+        }
+      ),
     ) {
-      chooseTrigger()
+      choosePower()
     }
-    row(group, getString(R.string.nika_vc_word), NikaVoiceCmds.wakeWord(ctx)) { askText(R.string.nika_vc_word, NikaVoiceCmds.wakeWord(ctx)) { text ->
-      pref().edit().putString(NikaVoiceCmds.PREF_WORD, text.trim()).apply()
-      rebuild()
-    } }
+    row(group, getString(R.string.nika_vc_name), NikaVoiceCmds.userName(ctx).ifEmpty { getString(R.string.nika_vc_name_empty) }) {
+      askText(R.string.nika_vc_name, NikaVoiceCmds.userName(ctx)) { text ->
+        pref().edit().putString(NikaVoiceCmds.PREF_NAME, text.trim()).apply()
+        rebuild()
+      }
+    }
 
     val engine = NikaVoiceEngines.find(NikaVoiceCmds.engine(ctx))
     row(group, getString(R.string.nika_vc_engine), getString(engine.titleRes) + ". " + getString(engine.noteRes)) {
@@ -139,14 +147,15 @@ class VoiceCommandsFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) 
     TalkBackService.getInstance()?.let { NikaKeepAlive.apply(it) }
   }
 
-  private fun chooseTrigger() {
+  private fun choosePower() {
     val act = activity ?: return
-    val ids = listOf(NikaVoiceCmds.TRIGGER_GESTURE, NikaVoiceCmds.TRIGGER_VOICE)
-    val names = arrayOf(getString(R.string.nika_vc_trigger_gesture), getString(R.string.nika_vc_trigger_voice))
+    val ids = listOf(NikaVoiceCmds.POWER_OFF, NikaVoiceCmds.POWER_DOUBLE, NikaVoiceCmds.POWER_TRIPLE)
+    val names =
+      arrayOf(getString(R.string.nika_vc_power_off), getString(R.string.nika_vc_power_double), getString(R.string.nika_vc_power_triple))
     AlertDialog.Builder(act)
-      .setTitle(R.string.nika_vc_trigger)
+      .setTitle(R.string.nika_vc_power)
       .setItems(names) { _, which ->
-        pref().edit().putString(NikaVoiceCmds.PREF_TRIGGER, ids[which]).apply()
+        pref().edit().putString(NikaVoiceCmds.PREF_POWER, ids[which]).apply()
         applyTrigger()
         rebuild()
       }

@@ -259,19 +259,91 @@ object NikaVoiceCmds {
     return true
   }
 
-  /** Listens once, then runs the command that was said. */
+  /** Says hello with the name, then a beep, then listens once and runs the command that was said. */
   @JvmStatic
   fun listen(service: TalkBackService) {
     handler.post {
       if (busy) return@post
       busy = true
-      NikaBeep.play(service, NikaBeep.START)
-      recognize(service, 6) { ok, text ->
-        NikaBeep.play(service, NikaBeep.STOP)
-        busy = false
-        if (!ok) say(service, text) else if (text.isBlank()) say(service, service.getString(R.string.nika_vc_nothing)) else handle(service, text)
-      }
+      val name = userName(service)
+      val hello =
+        if (name.isEmpty()) service.getString(R.string.nika_vc_greet_plain) else service.getString(R.string.nika_vc_greet, name)
+      say(service, hello)
+      handler.postDelayed(
+        {
+          try {
+            NikaBeep.play(service, NikaBeep.START)
+            recognize(service, 6) { ok, text ->
+              NikaBeep.play(service, NikaBeep.STOP)
+              busy = false
+              if (!ok) say(service, text) else if (text.isBlank()) say(service, service.getString(R.string.nika_vc_nothing)) else handle(service, text)
+            }
+          } catch (e: Throwable) {
+            busy = false
+            NikaDiag.log("voicecmd", "listen failed: $e")
+          }
+        },
+        900L + hello.length * 65L,
+      )
     }
+  }
+
+  const val PREF_POWER = "nika_vc_power"
+  const val PREF_NAME = "nika_vc_name"
+  const val POWER_OFF = "off"
+  const val POWER_DOUBLE = "double"
+  const val POWER_TRIPLE = "triple"
+
+  fun power(context: Context): String = prefs(context).getString(PREF_POWER, POWER_OFF) ?: POWER_OFF
+
+  fun userName(context: Context): String = (prefs(context).getString(PREF_NAME, "") ?: "").trim()
+
+  private var screenReceiver: android.content.BroadcastReceiver? = null
+  private var screenOwner: TalkBackService? = null
+  private var presses = 0
+
+  private val firePower = Runnable {
+    val owner = screenOwner
+    val n = presses
+    presses = 0
+    if (owner == null) return@Runnable
+    val mode = power(owner)
+    if ((mode == POWER_DOUBLE && n == 2) || (mode == POWER_TRIPLE && n == 3)) listen(owner)
+  }
+
+  /**
+   * The power button cannot be read by a screen reader, but each press changes the screen: it goes
+   * off or on. Two or three changes in a row are counted as a double or a triple press.
+   */
+  private fun applyPower(service: TalkBackService) {
+    val mode = power(service)
+    if (mode == POWER_OFF) {
+      screenReceiver?.let {
+        try {
+          screenOwner?.unregisterReceiver(it)
+        } catch (e: RuntimeException) {
+          // skip
+        }
+      }
+      screenReceiver = null
+      screenOwner = null
+      handler.removeCallbacks(firePower)
+      return
+    }
+    screenOwner = service
+    if (screenReceiver != null) return
+    val receiver =
+      object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+          presses++
+          handler.removeCallbacks(firePower)
+          handler.postDelayed(firePower, 900)
+        }
+      }
+    val filter = android.content.IntentFilter(Intent.ACTION_SCREEN_OFF)
+    filter.addAction(Intent.ACTION_SCREEN_ON)
+    service.registerReceiver(receiver, filter)
+    screenReceiver = receiver
   }
 
   /** Called when the settings change and when the service starts. */
@@ -279,17 +351,10 @@ object NikaVoiceCmds {
   fun applyTrigger(service: TalkBackService) {
     handler.post {
       try {
-        if (trigger(service) == TRIGGER_VOICE) {
-          if (!wakeRunning) {
-            wakeRunning = true
-            wakeCycle(service)
-          }
-        } else {
-          wakeRunning = false
-        }
-      } catch (e: Throwable) {
         wakeRunning = false
-        NikaDiag.log("voicecmd", "wake failed: $e")
+        applyPower(service)
+      } catch (e: Throwable) {
+        NikaDiag.log("voicecmd", "trigger failed: $e")
       }
     }
   }
@@ -302,32 +367,10 @@ object NikaVoiceCmds {
       false
     }
 
-  /**
-   * Listens for the wake word. The recognizer of Google beeps at each start, so the sound of the
-   * music stream is muted for these seconds, but only if nothing is playing.
-   */
+  /** Listens for the wake word (the recognizer of Google beeps at each start; it cannot be changed). */
   private fun listenQuiet(service: TalkBackService, seconds: Int, done: (Boolean, String) -> Unit) {
-    var muted = false
-    val audio = service.getSystemService(Context.AUDIO_SERVICE) as? android.media.AudioManager
-    try {
-      if (audio != null && engine(service) == NikaVoiceEngines.ANDROID && !audio.isMusicActive) {
-        audio.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, android.media.AudioManager.ADJUST_MUTE, 0)
-        muted = true
-      }
-    } catch (e: Throwable) {
-      muted = false
-    }
-    NikaDiag.log("voicecmd", "wake listen, quiet: $muted")
-    recognize(service, seconds) { ok, text ->
-      if (muted) {
-        try {
-          audio?.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, android.media.AudioManager.ADJUST_UNMUTE, 0)
-        } catch (e: Throwable) {
-          // skip
-        }
-      }
-      done(ok, text)
-    }
+    NikaDiag.log("voicecmd", "wake listen")
+    recognize(service, seconds, done)
   }
 
   private fun wakeCycle(service: TalkBackService) {

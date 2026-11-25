@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" >
   <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
       android:defaultValue="@bool/pref_soundback_default"
       android:key="@string/pref_soundback_key"
       android:title="@string/title_pref_soundback" />
-  <com.google.android.accessibility.material.preference.AccessibilitySuiteListPreference
-      android:defaultValue="@string/pref_soundback_volume_default"
+  <androidx.preference.SeekBarPreference
+      android:defaultValue="50"
       android:dependency="@string/pref_soundback_key"
-      android:dialogTitle="@string/title_pref_soundback_volume"
-      android:entries="@array/pref_soundback_volume_entries"
-      android:entryValues="@array/pref_soundback_volume_values"
-      android:key="@string/pref_soundback_volume_key"
-      android:summary="%s"
-      android:title="@string/title_pref_soundback_volume" />
+      android:key="nika_soundback_vol"
+      android:max="100"
+      android:summary="@string/nika_sbvol_summary"
+      android:title="@string/nika_sbvol_title"
+      app:min="0"
+      app:showSeekBarValue="true" />
+  <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
+      android:defaultValue="false"
+      android:key="nika_mic_beeps"
+      android:summary="@string/nika_mic_summary"
+      android:title="@string/nika_mic_title" />
   <com.google.android.accessibility.material.preference.AccessibilitySuiteListPreference
       android:defaultValue="@string/pref_audio_output_device_default"
       android:dialogTitle="@string/dialog_title_audio_output_device"
@@ -69,8 +74,9 @@
       android:key="pref_individual_feedback"
       android:title="@string/title_pref_individual_feedback"
       android:summary="@string/summary_pref_individual_feedback" />
-  <com.google.android.accessibility.talkback.preference.base.AccessibilityFooterPreference
-      android:key="@string/pref_speech_footer_key"
-      android:title="@string/title_pref_speech_footer"
-      android:selectable="false" />
+  <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
+      android:defaultValue="true"
+      android:key="nika_finger_volume"
+      android:summary="@string/nika_finger_volume_summary"
+      android:title="@string/nika_finger_volume_title" />
 </PreferenceScreen>

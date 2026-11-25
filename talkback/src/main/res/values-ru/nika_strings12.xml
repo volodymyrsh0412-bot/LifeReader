@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_vc_power">Кнопка питания (включение/выключение экрана)</string>
+    <string name="nika_vc_power_off">Не использовать</string>
+    <string name="nika_vc_power_double">Двойное нажатие</string>
+    <string name="nika_vc_power_triple">Тройное нажатие</string>
+    <string name="nika_vc_name">Твоё имя для приветствия</string>
+    <string name="nika_vc_name_empty">не указано</string>
+    <string name="nika_vc_greet">Привет, %1$s! Что выполнить?</string>
+    <string name="nika_vc_greet_plain">Привет! Что выполнить?</string>
+</resources>
