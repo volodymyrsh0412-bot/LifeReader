@@ -34,9 +34,9 @@
     <string name="nika_ka_notification">Nika is running</string>
     <string name="nika_vc_title">Nika voice commands</string>
     <string name="nika_vc_note">Say a command and Nika does it. Start by a gesture (assign the action Voice command: listen to a gesture) or by saying the name of Nika.</string>
-    <string name="nika_vc_add">1. Add a command</string>
-    <string name="nika_vc_created">2. Created commands: %1$d</string>
-    <string name="nika_vc_settings">3. Settings of commands</string>
+    <string name="nika_vc_add">Add a command</string>
+    <string name="nika_vc_created">Created commands: %1$d</string>
+    <string name="nika_vc_settings">Settings of commands</string>
     <string name="nika_vc_phrases">What to say (several variants separated by semicolon)</string>
     <string name="nika_vc_kind">What the command does</string>
     <string name="nika_vc_kind_action">An action (like a gesture can do)</string>

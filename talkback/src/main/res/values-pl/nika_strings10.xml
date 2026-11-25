@@ -34,9 +34,9 @@
     <string name="nika_ka_notification">Nika działa</string>
     <string name="nika_vc_title">Polecenia głosowe Nika</string>
     <string name="nika_vc_note">Powiedz polecenie, a Nika je wykona. Start gestem (przypisz gestowi akcję „Polecenie głosowe: słuchaj”) lub słowem z imieniem Niki.</string>
-    <string name="nika_vc_add">1. Dodaj polecenie</string>
-    <string name="nika_vc_created">2. Utworzone polecenia: %1$d</string>
-    <string name="nika_vc_settings">3. Ustawienia poleceń</string>
+    <string name="nika_vc_add">Dodaj polecenie</string>
+    <string name="nika_vc_created">Utworzone polecenia: %1$d</string>
+    <string name="nika_vc_settings">Ustawienia poleceń</string>
     <string name="nika_vc_phrases">Co mówić (kilka wariantów oddzielonych średnikiem)</string>
     <string name="nika_vc_kind">Co robi polecenie</string>
     <string name="nika_vc_kind_action">Akcja (jak gest)</string>

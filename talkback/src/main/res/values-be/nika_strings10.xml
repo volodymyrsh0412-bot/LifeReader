@@ -34,9 +34,9 @@
     <string name="nika_ka_notification">Ніка працуе</string>
     <string name="nika_vc_title">Галасавыя каманды Ніка</string>
     <string name="nika_vc_note">Скажыце каманду, і Ніка яе выканае. Запуск жэстам (прызначце жэсту дзеянне «Галасавая каманда: слухаць») або словам з імем Нікі.</string>
-    <string name="nika_vc_add">1. Дадаць каманду</string>
-    <string name="nika_vc_created">2. Створаныя каманды: %1$d</string>
-    <string name="nika_vc_settings">3. Налады каманд</string>
+    <string name="nika_vc_add">Дадаць каманду</string>
+    <string name="nika_vc_created">Створаныя каманды: %1$d</string>
+    <string name="nika_vc_settings">Налады каманд</string>
     <string name="nika_vc_phrases">Што казаць (некалькі варыянтаў праз коску з кропкай)</string>
     <string name="nika_vc_kind">Што робіць каманда</string>
     <string name="nika_vc_kind_action">Дзеянне (як можа жэст)</string>

@@ -34,9 +34,9 @@
     <string name="nika_ka_notification">Ника работает</string>
     <string name="nika_vc_title">Голосовые команды Ника</string>
     <string name="nika_vc_note">Скажите команду, и Ника её выполнит. Запуск жестом (назначьте жесту действие «Голосовая команда: слушать») или словом с именем Ники.</string>
-    <string name="nika_vc_add">1. Добавить команду</string>
-    <string name="nika_vc_created">2. Созданные команды: %1$d</string>
-    <string name="nika_vc_settings">3. Настройки команд</string>
+    <string name="nika_vc_add">Добавить команду</string>
+    <string name="nika_vc_created">Созданные команды: %1$d</string>
+    <string name="nika_vc_settings">Настройки команд</string>
     <string name="nika_vc_phrases">Что говорить (несколько вариантов через точку с запятой)</string>
     <string name="nika_vc_kind">Что делает команда</string>
     <string name="nika_vc_kind_action">Действие (как может жест)</string>

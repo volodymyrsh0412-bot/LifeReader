@@ -62,85 +62,94 @@ class VoiceCommandsFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) 
     note.isSelectable = false
     group.addPreference(note)
 
+    toggle(group, getString(R.string.nika_vc_settings), openSettings) {
+      openSettings = !openSettings
+      rebuild()
+    }
+    if (openSettings) {
+      val power = NikaVoiceCmds.power(ctx)
+      row(
+        group,
+        getString(R.string.nika_vc_power),
+        getString(
+          when (power) {
+            NikaVoiceCmds.POWER_DOUBLE -> R.string.nika_vc_power_double
+            NikaVoiceCmds.POWER_TRIPLE -> R.string.nika_vc_power_triple
+            else -> R.string.nika_vc_power_off
+          }
+        ) + ". " + getString(R.string.nika_vc_power_warn),
+      ) {
+        choosePower()
+      }
+      row(group, getString(R.string.nika_vc_name), NikaVoiceCmds.userName(ctx).ifEmpty { getString(R.string.nika_vc_name_empty) }) {
+        askText(R.string.nika_vc_name, NikaVoiceCmds.userName(ctx)) { text ->
+          pref().edit().putString(NikaVoiceCmds.PREF_NAME, text.trim()).apply()
+          rebuild()
+        }
+      }
+
+      row(
+        group,
+        getString(R.string.nika_vc_greet_mode),
+        getString(
+          when (NikaVoiceCmds.greetMode(ctx)) {
+            NikaVoiceCmds.GREET_HELLO -> R.string.nika_vc_greet_mode_hello
+            NikaVoiceCmds.GREET_BEEP -> R.string.nika_vc_greet_mode_beep
+            else -> R.string.nika_vc_greet_mode_name
+          }
+        ),
+      ) {
+        chooseGreet()
+      }
+
+      val engine = NikaVoiceEngines.find(NikaVoiceCmds.engine(ctx))
+      row(group, getString(R.string.nika_vc_engine), getString(engine.titleRes) + ". " + getString(engine.noteRes)) {
+        chooseEngine()
+      }
+      if (engine.id != NikaVoiceEngines.ANDROID) {
+        val has = NikaVoiceCmds.key(ctx, engine.id).isNotEmpty()
+        row(group, getString(R.string.nika_vc_key), getString(if (has) R.string.nika_vc_key_set else R.string.nika_vc_key_empty)) {
+          askText(R.string.nika_vc_key, "") { text ->
+            NikaVoiceCmds.setKey(ctx, engine.id, text)
+            rebuild()
+          }
+        }
+        row(group, getString(R.string.nika_vc_getkey), engine.keyUrl) {
+          try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(engine.keyUrl)))
+          } catch (e: RuntimeException) {
+            Toast.makeText(ctx, R.string.nika_ka_cannot_open, Toast.LENGTH_LONG).show()
+          }
+        }
+        row(group, getString(R.string.nika_vc_lang), NikaVoiceCmds.language(ctx).ifEmpty { "auto" }) {
+          askText(R.string.nika_vc_lang, NikaVoiceCmds.language(ctx)) { text ->
+            pref().edit().putString(NikaVoiceCmds.PREF_LANG, text.trim().lowercase()).apply()
+            rebuild()
+          }
+        }
+      }
+    }
+
     row(group, getString(R.string.nika_vc_add), null) { askPhrases(null) }
 
     val list = NikaVoiceCmds.load(ctx)
-    val header = Preference(group.context)
-    header.title = getString(R.string.nika_vc_created, list.size)
-    header.isPersistent = false
-    header.isSelectable = false
-    group.addPreference(header)
-    for (c in list) {
-      row(group, c.phrases.joinToString("; "), c.label) { commandMenu(c) }
+    toggle(group, getString(R.string.nika_vc_created, list.size), openList) {
+      openList = !openList
+      rebuild()
     }
-
-    val settings = Preference(group.context)
-    settings.title = getString(R.string.nika_vc_settings)
-    settings.isPersistent = false
-    settings.isSelectable = false
-    group.addPreference(settings)
-
-    val power = NikaVoiceCmds.power(ctx)
-    row(
-      group,
-      getString(R.string.nika_vc_power),
-      getString(
-        when (power) {
-          NikaVoiceCmds.POWER_DOUBLE -> R.string.nika_vc_power_double
-          NikaVoiceCmds.POWER_TRIPLE -> R.string.nika_vc_power_triple
-          else -> R.string.nika_vc_power_off
-        }
-      ),
-    ) {
-      choosePower()
-    }
-    row(group, getString(R.string.nika_vc_name), NikaVoiceCmds.userName(ctx).ifEmpty { getString(R.string.nika_vc_name_empty) }) {
-      askText(R.string.nika_vc_name, NikaVoiceCmds.userName(ctx)) { text ->
-        pref().edit().putString(NikaVoiceCmds.PREF_NAME, text.trim()).apply()
-        rebuild()
+    if (openList) {
+      for (c in list) {
+        row(group, c.phrases.joinToString("; "), c.label) { commandMenu(c) }
       }
     }
+  }
 
-    row(
-      group,
-      getString(R.string.nika_vc_greet_mode),
-      getString(
-        when (NikaVoiceCmds.greetMode(ctx)) {
-          NikaVoiceCmds.GREET_HELLO -> R.string.nika_vc_greet_mode_hello
-          NikaVoiceCmds.GREET_BEEP -> R.string.nika_vc_greet_mode_beep
-          else -> R.string.nika_vc_greet_mode_name
-        }
-      ),
-    ) {
-      chooseGreet()
-    }
+  private var openSettings = false
+  private var openList = false
 
-    val engine = NikaVoiceEngines.find(NikaVoiceCmds.engine(ctx))
-    row(group, getString(R.string.nika_vc_engine), getString(engine.titleRes) + ". " + getString(engine.noteRes)) {
-      chooseEngine()
-    }
-    if (engine.id != NikaVoiceEngines.ANDROID) {
-      val has = NikaVoiceCmds.key(ctx, engine.id).isNotEmpty()
-      row(group, getString(R.string.nika_vc_key), getString(if (has) R.string.nika_vc_key_set else R.string.nika_vc_key_empty)) {
-        askText(R.string.nika_vc_key, "") { text ->
-          NikaVoiceCmds.setKey(ctx, engine.id, text)
-          rebuild()
-        }
-      }
-      row(group, getString(R.string.nika_vc_getkey), engine.keyUrl) {
-        try {
-          startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(engine.keyUrl)))
-        } catch (e: RuntimeException) {
-          Toast.makeText(ctx, R.string.nika_ka_cannot_open, Toast.LENGTH_LONG).show()
-        }
-      }
-      row(group, getString(R.string.nika_vc_lang), NikaVoiceCmds.language(ctx).ifEmpty { "auto" }) {
-        askText(R.string.nika_vc_lang, NikaVoiceCmds.language(ctx)) { text ->
-          pref().edit().putString(NikaVoiceCmds.PREF_LANG, text.trim().lowercase()).apply()
-          rebuild()
-        }
-      }
-    }
+  /** A folding header: it says whether the group below is open. */
+  private fun toggle(group: PreferenceGroup, title: String, open: Boolean, click: () -> Unit) {
+    row(group, title, getString(if (open) R.string.nika_vc_expanded else R.string.nika_vc_collapsed), click)
   }
 
   private fun pref() = SharedPreferencesUtils.getSharedPreferences(requireContext())
@@ -214,12 +223,21 @@ class VoiceCommandsFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) 
     val edit = EditText(act)
     edit.inputType = InputType.TYPE_CLASS_TEXT
     edit.setText(initial)
-    AlertDialog.Builder(act)
-      .setTitle(title)
-      .setView(edit)
-      .setPositiveButton(android.R.string.ok) { _, _ -> onOk(edit.text.toString()) }
-      .setNegativeButton(android.R.string.cancel, null)
-      .show()
+    edit.setSelectAllOnFocus(true)
+    val dialog =
+      AlertDialog.Builder(act)
+        .setTitle(title)
+        .setView(edit)
+        .setPositiveButton(android.R.string.ok) { _, _ -> onOk(edit.text.toString()) }
+        .setNegativeButton(android.R.string.cancel, null)
+        .setNeutralButton(R.string.nika_vc_clear, null)
+        .create()
+    dialog.show()
+    // "Clear" empties the field and keeps the window open.
+    dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+      edit.setText("")
+      edit.requestFocus()
+    }
   }
 
   // ---------------------------------------------------------------- one command
