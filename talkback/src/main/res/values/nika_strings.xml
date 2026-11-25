@@ -2,7 +2,7 @@
 <resources>
     <string name="nika_whats_new_title">What\'s new</string>
     <string name="nika_whats_new_summary">Changes in this version</string>
-    <string name="nika_whats_new_message">Nika is a screen reader for Android.\n\nWhat\'s new in this version:\n\u2022 Quick settings with gestures: next/previous setting and value (keyboard echo, punctuation, emoji).\n\u2022 Volume keys: slider in focus, cursor in a field, no volume panel.\n\u2022 The backup is now a zip, and you choose what to restore.\n\u2022 The notification history can be cleared one entry at a time; progress out of focus is spoken; the words collapsed, button and heading are no longer said in settings.</string>
+    <string name="nika_whats_new_message">Nika is a screen reader for Android.\n\nWhat\'s new in this version:\n\u2022 Voices by language and alphabet are now the first item of speech synthesis: voices of any installed synthesizer, own speed and volume for each language, detection by alphabet or by Unicode. Ukrainian text is no longer read in English.\n\u2022 Sound feedback volume is a slider from 0 to 100; microphone on/off beeps and the translator beep are back, with a switch.\n\u2022 Settings groups that fold say collapsed and expanded again; only the word heading is removed there.\n\u2022 New: Protection from closing, and Nika voice commands (several recognition engines).</string>
     <string name="nika_feedback_title">Send feedback</string>
     <string name="nika_feedback_summary">Write to the developer in Telegram: report a problem or suggest an idea</string>
     <string name="nika_feedback_subject">Nika feedback (build %1$d)</string>

@@ -80,6 +80,8 @@ public class VoiceActionMonitor implements VoiceActionDelegate {
       new MicrophoneStateChangedListener() {
         @Override
         public void onMicrophoneActivated() {
+          com.google.android.accessibility.utils.NikaBeep.mic(
+              service, true, mediaRecorderMonitor.isVoiceRecognitionActive());
           if (isHeadphoneOn()) {
             return;
           }
@@ -91,7 +93,9 @@ public class VoiceActionMonitor implements VoiceActionDelegate {
         }
 
         @Override
-        public void onMicrophoneDeactivated() {}
+        public void onMicrophoneDeactivated() {
+          com.google.android.accessibility.utils.NikaBeep.mic(service, false, false);
+        }
       };
 
   private final AudioPlaybackMonitor.AudioPlaybackStateChangedListener

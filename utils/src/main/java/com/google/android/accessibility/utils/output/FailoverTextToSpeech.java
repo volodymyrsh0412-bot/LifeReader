@@ -1033,9 +1033,6 @@ public class FailoverTextToSpeech {
     synchronized (ttsLock) {
       locale = localeToSpeak(locale);
       com.google.android.accessibility.utils.NikaDiag.log("speak", String.valueOf(text));
-      if (nikaApplyVoice(text, locale)) {
-        mLastUtteranceLocale = locale;
-      }
       String utteranceId = params.get(Engine.KEY_PARAM_UTTERANCE_ID);
       boolean isLocaleAttached = locale != null;
       Locale previousLocale = getUsedLocale();
@@ -1059,6 +1056,10 @@ public class FailoverTextToSpeech {
         changeLocale = true;
       }
       int changeLocaleAction = Performance.CHANGE_LOCALE_NONE;
+      // Nika: the engine may change the voice.
+      if (changeLocale) {
+        nikaCurrentVoice = null;
+      }
       if (changeLocale) {
         changeLocaleAction = getChangeLocaleAction(previousLocale);
       }
@@ -1496,7 +1497,12 @@ public class FailoverTextToSpeech {
    */
   private int speakInChunks(
       CharSequence text, int queueMode, Bundle bundle, String utteranceId, Locale locale) {
+    List<Integer> nikaRuns =
+        utteranceId == null ? null : NikaVoiceRules.runStarts(context, text);
     List<Integer> starts =
+        nikaRuns != null
+            ? nikaRuns
+            :
         utteranceId == null || !speaksInPhrases()
             ? Collections.singletonList(0)
             : SpeechChunker.chunkStarts(text, locale == null ? Locale.getDefault() : locale);
@@ -1504,7 +1510,7 @@ public class FailoverTextToSpeech {
       if (utteranceId != null) {
         progressEstimator.onQueued(utteranceId, text, requestRate, ttsEngine);
       }
-      return ttsSpeak(text, queueMode, bundle, utteranceId);
+      return nikaSpeakPiece(text, queueMode, bundle, utteranceId, locale);
     }
     for (int i = 0; i < starts.size(); i++) {
       int start = starts.get(i);
@@ -1513,7 +1519,7 @@ public class FailoverTextToSpeech {
       String chunkId = utteranceId + CHUNK_ID_SEPARATOR + i;
       speechChunks.put(chunkId, new SpeechChunk(utteranceId, start, i == 0, last));
       int result =
-          ttsSpeak(text.subSequence(start, end), i == 0 ? queueMode : QUEUE_ADD, bundle, chunkId);
+          nikaSpeakPiece(text.subSequence(start, end), i == 0 ? queueMode : QUEUE_ADD, bundle, chunkId, locale);
       if (result != TextToSpeech.SUCCESS) {
         speechChunks.remove(chunkId);
         if (i == 0) {
@@ -1540,6 +1546,15 @@ public class FailoverTextToSpeech {
    */
   private int ttsSpeak(
       CharSequence text, int queueMode, Bundle bundle, @Nullable String utteranceId) {
+    TextToSpeech nikaRouted = nikaRouteTts;
+    if (nikaRouted != null) {
+      int nikaResult = nikaRouted.speak(text, queueMode, bundle, utteranceId);
+      if (nikaResult == TextToSpeech.SUCCESS) {
+        return nikaResult;
+      }
+      nikaRouteTts = null;
+      nikaRestoreDefault();
+    }
     @Nullable LowLatencyAudio player = lowLatencyPlayer();
     if (player == null || utteranceId == null || TextUtils.isEmpty(text)) {
       return tts.speak(text, queueMode, bundle, utteranceId);
@@ -1745,6 +1760,8 @@ public class FailoverTextToSpeech {
     stopLowLatencySpeech();
     try {
       // Stopping rather than speaking nothing, which would queue ahead of new speech.
+      // Nika: stop the other engine too.
+      nikaStopExtra();
       tts.stop();
       unfinishedUtterances.clear();
     } catch (Exception e) {
@@ -2605,46 +2622,176 @@ public class FailoverTextToSpeech {
   private @Nullable String nikaCurrentVoice = null;
   private @Nullable TextToSpeech nikaVoiceTts = null;
 
-  /** Nika: puts the voice of a rule by language or alphabet. Call with ttsLock. */
-  private boolean nikaApplyVoice(CharSequence text, @Nullable Locale locale) {
+  private @Nullable TextToSpeech nikaExtraTts = null;
+  private @Nullable String nikaExtraEngine = null;
+  private @Nullable String nikaExtraVoice = null;
+  private volatile boolean nikaExtraReady = false;
+  private @Nullable TextToSpeech nikaRouteTts = null;
+
+  private @Nullable Voice nikaFindVoice(@Nullable TextToSpeech target, String name) {
+    if (target == null) {
+      return null;
+    }
+    try {
+      Set<Voice> all = target.getVoices();
+      if (all != null) {
+        for (Voice v : all) {
+          if (name.equals(v.getName())) {
+            return v;
+          }
+        }
+      }
+    } catch (RuntimeException e) {
+      // no voices
+    }
+    return null;
+  }
+
+  /** Nika: the speech engine of another voice. Null while it is still starting. */
+  private @Nullable TextToSpeech nikaExtra(String engine) {
+    if (nikaExtraTts != null && engine.equals(nikaExtraEngine)) {
+      return nikaExtraReady ? nikaExtraTts : null;
+    }
+    nikaShutdownExtra();
+    nikaExtraEngine = engine;
+    try {
+      TextToSpeech created =
+          new TextToSpeech(
+              context,
+              status -> {
+                nikaExtraReady = status == TextToSpeech.SUCCESS;
+              },
+              engine);
+      created.setOnUtteranceProgressListener(lowLatencyRouter);
+      nikaExtraTts = created;
+    } catch (RuntimeException e) {
+      nikaExtraTts = null;
+    }
+    return null;
+  }
+
+  private void nikaShutdownExtra() {
+    TextToSpeech old = nikaExtraTts;
+    nikaExtraTts = null;
+    nikaExtraReady = false;
+    nikaExtraEngine = null;
+    nikaExtraVoice = null;
+    if (old != null) {
+      try {
+        old.stop();
+        old.shutdown();
+      } catch (RuntimeException e) {
+        // gone
+      }
+    }
+  }
+
+  private void nikaStopExtra() {
+    TextToSpeech extra = nikaExtraTts;
+    if (extra != null && nikaExtraReady) {
+      try {
+        extra.stop();
+      } catch (RuntimeException e) {
+        // gone
+      }
+    }
+  }
+
+  /** Nika: back to the voice that was chosen in the settings. */
+  private void nikaRestoreDefault() {
+    if (nikaCurrentVoice == null) {
+      return;
+    }
+    nikaCurrentVoice = null;
+    mLastUtteranceLocale = null;
+    cachedTtsLocale = null;
+    VoiceProfile activeProfile = VoiceProfiles.active();
+    if (activeProfile != null) {
+      attemptSetProfileVoice(activeProfile);
+    } else {
+      Voice engineDefault = tts.getDefaultVoice();
+      if (engineDefault != null) {
+        tts.setVoice(engineDefault);
+      }
+    }
+    localeInUse = ensureSupportedLocale();
+  }
+
+  /** Nika: chooses the voice, speed and volume for one piece of text. Call with ttsLock. */
+  private Bundle nikaPrepare(CharSequence text, @Nullable Locale locale, Bundle bundle) {
+    nikaRouteTts = null;
     try {
       if (nikaVoiceTts != tts) {
         nikaVoiceTts = tts;
         nikaCurrentVoice = null;
       }
-      String wanted = NikaVoiceRules.voiceFor(context, text, locale);
-      if (wanted != null) {
-        if (wanted.equals(nikaCurrentVoice)) {
-          return true;
-        }
-        Voice voice = findVoice(wanted);
-        if (voice != null && tts.setVoice(voice) == TextToSpeech.SUCCESS) {
-          nikaCurrentVoice = wanted;
-          cachedTtsLocale = voice.getLocale();
-          return true;
-        }
-        return false;
+      NikaVoiceRules.Rule rule = NikaVoiceRules.ruleFor(context, text, locale);
+      if (rule == null) {
+        nikaRestoreDefault();
+        return bundle;
       }
-      if (nikaCurrentVoice != null) {
-        nikaCurrentVoice = null;
-        mLastUtteranceLocale = null;
-        cachedTtsLocale = null;
-        VoiceProfile activeProfile = VoiceProfiles.active();
-        if (activeProfile != null) {
-          attemptSetProfileVoice(activeProfile);
-        } else {
-          Voice engineDefault = tts.getDefaultVoice();
-          if (engineDefault != null) {
-            tts.setVoice(engineDefault);
+      boolean otherEngine = !rule.getEngine().isEmpty() && !rule.getEngine().equals(ttsEngine);
+      if (otherEngine) {
+        TextToSpeech extra = nikaExtra(rule.getEngine());
+        if (extra == null) {
+          nikaRestoreDefault();
+          return bundle;
+        }
+        if (!rule.getVoice().equals(nikaExtraVoice)) {
+          Voice voice = nikaFindVoice(extra, rule.getVoice());
+          if (voice == null || extra.setVoice(voice) != TextToSpeech.SUCCESS) {
+            nikaRestoreDefault();
+            return bundle;
           }
+          nikaExtraVoice = rule.getVoice();
         }
-        localeInUse = ensureSupportedLocale();
+        nikaRouteTts = extra;
+      } else if (!rule.getVoice().equals(nikaCurrentVoice)) {
+        Voice voice = nikaFindVoice(tts, rule.getVoice());
+        if (voice == null || tts.setVoice(voice) != TextToSpeech.SUCCESS) {
+          nikaRestoreDefault();
+          return bundle;
+        }
+        nikaCurrentVoice = rule.getVoice();
+        cachedTtsLocale = voice.getLocale();
       }
+      if (rule.getRate() == 100 && rule.getVolume() == 100) {
+        return bundle;
+      }
+      Bundle changed = new Bundle(bundle);
+      changed.putInt(
+          SpeechParam.RATE, Math.max(10, bundle.getInt(SpeechParam.RATE, 100) * rule.getRate() / 100));
+      changed.putFloat(
+          SpeechParam.VOLUME, bundle.getFloat(SpeechParam.VOLUME, 1f) * rule.getVolume() / 100f);
+      return changed;
     } catch (RuntimeException e) {
-      nikaCurrentVoice = null;
+      nikaRouteTts = null;
+      return bundle;
     }
-    return false;
   }
+
+  /** Nika: speaks one piece of text with the voice of its rule. */
+  private int nikaSpeakPiece(
+      CharSequence text,
+      int queueMode,
+      Bundle bundle,
+      @Nullable String utteranceId,
+      @Nullable Locale locale) {
+    Bundle prepared = nikaPrepare(text, locale, bundle);
+    try {
+      if (queueMode != QUEUE_ADD) {
+        if (nikaRouteTts != null) {
+          tts.stop();
+        } else {
+          nikaStopExtra();
+        }
+      }
+      return ttsSpeak(text, queueMode, prepared, utteranceId);
+    } finally {
+      nikaRouteTts = null;
+    }
+  }
+
 
   // TODO: Replace it with cachedTtsLocale.
   /**

@@ -102,6 +102,16 @@
       android:key="@string/pref_category_apps_key"
       android:title="@string/title_pref_category_apps">
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.KeepAliveFragment"
+        android:key="pref_nika_keepalive"
+        android:summary="@string/nika_ka_menu_summary"
+        android:title="@string/nika_ka_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.VoiceCommandsFragment"
+        android:key="pref_nika_voicecmds"
+        android:summary="@string/nika_vc_menu_summary"
+        android:title="@string/nika_vc_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:fragment="com.google.android.accessibility.talkback.preference.base.AiSettingsFragment"
         android:key="pref_nika_ai"
         android:summary="@string/nika_ai_summary"

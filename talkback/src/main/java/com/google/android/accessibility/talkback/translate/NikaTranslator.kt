@@ -215,7 +215,7 @@ class NikaTranslator private constructor(private val service: TalkBackService) {
       "none" -> {}
       "sound" -> {
         try {
-          ToneGenerator(AudioManager.STREAM_MUSIC, 80).startTone(ToneGenerator.TONE_PROP_BEEP, 120)
+          com.google.android.accessibility.utils.NikaBeep.play(service, com.google.android.accessibility.utils.NikaBeep.TRANSLATE)
         } catch (e: RuntimeException) {
           // skip
         }

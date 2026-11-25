@@ -727,6 +727,11 @@ public class TalkBackService extends AccessibilityServiceCompat
   /** Controller for handling gestures */
   protected GestureController gestureController;
 
+  /** Nika: the gesture controller for the voice commands. */
+  public GestureController nikaGestureController() {
+    return gestureController;
+  }
+
   /** Speech recognition wrapper for voice commands */
   private VoiceCommandActor voiceCommandActor;
 
@@ -2090,6 +2095,7 @@ public class TalkBackService extends AccessibilityServiceCompat
     Updater.startAutomaticChecks(this);
     // Turns Backtalk under its old app ID off, before this one says it is on.
     AppIdHandOver.onServiceConnected(this, this::refreshGestureDetection);
+    com.google.android.accessibility.talkback.macros.NikaKeepAlive.apply(this);
 
     compositor.handleEvent(Compositor.EVENT_SPOKEN_FEEDBACK_ON, talkbackOnEventId);
 
@@ -3842,6 +3848,7 @@ public class TalkBackService extends AccessibilityServiceCompat
     int adjustment =
         SharedPreferencesUtils.getIntFromStringPref(
             prefs, res, R.string.pref_soundback_volume_key, R.string.pref_soundback_volume_default);
+    adjustment = prefs.getInt("nika_soundback_vol", adjustment);
     feedbackController.setVolumeAdjustment(adjustment / 100.0f);
 
     boolean hapticEnabled =

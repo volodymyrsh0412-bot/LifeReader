@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nika_whats_new_page_title">Nika \u2014 czytnik ekranu dla Androida</string>
-    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Szybkie ustawienia gestami: następne/poprzednie ustawienie i wartość (echo klawiatury, interpunkcja, emoji).\n\u2022 Klawisze głośności: suwak w fokusie, kursor w polu, bez panelu głośności.\n\u2022 Kopia zapasowa jest teraz w zip z wyborem, co przywrócić.\n\u2022 Historię powiadomień można czyścić po jednym wpisie; postęp poza fokusem jest odczytywany; usunięto słowa „zwinięte”, „przycisk”, „nagłówek” w ustawieniach.</string>
+    <string name="nika_whats_new_page_text">Co nowego:\n\u2022 Głosy według języka i alfabetu to teraz pierwsza pozycja syntezy mowy: głosy dowolnego zainstalowanego syntezatora, własna szybkość i głośność dla każdego języka, rozpoznawanie według alfabetu lub Unicode. Ukraiński tekst nie jest już czytany po angielsku.\n\u2022 Głośność dźwięków to suwak od 0 do 100; dźwięki mikrofonu i dźwięk przed tłumaczeniem wróciły, jest przełącznik.\n\u2022 Grupy ustawień, które się zwijają, znów mówią „zwinięte” i „rozwinięte”; usunięto tylko słowo „nagłówek”.\n\u2022 Nowe: „Ochrona przed zamknięciem” i „Polecenia głosowe Nika” (kilka silników rozpoznawania).</string>
     <string name="nika_update_available">Dost\u0119pna aktualizacja: kompilacja %1$d</string>
     <string name="nika_update_tap">Dotknij, aby pobra\u0107 i zainstalowa\u0107</string>
     <string name="nika_telegram_title">Nika na Telegramie</string>

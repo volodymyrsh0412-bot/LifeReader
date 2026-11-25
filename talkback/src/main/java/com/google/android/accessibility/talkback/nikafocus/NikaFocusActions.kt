@@ -21,6 +21,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 import android.view.accessibility.AccessibilityWindowInfo
 import androidx.annotation.StringRes
 import com.google.android.accessibility.talkback.R
+import com.google.android.accessibility.talkback.macros.NikaVoiceCmds
 import com.google.android.accessibility.talkback.TalkBackService
 
 /** Nika: focus actions for gestures and keys. */
@@ -33,6 +34,7 @@ object NikaFocusActions {
   val ACTIONS: List<Action> =
     listOf(
       Action("nika_focus_toggle", R.string.nika_act_focus_toggle),
+      Action(NikaVoiceCmds.ACTION_LISTEN, R.string.nika_act_vc_listen),
       Action(NikaValueActions.SETTING_NEXT, R.string.nika_act_setting_next),
       Action(NikaValueActions.SETTING_PREV, R.string.nika_act_setting_prev),
       Action(NikaValueActions.VALUE_NEXT, R.string.nika_act_value_next),
@@ -54,6 +56,10 @@ object NikaFocusActions {
   @JvmStatic
   fun perform(service: TalkBackService, value: String): Boolean {
     if (NikaValueActions.isAction(value)) return NikaValueActions.perform(service, value)
+    if (value == NikaVoiceCmds.ACTION_LISTEN) {
+      NikaVoiceCmds.listen(service)
+      return true
+    }
     if (value != "nika_focus_toggle") return false
     try {
       toggle(service)
