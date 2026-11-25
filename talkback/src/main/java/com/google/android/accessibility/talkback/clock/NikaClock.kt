@@ -506,6 +506,7 @@ class NikaClock private constructor(private val service: TalkBackService) {
   }
 
   private fun speak(text: String, interrupt: Boolean) {
+    if (com.google.android.accessibility.talkback.macros.NikaSideVoice.speak(service, "clock", text, interrupt)) return
     try {
       service.speechController.speak(
         text,

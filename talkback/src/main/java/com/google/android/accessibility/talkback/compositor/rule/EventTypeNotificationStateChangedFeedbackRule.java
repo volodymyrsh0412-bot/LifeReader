@@ -115,6 +115,11 @@ public final class EventTypeNotificationStateChangedFeedbackRule {
                     StringBuilderUtils.optionalText(", role", Role.roleToString(role))));
           }
 
+          // Nika: the notifications may have their own voice and volume.
+          if (com.google.android.accessibility.talkback.macros.NikaSideVoice.speak(
+              context, "notif", ttsOutput == null ? "" : ttsOutput.toString(), false)) {
+            ttsOutput = "";
+          }
           boolean isToastOrCall =
               isToast
                   || notificationCategory

@@ -137,6 +137,11 @@
         android:summary="@string/nika_vc_menu_summary"
         android:title="@string/nika_vc_title" />
     <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
+        android:fragment="com.google.android.accessibility.talkback.preference.base.NikaSideVoiceFragment"
+        android:key="pref_nika_side_voice"
+        android:summary="@string/nika_sv_summary"
+        android:title="@string/nika_sv_title" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuitePreference
         android:key="@string/pref_scripts_key"
         android:title="@string/title_pref_scripts"
         android:summary="@string/summary_pref_scripts"

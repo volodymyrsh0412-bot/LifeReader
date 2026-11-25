@@ -18,6 +18,8 @@ package com.google.android.accessibility.talkback.macros
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
@@ -79,6 +81,7 @@ object NikaVoiceCmds {
   const val KIND_ACTION = "action"
   const val KIND_APP = "app"
   const val KIND_CALL = "call"
+  const val KIND_CALL_PHONE = "callphone"
 
   class Cmd(
     val id: String,
@@ -102,6 +105,24 @@ object NikaVoiceCmds {
   fun engine(context: Context): String = prefs(context).getString(PREF_ENGINE, NikaVoiceEngines.ANDROID) ?: NikaVoiceEngines.ANDROID
 
   fun trigger(context: Context): String = prefs(context).getString(PREF_TRIGGER, TRIGGER_GESTURE) ?: TRIGGER_GESTURE
+
+  /** Puts the chosen language of the recognizer of Android into its intent. */
+  @JvmStatic
+  fun applyLanguage(context: Context, intent: Intent?) {
+    val p = prefs(context)
+    if (intent == null || !p.contains(PREF_LANG)) return
+    val tag =
+      when (val l = (p.getString(PREF_LANG, "") ?: "").trim().lowercase()) {
+        "" -> return
+        "uk" -> "uk-UA"
+        "ru" -> "ru-RU"
+        "be" -> "be-BY"
+        "pl" -> "pl-PL"
+        else -> l
+      }
+    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, tag)
+    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, tag)
+  }
 
   fun language(context: Context): String = prefs(context).getString(PREF_LANG, "uk") ?: "uk"
 
@@ -311,6 +332,16 @@ object NikaVoiceCmds {
           } else {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             service.startActivity(intent)
+          }
+        }
+        KIND_CALL_PHONE -> {
+          val uri = Uri.parse("tel:" + Uri.encode(cmd.value))
+          try {
+            val tm = service.getSystemService(Context.TELECOM_SERVICE) as android.telecom.TelecomManager
+            tm.placeCall(uri, Bundle())
+          } catch (e: SecurityException) {
+            say(service, service.getString(R.string.nika_vc_call_noperm))
+            service.startActivity(Intent(Intent.ACTION_DIAL, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
           }
         }
         KIND_CALL -> {

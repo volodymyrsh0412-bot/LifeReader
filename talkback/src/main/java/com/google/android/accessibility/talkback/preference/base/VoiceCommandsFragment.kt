@@ -15,13 +15,16 @@
  */
 package com.google.android.accessibility.talkback.preference.base
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.text.InputType
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import com.google.android.accessibility.talkback.R
@@ -106,6 +109,7 @@ class VoiceCommandsFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) 
       row(group, getString(R.string.nika_vc_engine), getString(engine.titleRes) + ". " + getString(engine.noteRes)) {
         chooseEngine()
       }
+      row(group, getString(R.string.nika_vc_lang), languageName(NikaVoiceCmds.language(ctx))) { chooseLanguage() }
       if (engine.id != NikaVoiceEngines.ANDROID) {
         val has = NikaVoiceCmds.key(ctx, engine.id).isNotEmpty()
         row(group, getString(R.string.nika_vc_key), getString(if (has) R.string.nika_vc_key_set else R.string.nika_vc_key_empty)) {
@@ -119,12 +123,6 @@ class VoiceCommandsFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) 
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(engine.keyUrl)))
           } catch (e: RuntimeException) {
             Toast.makeText(ctx, R.string.nika_ka_cannot_open, Toast.LENGTH_LONG).show()
-          }
-        }
-        row(group, getString(R.string.nika_vc_lang), NikaVoiceCmds.language(ctx).ifEmpty { "auto" }) {
-          askText(R.string.nika_vc_lang, NikaVoiceCmds.language(ctx)) { text ->
-            pref().edit().putString(NikaVoiceCmds.PREF_LANG, text.trim().lowercase()).apply()
-            rebuild()
           }
         }
       }
@@ -299,13 +297,96 @@ class VoiceCommandsFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) 
           0 -> pickAction(old, phrases)
           1 -> pickMacro(old, phrases)
           2 -> pickApp(old, phrases)
-          else -> askText(R.string.nika_vc_number, "") { text ->
-            val number = text.filter { it.isDigit() || it == '+' || it == '*' || it == '#' }
-            if (number.isNotEmpty()) {
-              finish(old, phrases, NikaVoiceCmds.KIND_CALL, number, getString(R.string.nika_vc_label_call, number))
+          else -> askNumber(old, phrases)
+        }
+      }
+      .setNegativeButton(android.R.string.cancel, null)
+      .show()
+  }
+
+  private var pendingOld: NikaVoiceCmds.Cmd? = null
+  private var pendingPhrases: List<String> = emptyList()
+
+  private val pickPhone =
+    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+      val uri = result.data?.data
+      if (result.resultCode == Activity.RESULT_OK && uri != null) {
+        try {
+          requireContext()
+            .contentResolver
+            .query(
+              uri,
+              arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME),
+              null,
+              null,
+              null,
+            )
+            ?.use { c ->
+              if (c.moveToFirst()) {
+                val number = (c.getString(0) ?: "").filter { it.isDigit() || it == '+' || it == '*' || it == '#' }
+                val name = c.getString(1) ?: number
+                if (number.isNotEmpty()) askCallMode(pendingOld, pendingPhrases, number, name)
+              }
             }
+        } catch (e: RuntimeException) {
+          Toast.makeText(requireContext(), R.string.nika_vc_no_contact, Toast.LENGTH_LONG).show()
+        }
+      }
+    }
+
+  private fun askNumber(old: NikaVoiceCmds.Cmd?, phrases: List<String>) {
+    val act = activity ?: return
+    AlertDialog.Builder(act)
+      .setTitle(R.string.nika_vc_number_how)
+      .setItems(arrayOf(getString(R.string.nika_vc_number_type), getString(R.string.nika_vc_number_contact))) { _, which ->
+        if (which == 0) {
+          askText(R.string.nika_vc_number, "") { text ->
+            val number = text.filter { it.isDigit() || it == '+' || it == '*' || it == '#' }
+            if (number.isNotEmpty()) askCallMode(old, phrases, number, number)
+          }
+        } else {
+          pendingOld = old
+          pendingPhrases = phrases
+          try {
+            pickPhone.launch(Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI))
+          } catch (e: RuntimeException) {
+            Toast.makeText(act, R.string.nika_vc_no_contact, Toast.LENGTH_LONG).show()
           }
         }
+      }
+      .setNegativeButton(android.R.string.cancel, null)
+      .show()
+  }
+
+  /** How to call: straight through the phone (no question), or let the system ask which app. */
+  private fun askCallMode(old: NikaVoiceCmds.Cmd?, phrases: List<String>, number: String, who: String) {
+    val act = activity ?: return
+    AlertDialog.Builder(act)
+      .setTitle(R.string.nika_vc_mode_title)
+      .setItems(arrayOf(getString(R.string.nika_vc_mode_phone), getString(R.string.nika_vc_mode_ask))) { _, which ->
+        if (which == 0) {
+          finish(old, phrases, NikaVoiceCmds.KIND_CALL_PHONE, number, getString(R.string.nika_vc_label_callphone, who))
+        } else {
+          finish(old, phrases, NikaVoiceCmds.KIND_CALL, number, getString(R.string.nika_vc_label_call, who))
+        }
+      }
+      .setNegativeButton(android.R.string.cancel, null)
+      .show()
+  }
+
+  private val languages = listOf("" to "", "uk" to "Українська", "ru" to "Русский", "be" to "Беларуская", "pl" to "Polski")
+
+  private fun languageName(code: String): String =
+    languages.firstOrNull { it.first == code }?.let { if (it.first.isEmpty()) getString(R.string.nika_vc_lang_auto) else it.second }
+      ?: code
+
+  private fun chooseLanguage() {
+    val act = activity ?: return
+    AlertDialog.Builder(act)
+      .setTitle(R.string.nika_vc_lang)
+      .setItems(languages.map { languageName(it.first) }.toTypedArray()) { _, which ->
+        pref().edit().putString(NikaVoiceCmds.PREF_LANG, languages[which].first).apply()
+        rebuild()
       }
       .setNegativeButton(android.R.string.cancel, null)
       .show()

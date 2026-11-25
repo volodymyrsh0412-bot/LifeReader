@@ -67,6 +67,57 @@ class NikaKeyActions(private val service: TalkBackService) {
   private val handler = Handler(Looper.getMainLooper())
   private val states = HashMap<Int, State>()
 
+  @Volatile private var lastVolumeKey = 0L
+  private var ignoreVolumeUntil = 0L
+
+  /**
+   * On some phones the volume keys do not reach a screen reader on the lock screen. The volume itself
+   * still changes, so the change is taken as the key: the volume is put back and the action is done.
+   * A key at the end of the scale (loudest or quietest) makes no change and is not seen this way.
+   */
+  private val volumeReceiver =
+    object : android.content.BroadcastReceiver() {
+      override fun onReceive(context: Context?, intent: android.content.Intent?) {
+        try {
+          if (intent == null) return
+          val type = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1)
+          val now = android.os.SystemClock.uptimeMillis()
+          val value = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_VALUE", -1)
+          val prev = intent.getIntExtra("android.media.EXTRA_PREV_VOLUME_STREAM_VALUE", -1)
+          if (type < 0 || value < 0 || prev < 0 || value == prev) return
+          if (now < ignoreVolumeUntil || now - lastVolumeKey < 1500 || !isLocked()) return
+          val prefs = SharedPreferencesUtils.getSharedPreferences(service)
+          val code = if (value > prev) KeyEvent.KEYCODE_VOLUME_UP else KeyEvent.KEYCODE_VOLUME_DOWN
+          val slot = slotFor(prefs, code) ?: return
+          val actions = actionsFor(prefs, slot, true)
+          if (actions.all { it == UNASSIGNED }) return
+          ignoreVolumeUntil = now + 1500
+          service.getSystemService(AudioManager::class.java)?.setStreamVolume(type, prev, 0)
+          com.google.android.accessibility.utils.NikaDiag.log(
+            "key",
+            "lock screen: " + KeyEvent.keyCodeToString(code) + " seen by the change of the volume"
+          )
+          handle(KeyEvent(KeyEvent.ACTION_DOWN, code), false, prefs, StringBuilder())
+          handler.postDelayed({ handle(KeyEvent(KeyEvent.ACTION_UP, code), false, prefs, StringBuilder()) }, 60)
+        } catch (e: Throwable) {
+          // the keys of the lock screen are an extra, never a reason to fail
+        }
+      }
+    }
+
+  init {
+    try {
+      val filter = android.content.IntentFilter("android.media.VOLUME_CHANGED_ACTION")
+      if (android.os.Build.VERSION.SDK_INT >= 33) {
+        service.registerReceiver(volumeReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+      } else {
+        service.registerReceiver(volumeReceiver, filter)
+      }
+    } catch (e: Throwable) {
+      // skip
+    }
+  }
+
   /** The settings of the screens may be stored in the device or in the user storage. */
   private fun userPrefs(): SharedPreferences? =
     try {
@@ -124,6 +175,9 @@ class NikaKeyActions(private val service: TalkBackService) {
   fun onKeyEvent(event: KeyEvent, inEditField: Boolean): Boolean {
     val prefs = SharedPreferencesUtils.getSharedPreferences(service)
     val note = StringBuilder()
+    if (event.keyCode == KeyEvent.KEYCODE_VOLUME_UP || event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+      lastVolumeKey = android.os.SystemClock.uptimeMillis()
+    }
     val used = handle(event, inEditField, prefs, note)
     if (
       event.action == KeyEvent.ACTION_DOWN &&

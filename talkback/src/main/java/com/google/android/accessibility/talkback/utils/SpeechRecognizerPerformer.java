@@ -485,6 +485,7 @@ public class SpeechRecognizerPerformer {
             .putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             .putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+    com.google.android.accessibility.talkback.macros.NikaVoiceCmds.applyLanguage(context, recognizerIntent);
   }
 
   /** Creates RecognitionListener and connects recognition listener to speech recognizer. */
