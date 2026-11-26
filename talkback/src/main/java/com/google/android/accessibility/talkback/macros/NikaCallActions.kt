@@ -47,52 +47,37 @@ object NikaCallActions {
   @JvmStatic
   fun perform(service: TalkBackService) {
     try {
-      if (phoneCall(service)) return
-      if (press(service, ANSWER)) return
-      if (viberSwipe(service)) return
-      if (reveal(service)) return
-      if (press(service, END)) return
-      NikaDiag.log("call", "no call button found")
-      dump(service)
+      // A call of the phone itself: the usual action of this gesture does it (answers or ends).
+      if (!phoneCall(service)) {
+        if (press(service, ANSWER)) return
+        if (viberSwipe(service)) return
+        if (reveal(service)) return
+        if (press(service, END)) return
+        NikaDiag.log("call", "no messenger call found")
+        dump(service)
+      }
     } catch (e: Throwable) {
       NikaDiag.log("call", "failed: $e")
     }
-    // No call: the usual action of the two-finger double tap, play or pause.
+    // Everything else: the standard action of the two-finger double tap (media or voice input, calls).
     try {
-      val audio = service.getSystemService(android.media.AudioManager::class.java)
-      audio?.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE))
-      audio?.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE))
+      service.performNikaKeyAction("MEDIA_CONTROL_OR_VOICE_INPUT")
     } catch (e: RuntimeException) {
       // skip
     }
   }
 
-
-  /**
-   * A call of the phone itself (not of a messenger): the headset button answers a ringing call and
-   * ends a call in progress, like the media key of the two-finger tap did before.
-   */
+  /** The call screen of the phone: its own application is on the screen, or a call is in progress. */
   private fun phoneCall(service: TalkBackService): Boolean {
-    val audio = service.getSystemService(android.media.AudioManager::class.java) ?: return false
-    val mode = audio.mode
-    val ringing = mode == android.media.AudioManager.MODE_RINGTONE
-    val talking = mode == android.media.AudioManager.MODE_IN_CALL
-    if (!ringing && !talking) return false
-    if (ringing) {
-      var dialer = false
-      for (w in service.windows) {
-        val pkg = w.root?.packageName?.toString() ?: continue
-        if (pkg.contains("incallui") || pkg.contains("dialer") || pkg == "com.android.phone" || pkg.contains("telecom")) {
-          dialer = true
-          break
-        }
+    val audio = service.getSystemService(android.media.AudioManager::class.java)
+    if (audio != null && audio.mode == android.media.AudioManager.MODE_IN_CALL) return true
+    for (w in service.windows) {
+      val pkg = w.root?.packageName?.toString() ?: continue
+      if (pkg.contains("incallui") || pkg.contains("dialer") || pkg == "com.android.phone" || pkg.contains("telecom")) {
+        return true
       }
-      if (!dialer) return false
     }
-    NikaDiag.log("call", "phone call: " + (if (ringing) "answer" else "end") + " by the headset button")
-    audio.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_HEADSETHOOK))
-    audio.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK))
-    return true
+    return false
   }
 
   private fun press(service: TalkBackService, names: Set<String>): Boolean {
