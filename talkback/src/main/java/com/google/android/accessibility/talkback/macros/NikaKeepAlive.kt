@@ -36,12 +36,12 @@ object NikaKeepAlive {
   private const val CHANNEL = "nika_keepalive"
 
   fun enabled(service: Service): Boolean =
-    SharedPreferencesUtils.getSharedPreferences(service).getBoolean(PREF, false)
+    SharedPreferencesUtils.getSharedPreferences(service).getBoolean(PREF, true)
 
   /** Starts or stops the notification as the setting says, and starts the voice trigger. */
   @JvmStatic
   fun apply(service: Service) {
-    NikaDiag.log("nika", "version 44 started")
+    NikaDiag.log("nika", "version 45 started")
     try {
       if (enabled(service)) start(service) else stop(service)
     } catch (e: Throwable) {
@@ -70,6 +70,7 @@ object NikaKeepAlive {
     } else {
       service.startForeground(ID, notification)
     }
+    NikaDiag.log("keepalive", "started, notifications allowed: " + manager.areNotificationsEnabled())
   }
 
   private fun stop(service: Service) {
