@@ -51,7 +51,14 @@ object NikaMacroActions {
 
   /** Actions for calls: they have their own group in the list, they are not macros. */
   @JvmField
-  val CALLS: List<Fixed> = listOf(Fixed(NikaCallActions.ACTION, R.string.nika_act_call))
+  val CALLS: List<Fixed> = listOf(
+      Fixed(NikaCallActions.ACTION, R.string.nika_act_call),
+      Fixed(NikaCallActions.DECLINE, R.string.nika_act_call_decline),
+      Fixed(NikaCallActions.QUICK, R.string.nika_act_call_quick),
+      Fixed(NikaCallActions.HANGUP, R.string.nika_act_call_hangup),
+      Fixed(NikaCallActions.MIC, R.string.nika_act_call_mic),
+      Fixed(NikaCallActions.SPEAKER, R.string.nika_act_call_speaker),
+    )
 
   private val handler = Handler(Looper.getMainLooper())
   private var runToken = 0
@@ -88,6 +95,7 @@ object NikaMacroActions {
           say(service, service.getString(R.string.nika_mac_rec_stopped))
         }
         value == NikaCallActions.ACTION -> NikaCallActions.perform(service)
+        CALLS.any { it.value == value } -> NikaCallActions.run(service, value)
         NikaVoiceCmds.isCmdAction(value) -> NikaVoiceCmds.performCmd(service, value)
         value.startsWith(PREFIX) -> start(service, value.removePrefix(PREFIX))
         else -> return false

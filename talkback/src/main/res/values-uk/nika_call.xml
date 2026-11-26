@@ -2,4 +2,9 @@
 <resources>
     <string name="nika_act_call">Відповісти або завершити виклик</string>
     <string name="nika_call_category">Дзвінки</string>
+    <string name="nika_act_call_decline">Відхилити виклик</string>
+    <string name="nika_act_call_quick">Швидкі відповіді на виклик</string>
+    <string name="nika_act_call_hangup">Завершити виклик</string>
+    <string name="nika_act_call_mic">Мікрофон у виклику</string>
+    <string name="nika_act_call_speaker">Динамік у виклику</string>
 </resources>
