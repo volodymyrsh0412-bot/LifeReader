@@ -51,7 +51,6 @@ object NikaCallActions {
       if (press(service, ANSWER)) return
       if (viberSwipe(service)) return
       if (reveal(service)) return
-      dump(service)
       if (press(service, END)) return
       NikaDiag.log("call", "no call button found")
       dump(service)
@@ -191,30 +190,6 @@ object NikaCallActions {
       return true
     }
     return false
-  }
-
-  /** For the diary: what the screen of a call shows, when nothing was found. */
-  private fun dump(service: TalkBackService) {
-    try {
-      for (w in service.windows) {
-        val root = w.root ?: continue
-        val out = StringBuilder()
-        collect(root, out, 0)
-        NikaDiag.log("call", "nothing found in " + root.packageName + ": " + out.toString().take(600))
-      }
-    } catch (e: Throwable) {
-      // skip
-    }
-  }
-
-  private fun collect(node: AccessibilityNodeInfo, out: StringBuilder, depth: Int) {
-    if (depth > 30 || out.length > 600) return
-    val l = ((node.text ?: node.contentDescription ?: "")).toString().trim()
-    if (l.isNotEmpty()) out.append('[').append(l.take(30)).append(node.isClickable.let { if (it) "*" else "" }).append(']')
-    for (i in 0 until node.childCount) {
-      val c = node.getChild(i) ?: continue
-      collect(c, out, depth + 1)
-    }
   }
 
   private fun label(node: AccessibilityNodeInfo): String =
