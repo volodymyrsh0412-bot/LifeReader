@@ -47,8 +47,11 @@ object NikaMacroActions {
       Fixed(REC_CLICK, R.string.nika_act_mac_rec),
       Fixed(REC_HOLD, R.string.nika_act_mac_rec_hold),
       Fixed(REC_STOP, R.string.nika_act_mac_stop),
-      Fixed(NikaCallActions.ACTION, R.string.nika_act_call),
     )
+
+  /** Actions for calls: they have their own group in the list, they are not macros. */
+  @JvmField
+  val CALLS: List<Fixed> = listOf(Fixed(NikaCallActions.ACTION, R.string.nika_act_call))
 
   private val handler = Handler(Looper.getMainLooper())
   private var runToken = 0
@@ -62,13 +65,13 @@ object NikaMacroActions {
 
   @JvmStatic
   fun isAction(value: String?): Boolean =
-    value != null && (value.startsWith(PREFIX) || FIXED.any { it.value == value } || NikaVoiceCmds.isCmdAction(value))
+    value != null && (value.startsWith(PREFIX) || (FIXED + CALLS).any { it.value == value } || NikaVoiceCmds.isCmdAction(value))
 
   @JvmStatic
   fun label(context: Context, value: String?): String? {
     if (value == null) return null
     NikaVoiceCmds.cmdLabel(context, value)?.let { return it }
-    FIXED.firstOrNull { it.value == value }?.let { return context.getString(it.labelRes) }
+    (FIXED + CALLS).firstOrNull { it.value == value }?.let { return context.getString(it.labelRes) }
     if (!value.startsWith(PREFIX)) return null
     val macro = NikaMacros.find(context, value.removePrefix(PREFIX))
     return context.getString(R.string.nika_mac_prefix, macro?.name ?: "?")

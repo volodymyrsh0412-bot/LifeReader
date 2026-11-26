@@ -48,7 +48,12 @@ object NikaCallActions {
   fun perform(service: TalkBackService) {
     try {
       if (press(service, ANSWER)) return
+      if (viberSwipe(service)) return
+      if (reveal(service)) return
+      dump(service)
       if (press(service, END)) return
+      NikaDiag.log("call", "no call button found")
+      dump(service)
     } catch (e: Throwable) {
       NikaDiag.log("call", "failed: $e")
     }
@@ -74,6 +79,115 @@ object NikaCallActions {
     return false
   }
 
+
+  private val INCOMING = listOf("вхідний виклик", "входящий вызов", "incoming call", "вхідний дзвінок", "przychodzące")
+
+  private fun hasPhrase(node: AccessibilityNodeInfo, depth: Int): Boolean {
+    if (depth > 40) return false
+    val t = ((node.text ?: "").toString() + " " + (node.contentDescription ?: "")).lowercase()
+    if (INCOMING.any { t.contains(it) }) return true
+    for (i in 0 until node.childCount) {
+      val c = node.getChild(i) ?: continue
+      if (hasPhrase(c, depth + 1)) return true
+    }
+    return false
+  }
+
+  /** The Viber call screen has no buttons for a screen reader: the round button is swiped to the right. */
+  private fun viberSwipe(service: TalkBackService): Boolean {
+    for (w in service.windows) {
+      val root = w.root ?: continue
+      if (root.packageName?.toString() != "com.viber.voip") continue
+      if (!hasPhrase(root, 0)) continue
+      val b = Rect()
+      root.getBoundsInScreen(b)
+      val cx = b.left + b.width() * 0.5f
+      val cy = b.top + b.height() * 0.605f
+      val path = Path()
+      path.moveTo(cx, cy)
+      path.lineTo(b.left + b.width() * 0.88f, cy)
+      NikaDiag.log("call", "viber swipe from " + cx + "," + cy)
+      val stroke = GestureDescription.StrokeDescription(path, 0L, 350L)
+      return service.dispatchGesture(GestureDescription.Builder().addStroke(stroke).build(), null, null)
+    }
+    return false
+  }
+
+
+  private val CALL_APPS = setOf("com.whatsapp", "com.whatsapp.w4b", "org.telegram.messenger", "com.viber.voip", "com.facebook.orca", "com.skype.raider")
+  private val CALLING =
+    listOf(
+      "звонок whatsapp", "дзвінок whatsapp", "whatsapp call", "whatsapp voice call", "whatsapp video call",
+      "calling", "ringing", "вызываем", "дзвонимо", "звонок telegram", "дзвінок telegram", "telegram call",
+    )
+  private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+
+  private fun hasAny(node: AccessibilityNodeInfo, phrases: List<String>, depth: Int): Boolean {
+    if (depth > 40) return false
+    val t = ((node.text ?: "").toString() + " " + (node.contentDescription ?: "")).lowercase()
+    if (phrases.any { t.contains(it) }) return true
+    for (i in 0 until node.childCount) {
+      val c = node.getChild(i) ?: continue
+      if (hasAny(c, phrases, depth + 1)) return true
+    }
+    return false
+  }
+
+  /** Some call screens show their buttons only after a touch: touch the screen and look again. */
+  private fun reveal(service: TalkBackService): Boolean {
+    for (w in service.windows) {
+      val root = w.root ?: continue
+      if (!CALL_APPS.contains(root.packageName?.toString())) continue
+      if (!hasAny(root, CALLING, 0)) continue
+      val b = Rect()
+      root.getBoundsInScreen(b)
+      val path = Path()
+      path.moveTo(b.exactCenterX(), b.top + b.height() * 0.4f)
+      NikaDiag.log("call", "touch to show the buttons")
+      service.dispatchGesture(
+        GestureDescription.Builder().addStroke(GestureDescription.StrokeDescription(path, 0L, 60L)).build(),
+        null,
+        null,
+      )
+      handler.postDelayed(
+        {
+          try {
+            if (!press(service, ANSWER)) press(service, END)
+          } catch (e: Throwable) {
+            NikaDiag.log("call", "second look failed: $e")
+          }
+        },
+        800,
+      )
+      return true
+    }
+    return false
+  }
+
+  /** For the diary: what the screen of a call shows, when nothing was found. */
+  private fun dump(service: TalkBackService) {
+    try {
+      for (w in service.windows) {
+        val root = w.root ?: continue
+        val out = StringBuilder()
+        collect(root, out, 0)
+        NikaDiag.log("call", "nothing found in " + root.packageName + ": " + out.toString().take(600))
+      }
+    } catch (e: Throwable) {
+      // skip
+    }
+  }
+
+  private fun collect(node: AccessibilityNodeInfo, out: StringBuilder, depth: Int) {
+    if (depth > 30 || out.length > 600) return
+    val l = ((node.text ?: node.contentDescription ?: "")).toString().trim()
+    if (l.isNotEmpty()) out.append('[').append(l.take(30)).append(node.isClickable.let { if (it) "*" else "" }).append(']')
+    for (i in 0 until node.childCount) {
+      val c = node.getChild(i) ?: continue
+      collect(c, out, depth + 1)
+    }
+  }
+
   private fun label(node: AccessibilityNodeInfo): String =
     (node.contentDescription ?: node.text ?: "").toString().trim().lowercase().trimEnd('.', '!')
 
@@ -89,21 +203,57 @@ object NikaCallActions {
   }
 
   private fun click(service: TalkBackService, node: AccessibilityNodeInfo): Boolean {
+    val metrics = service.resources.displayMetrics
+    val maxW = metrics.widthPixels * 0.6f
+    val maxH = metrics.heightPixels * 0.25f
+    val r = Rect()
     var n: AccessibilityNodeInfo? = node
     var up = 0
     while (n != null && up < 4) {
+      n.getBoundsInScreen(r)
+      // A big container is a panel, not the button: its click does nothing.
+      if (r.width() > maxW || r.height() > maxH) break
       if (n.isClickable && n.performAction(AccessibilityNodeInfo.ACTION_CLICK)) return true
       n = n.parent
       up++
     }
-    // The name is a separate text under a round button: touch the screen just above it.
-    val b = Rect()
-    node.getBoundsInScreen(b)
-    val x = b.exactCenterX()
-    val y = (b.top - b.height() * 3.5f).coerceAtLeast(1f)
+    node.getBoundsInScreen(r)
+    val x = r.exactCenterX()
+    // A small text under a round button: touch the screen just above the text.
+    val y =
+      if (node.isClickable || r.height() > metrics.density * 60) r.exactCenterY()
+      else (r.top - r.height() * 3.5f).coerceAtLeast(1f)
+    return tapAt(service, x, y)
+  }
+
+  private fun tapAt(service: TalkBackService, x: Float, y: Float): Boolean {
     val path = Path()
     path.moveTo(x, y)
     val stroke = GestureDescription.StrokeDescription(path, 0L, 60L)
     return service.dispatchGesture(GestureDescription.Builder().addStroke(stroke).build(), null, null)
+  }
+
+  /** For the diary: what the screen reader can see when no button was found. */
+  private fun dump(service: TalkBackService) {
+    try {
+      for (w in service.windows) {
+        val root = w.root ?: continue
+        val labels = ArrayList<String>()
+        collect(root, labels, 0)
+        NikaDiag.log("call", "window " + root.packageName + ": " + labels.take(25).joinToString(" | "))
+      }
+    } catch (e: Throwable) {
+      // skip
+    }
+  }
+
+  private fun collect(node: AccessibilityNodeInfo, out: MutableList<String>, depth: Int) {
+    if (depth > 40 || out.size > 25) return
+    val l = label(node)
+    if (l.isNotEmpty()) out.add(l + (if (node.isClickable) "*" else ""))
+    for (i in 0 until node.childCount) {
+      val c = node.getChild(i) ?: continue
+      collect(c, out, depth + 1)
+    }
   }
 }
