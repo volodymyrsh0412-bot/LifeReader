@@ -25,20 +25,35 @@ import android.content.Context
  */
 object NikaBuiltInAgent {
   private const val ASSET = "scripting/nika-ai-agent.js"
+  private const val DIR = "scripting/builtin"
   private const val PREFS = "nika_builtin_scripts"
   private const val KEY = "ai_agent_version"
 
   @JvmStatic
   fun ensureInstalled(context: Context, store: ScriptStore) {
     try {
-      val bytes = context.assets.open(ASSET).use { it.readBytes() }
-      val pkg = ScriptPackage.read(bytes)
-      val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-      if (prefs.getString(KEY, null) == pkg.manifest.version) return
-      store.install(pkg, pkg.manifest.permissions, true)
-      prefs.edit().putString(KEY, pkg.manifest.version).apply()
+      install(context, store, ASSET, KEY)
     } catch (e: Exception) {
       // The script engine works without the built-in script.
     }
+    // The other built-in scripts: each is installed on its own, so one failing does not stop the rest.
+    val names = try { context.assets.list(DIR) ?: emptyArray<String>() } catch (e: Exception) { emptyArray<String>() }
+    for (name in names) {
+      if (!name.endsWith(".js")) continue
+      try {
+        install(context, store, DIR + "/" + name, "builtin_" + name)
+      } catch (e: Exception) {
+        // skip
+      }
+    }
+  }
+
+  private fun install(context: Context, store: ScriptStore, asset: String, key: String) {
+    val bytes = context.assets.open(asset).use { it.readBytes() }
+    val pkg = ScriptPackage.read(bytes)
+    val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+    if (prefs.getString(key, null) == pkg.manifest.version) return
+    store.install(pkg, pkg.manifest.permissions, true)
+    prefs.edit().putString(key, pkg.manifest.version).apply()
   }
 }
