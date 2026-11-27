@@ -297,12 +297,6 @@ public final class GestureListPreference extends AccessibilitySuiteDialogPrefere
     ImmutableList.Builder<ActionItem> builder =
         createActionListBuilder(R.string.nika_call_category, 0, 0);
     Resources resources = getContext().getResources();
-    // nika-standard-call-item: the standard action of the two-finger double tap.
-    builder.add(
-        new ActionItem(
-            resources.getString(R.string.shortcut_media_control_or_voice_input),
-            resources.getString(R.string.shortcut_value_media_control_or_voice_input),
-            TYPE_ACTION_ITEM));
     for (com.google.android.accessibility.talkback.macros.NikaMacroActions.Fixed fixed : com.google.android.accessibility.talkback.macros.NikaMacroActions.CALLS) {
       builder.add(
           new ActionItem(
