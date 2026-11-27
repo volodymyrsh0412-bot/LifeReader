@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_timer_paused">Timer paused. %1$s left</string>
+    <string name="nika_timer_resumed">Timer resumed. %1$s left</string>
+    <string name="nika_act_timer_pause">Timer: pause or resume</string>
+    <string name="nika_timer_repeats_title">Number of signals when the timer ends</string>
+    <string name="nika_timer_sound_title">Timer signal sound</string>
+    <string name="nika_timer_vibrate_title">Vibration when the timer ends</string>
+    <string name="nika_sv_timer">Timer</string>
+    <string name="nika_sv_stopwatch">Stopwatch</string>
+    <string-array name="nika_timer_repeats_entries">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="nika_timer_repeats_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="nika_timer_sound_entries">
+        <item>Short beeps</item>
+        <item>Confirmation</item>
+        <item>Prompt</item>
+        <item>Long beep</item>
+    </string-array>
+    <string-array name="nika_timer_sound_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+</resources>

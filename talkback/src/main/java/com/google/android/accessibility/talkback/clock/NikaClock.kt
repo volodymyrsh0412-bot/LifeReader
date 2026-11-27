@@ -62,6 +62,7 @@ class NikaClock private constructor(private val service: TalkBackService) {
   private var timerEndAt = 0L
   private var timerLength = 0L
   private var ringsLeft = 0
+  private var timerPausedLeft = 0L
 
   // Spoken progress (every few seconds) of the stopwatch and of the timer.
   private var progressLock: PowerManager.WakeLock? = null
@@ -315,6 +316,7 @@ class NikaClock private constructor(private val service: TalkBackService) {
       speak(
         service.getString(R.string.nika_sw_paused) + ". " + durationText(swAccumulated),
         true,
+        "stopwatch",
       )
     } else {
       val fresh = swAccumulated == 0L
@@ -322,6 +324,7 @@ class NikaClock private constructor(private val service: TalkBackService) {
       speak(
         service.getString(if (fresh) R.string.nika_sw_started else R.string.nika_sw_resumed),
         true,
+        "stopwatch",
       )
     }
     lastSwSpoken = -1L
@@ -331,16 +334,16 @@ class NikaClock private constructor(private val service: TalkBackService) {
   fun stopwatchSay() {
     val elapsed = stopwatchElapsed()
     if (elapsed == 0L && swStartedAt == 0L) {
-      speak(service.getString(R.string.nika_sw_zero), true)
+      speak(service.getString(R.string.nika_sw_zero), true, "stopwatch")
     } else {
-      speak(durationText(elapsed), true)
+      speak(durationText(elapsed), true, "stopwatch")
     }
   }
 
   fun stopwatchReset() {
     swAccumulated = 0L
     swStartedAt = 0L
-    speak(service.getString(R.string.nika_sw_reset_done), true)
+    speak(service.getString(R.string.nika_sw_reset_done), true, "stopwatch")
     lastSwSpoken = -1L
     scheduleProgress()
   }
@@ -348,9 +351,14 @@ class NikaClock private constructor(private val service: TalkBackService) {
   // ----- countdown timer -----
 
   fun timerToggle() {
+    if (timerEndAt == 0L && timerPausedLeft > 0L) {
+      timerPausedLeft = 0L
+      speak(service.getString(R.string.nika_timer_stopped), true, "timer")
+      return
+    }
     if (timerEndAt != 0L) {
       stopTimer()
-      speak(service.getString(R.string.nika_timer_stopped), true)
+      speak(service.getString(R.string.nika_timer_stopped), true, "timer")
       scheduleProgress()
       return
     }
@@ -359,18 +367,46 @@ class NikaClock private constructor(private val service: TalkBackService) {
     timerEndAt = SystemClock.elapsedRealtime() + timerLength
     ringsLeft = 0
     setAlarm(AlarmManager.ELAPSED_REALTIME_WAKEUP, timerEndAt, pending(ACTION_TIMER))
-    speak(service.getString(R.string.nika_timer_started, durationText(timerLength)), true)
+    speak(service.getString(R.string.nika_timer_started, durationText(timerLength)), true, "timer")
     lastTimerSpoken = -1L
     scheduleProgress()
   }
 
+  /** Pause and resume of the timer. The alarm is cancelled while it waits. */
+  fun timerPause() {
+    if (timerEndAt != 0L) {
+      val left = (timerEndAt - SystemClock.elapsedRealtime()).coerceAtLeast(0L)
+      stopTimer()
+      timerPausedLeft = left
+      speak(service.getString(R.string.nika_timer_paused, durationText(left)), true, "timer")
+      scheduleProgress()
+      return
+    }
+    if (timerPausedLeft > 0L) {
+      val left = timerPausedLeft
+      timerPausedLeft = 0L
+      timerEndAt = SystemClock.elapsedRealtime() + left
+      ringsLeft = 0
+      setAlarm(AlarmManager.ELAPSED_REALTIME_WAKEUP, timerEndAt, pending(ACTION_TIMER))
+      speak(service.getString(R.string.nika_timer_resumed, durationText(left)), true, "timer")
+      lastTimerSpoken = -1L
+      scheduleProgress()
+      return
+    }
+    speak(service.getString(R.string.nika_timer_idle), true, "timer")
+  }
+
   fun timerSay() {
+    if (timerEndAt == 0L && timerPausedLeft > 0L) {
+      speak(service.getString(R.string.nika_timer_paused, durationText(timerPausedLeft)), true, "timer")
+      return
+    }
     if (timerEndAt == 0L) {
-      speak(service.getString(R.string.nika_timer_idle), true)
+      speak(service.getString(R.string.nika_timer_idle), true, "timer")
       return
     }
     val left = (timerEndAt - SystemClock.elapsedRealtime()).coerceAtLeast(0L)
-    speak(service.getString(R.string.nika_timer_left, durationText(left)), true)
+    speak(service.getString(R.string.nika_timer_left, durationText(left)), true, "timer")
   }
 
   private fun stopTimer() {
@@ -400,24 +436,31 @@ class NikaClock private constructor(private val service: TalkBackService) {
     } catch (e: RuntimeException) {
       // skip
     }
-    ringsLeft = 3
+    ringsLeft = int("nika_clock_timer_repeats", 3).coerceIn(1, 20)
     handler.removeCallbacks(ringTask)
     handler.post(ringTask)
   }
 
   private fun ring() {
     try {
-      ToneGenerator(AudioManager.STREAM_ALARM, 100).startTone(ToneGenerator.TONE_PROP_BEEP2, 400)
+      val tone =
+        when (int("nika_clock_timer_sound", 0)) {
+          1 -> ToneGenerator.TONE_PROP_ACK
+          2 -> ToneGenerator.TONE_PROP_PROMPT
+          3 -> ToneGenerator.TONE_CDMA_ONE_MIN_BEEP
+          else -> ToneGenerator.TONE_PROP_BEEP2
+        }
+      ToneGenerator(AudioManager.STREAM_ALARM, 100).startTone(tone, 400)
     } catch (e: RuntimeException) {
       // skip
     }
     try {
-      val vibrator = service.getSystemService(Vibrator::class.java)
+      val vibrator = if (bool("nika_clock_timer_vibrate", true)) service.getSystemService(Vibrator::class.java) else null
       vibrator?.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 400, 200, 400), -1))
     } catch (e: RuntimeException) {
       // skip
     }
-    speak(service.getString(R.string.nika_timer_done), true)
+    speak(service.getString(R.string.nika_timer_done), true, "timer")
   }
 
   // ----- spoken progress -----
@@ -472,7 +515,7 @@ class NikaClock private constructor(private val service: TalkBackService) {
         val rounded = (elapsed + swStep / 2) / swStep * swStep
         if (rounded > 0L && Math.abs(elapsed - rounded) < 400L && rounded != lastSwSpoken) {
           lastSwSpoken = rounded
-          speak(durationText(rounded), false)
+          speak(durationText(rounded), false, "stopwatch")
         }
       }
       val timerStep = int("nika_clock_timer_progress", 0) * 1000L
@@ -481,7 +524,7 @@ class NikaClock private constructor(private val service: TalkBackService) {
         val rounded = (left + timerStep / 2) / timerStep * timerStep
         if (rounded > 0L && Math.abs(left - rounded) < 400L && rounded != lastTimerSpoken) {
           lastTimerSpoken = rounded
-          speak(durationText(rounded), false)
+          speak(durationText(rounded), false, "timer")
         }
       }
     } catch (e: RuntimeException) {
@@ -505,8 +548,11 @@ class NikaClock private constructor(private val service: TalkBackService) {
     return parts.joinToString(" ")
   }
 
-  private fun speak(text: String, interrupt: Boolean) {
-    if (com.google.android.accessibility.talkback.macros.NikaSideVoice.speak(service, "clock", text, interrupt)) return
+  private fun speak(text: String, interrupt: Boolean, src: String = "clock") {
+    val side = com.google.android.accessibility.talkback.macros.NikaSideVoice
+    // A timer or stopwatch without its own voice uses the voice of the talking clock.
+    val use = if (src != "clock" && !side.isCustom(service, src)) "clock" else src
+    if (side.speak(service, use, text, interrupt)) return
     try {
       service.speechController.speak(
         text,

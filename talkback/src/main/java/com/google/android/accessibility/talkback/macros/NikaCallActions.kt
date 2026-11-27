@@ -89,6 +89,9 @@ object NikaCallActions {
   /** The call is in the notification: open the shade, look for the button several times, press it. */
   private fun openShade(service: TalkBackService, names: Set<String>): Boolean {
     if (!recentCall()) return false
+    val keyguard = service.getSystemService(android.app.KeyguardManager::class.java)
+    // On the lock screen the shade is not opened: there the call is answered with the swipes only.
+    if (keyguard != null && keyguard.isKeyguardLocked) return false
     callSeenAt = 0L
     NikaDiag.log("call", "opening the shade")
     service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS)
@@ -220,31 +223,62 @@ object NikaCallActions {
     return null
   }
 
+  // Variants of the two-finger swipe: gap between the fingers (px), duration (ms), length (share of the width).
+  private val SWIPES =
+    listOf(
+      floatArrayOf(120f, 450f, 0.25f),
+      floatArrayOf(160f, 700f, 0.30f),
+      floatArrayOf(80f, 300f, 0.25f),
+    )
+  private var swipeRun = 0
+
   private fun viberSwipe(service: TalkBackService, dx: Float, dy: Float): Boolean {
-    val root = viberWindowRoot(service) ?: return false
-    val b = Rect()
-    root.getBoundsInScreen(b)
-    val w = b.width().toFloat()
-    val h = b.height().toFloat()
-    val cx = b.left + w * 0.5f
-    val cy = b.top + h * 0.605f
-    val tx = (cx + dx * w * 0.25f).coerceIn(b.left + w * 0.05f, b.left + w * 0.95f)
-    val ty = (cy + dy * h * 0.25f).coerceIn(b.top + h * 0.05f, b.top + h * 0.95f)
-    // The two fingers stand one above the other for a sideways swipe, side by side for a vertical one.
-    val ox = if (dx == 0f) 60f else 0f
-    val oy = if (dx == 0f) 0f else 60f
-    val a = Path()
-    a.moveTo(cx - ox, cy - oy)
-    a.lineTo(tx - ox, ty - oy)
-    val c = Path()
-    c.moveTo(cx + ox, cy + oy)
-    c.lineTo(tx + ox, ty + oy)
-    val g = GestureDescription.Builder()
-    g.addStroke(GestureDescription.StrokeDescription(a, 0L, 450L))
-    g.addStroke(GestureDescription.StrokeDescription(c, 0L, 450L))
-    val ok = service.dispatchGesture(g.build(), null, null)
-    NikaDiag.log("call", "viber: two fingers " + dx + "," + dy + ": " + ok)
+    if (viberWindowRoot(service) == null) return false
+    swipeRun += 1
+    trySwipe(service, dx, dy, 0, swipeRun)
     return true
+  }
+
+  private fun trySwipe(service: TalkBackService, dx: Float, dy: Float, step: Int, run: Int) {
+    try {
+      if (run != swipeRun) return
+      val root = viberWindowRoot(service)
+      if (root == null) {
+        NikaDiag.log("call", "viber: the call screen is gone, swipe " + step + " worked")
+        return
+      }
+      if (step >= SWIPES.size) {
+        NikaDiag.log("call", "viber: the swipe did not help")
+        return
+      }
+      val v = SWIPES[step]
+      val b = Rect()
+      root.getBoundsInScreen(b)
+      val w = b.width().toFloat()
+      val h = b.height().toFloat()
+      val cx = b.left + w * 0.5f
+      val cy = b.top + h * 0.605f
+      val tx = (cx + dx * w * v[2]).coerceIn(b.left + w * 0.05f, b.left + w * 0.95f)
+      val ty = (cy + dy * h * v[2]).coerceIn(b.top + h * 0.05f, b.top + h * 0.95f)
+      // The two fingers stand one above the other for a sideways swipe, side by side for a vertical one.
+      val ox = if (dx == 0f) v[0] / 2f else 0f
+      val oy = if (dx == 0f) 0f else v[0] / 2f
+      val a = Path()
+      a.moveTo(cx - ox, cy - oy)
+      a.lineTo(tx - ox, ty - oy)
+      val c = Path()
+      c.moveTo(cx + ox, cy + oy)
+      c.lineTo(tx + ox, ty + oy)
+      val g = GestureDescription.Builder()
+      g.addStroke(GestureDescription.StrokeDescription(a, 0L, v[1].toLong()))
+      g.addStroke(GestureDescription.StrokeDescription(c, 0L, v[1].toLong()))
+      val ok = service.dispatchGesture(g.build(), null, null)
+      NikaDiag.log("call", "viber: two fingers " + dx + "," + dy + " variant " + step + ": " + ok)
+      // If the call screen is still there a little later, the next variant is tried.
+      handler.postDelayed({ trySwipe(service, dx, dy, step + 1, run) }, v[1].toLong() + 1500L)
+    } catch (e: Throwable) {
+      NikaDiag.log("call", "viber: swipe failed: $e")
+    }
   }
 
   private fun findById(node: AccessibilityNodeInfo, id: String, depth: Int): AccessibilityNodeInfo? {

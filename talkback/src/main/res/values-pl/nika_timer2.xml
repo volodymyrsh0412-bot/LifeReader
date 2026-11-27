@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_timer_paused">Minutnik wstrzymany. Zostało: %1$s</string>
+    <string name="nika_timer_resumed">Minutnik wznowiony. Zostało: %1$s</string>
+    <string name="nika_act_timer_pause">Minutnik: pauza lub wznowienie</string>
+    <string name="nika_timer_repeats_title">Ile razy powtórzyć sygnał po zakończeniu minutnika</string>
+    <string name="nika_timer_sound_title">Dźwięk sygnału minutnika</string>
+    <string name="nika_timer_vibrate_title">Wibracja po zakończeniu minutnika</string>
+    <string name="nika_sv_timer">Minutnik</string>
+    <string name="nika_sv_stopwatch">Stoper</string>
+    <string-array name="nika_timer_repeats_entries">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="nika_timer_repeats_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="nika_timer_sound_entries">
+        <item>Krótkie sygnały</item>
+        <item>Potwierdzenie</item>
+        <item>Zachęta</item>
+        <item>Długi sygnał</item>
+    </string-array>
+    <string-array name="nika_timer_sound_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+</resources>

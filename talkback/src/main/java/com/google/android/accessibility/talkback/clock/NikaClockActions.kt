@@ -36,6 +36,7 @@ object NikaClockActions {
       Action("nika_sw_reset", R.string.nika_act_sw_reset),
       Action("nika_timer_toggle", R.string.nika_act_timer_toggle),
       Action("nika_timer_say", R.string.nika_act_timer_say),
+      Action("nika_timer_pause", R.string.nika_act_timer_pause),
     )
 
   private fun find(value: String?): Action? = ACTIONS.firstOrNull { it.value == value }
@@ -58,6 +59,7 @@ object NikaClockActions {
       "nika_sw_reset" -> clock.stopwatchReset()
       "nika_timer_toggle" -> clock.timerToggle()
       "nika_timer_say" -> clock.timerSay()
+      "nika_timer_pause" -> clock.timerPause()
       else -> return false
     }
     return true

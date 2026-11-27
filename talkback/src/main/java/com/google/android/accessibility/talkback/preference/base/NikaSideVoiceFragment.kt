@@ -69,6 +69,8 @@ class NikaSideVoiceFragment : NikaKeysBaseFragment(R.xml.nika_list_preferences) 
     group.addPreference(note)
     section(group, NikaSideVoice.NOTIF, R.string.nika_sv_notif)
     section(group, NikaSideVoice.CLOCK, R.string.nika_sv_clock)
+    section(group, NikaSideVoice.TIMER, R.string.nika_sv_timer)
+    section(group, NikaSideVoice.STOPWATCH, R.string.nika_sv_stopwatch)
   }
 
   private fun engineName(engine: String): String {

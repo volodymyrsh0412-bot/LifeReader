@@ -63,6 +63,24 @@
           android:summary="%s"
           android:entries="@array/nika_clock_progress_entries"
           android:entryValues="@array/nika_clock_progress_values" />
+    <ListPreference
+          android:key="nika_clock_timer_repeats"
+          android:defaultValue="3"
+          android:title="@string/nika_timer_repeats_title"
+          android:summary="%s"
+          android:entries="@array/nika_timer_repeats_entries"
+          android:entryValues="@array/nika_timer_repeats_values" />
+    <ListPreference
+          android:key="nika_clock_timer_sound"
+          android:defaultValue="0"
+          android:title="@string/nika_timer_sound_title"
+          android:summary="%s"
+          android:entries="@array/nika_timer_sound_entries"
+          android:entryValues="@array/nika_timer_sound_values" />
+    <com.google.android.accessibility.material.preference.AccessibilitySuiteSwitchPreference
+          android:key="nika_clock_timer_vibrate"
+          android:defaultValue="true"
+          android:title="@string/nika_timer_vibrate_title" />
     <Preference
           android:key="nika_clock_permission"
           android:title="@string/nika_clock_perm_title"

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_timer_paused">Таймер на паўзе. Засталося: %1$s</string>
+    <string name="nika_timer_resumed">Таймер працягнуты. Засталося: %1$s</string>
+    <string name="nika_act_timer_pause">Таймер: паўза або працяг</string>
+    <string name="nika_timer_repeats_title">Колькі разоў паўтарыць сігнал, калі таймер скончыўся</string>
+    <string name="nika_timer_sound_title">Гук сігналу таймера</string>
+    <string name="nika_timer_vibrate_title">Вібрацыя, калі таймер скончыўся</string>
+    <string name="nika_sv_timer">Таймер</string>
+    <string name="nika_sv_stopwatch">Секундамер</string>
+    <string-array name="nika_timer_repeats_entries">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="nika_timer_repeats_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="nika_timer_sound_entries">
+        <item>Кароткія сігналы</item>
+        <item>Пацвярджэнне</item>
+        <item>Запрашэнне</item>
+        <item>Доўгі сігнал</item>
+    </string-array>
+    <string-array name="nika_timer_sound_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+</resources>

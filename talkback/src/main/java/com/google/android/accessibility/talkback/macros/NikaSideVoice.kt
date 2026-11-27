@@ -31,6 +31,8 @@ import com.google.android.accessibility.utils.SharedPreferencesUtils
 object NikaSideVoice {
   const val NOTIF = "notif"
   const val CLOCK = "clock"
+  const val TIMER = "timer"
+  const val STOPWATCH = "stopwatch"
 
   private val handler = Handler(Looper.getMainLooper())
 

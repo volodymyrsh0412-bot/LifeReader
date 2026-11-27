@@ -3,7 +3,7 @@
 export const manifest = {
   id: 'viber-messages',
   name: 'Viber: повідомлення',
-  version: '1.0',
+  version: '1.1',
   author: 'Kostya (SandFly), Nika',
   description: 'У чатах Viber кожне повідомлення читається як одна зупинка: хто, кому відповідає, текст, цитата, реакції й час. Кнопки повідомлення — у меню дій з українськими назвами.',
   apps: ['com.viber.voip'],
@@ -12,6 +12,14 @@ export const manifest = {
     { match: { parentId: 'conversation_recycler_view' }, group: true, activate: { id: 'balloonView' } },
     { id: 'btn_jump_to_bottom', label: 'До останніх повідомлень' },
     { id: 'options_menu_open_more', label: 'Інші вкладення' },
+    // Call screen: the buttons have no names (the red one is called leaveConference).
+    { id: 'leaveConference', label: 'Завершити виклик' },
+    { id: 'speakerPhone', label: 'Динамік' },
+    { id: 'silentCall', label: 'Мікрофон' },
+    { id: 'videoCall', label: 'Відео' },
+    { id: 'backButton', label: 'Згорнути виклик' },
+    { id: 'menuView', label: 'Меню виклику' },
+    { id: 'phone_call_secure', label: 'Захищений виклик' },
   ],
 };
 
