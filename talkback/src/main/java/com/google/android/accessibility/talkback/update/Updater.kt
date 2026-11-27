@@ -189,6 +189,16 @@ object Updater {
         } catch (e: Exception) {
           LogUtils.w(TAG, "Update check failed: %s", e)
           mainHandler.post { // nika-real-error
+            try { // nika-error-dialog
+              val full = e.toString() + (e.cause?.let { " / " + it.toString() } ?: "")
+              com.google.android.accessibility.utils.NikaDiag.log("update", full)
+              android.app.AlertDialog.Builder(activity)
+                .setMessage(full)
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
+            } catch (x: Exception) {
+              // the toast below is enough
+            }
             Toast.makeText(
                 context,
                 context.getString(R.string.update_check_failed) + ": " + e,
