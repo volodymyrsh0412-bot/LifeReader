@@ -233,10 +233,50 @@ object NikaCallActions {
   private var swipeRun = 0
 
   private fun viberSwipe(service: TalkBackService, dx: Float, dy: Float): Boolean {
-    if (viberWindowRoot(service) == null) return false
+    val root = viberWindowRoot(service) ?: return false
     swipeRun += 1
-    trySwipe(service, dx, dy, 0, swipeRun)
+    val run = swipeRun
+    // To answer, a click from the screen reader on the round button comes first: it answers, a touch does not.
+    if (dx > 0f && dy == 0f && viberClickCenter(root)) {
+      handler.postDelayed({ trySwipe(service, dx, dy, 0, run) }, 1500L)
+      return true
+    }
+    trySwipe(service, dx, dy, 0, run)
     return true
+  }
+
+  /** The round button of the Viber call screen is a View without a label. Its click answers the call. */
+  private fun viberClickCenter(root: AccessibilityNodeInfo): Boolean {
+    val b = Rect()
+    root.getBoundsInScreen(b)
+    val cx = b.exactCenterX()
+    val cy = b.top + b.height() * 0.605f
+    var best: AccessibilityNodeInfo? = null
+    var bestD = Float.MAX_VALUE
+    val r = Rect()
+    val stack = ArrayDeque<AccessibilityNodeInfo>()
+    stack.addLast(root)
+    var n = 0
+    while (stack.isNotEmpty() && n < 500) {
+      val node = stack.removeFirst()
+      n++
+      if (node.className?.toString() == "android.view.View" && node.isClickable &&
+        node.text.isNullOrEmpty() && node.contentDescription.isNullOrEmpty()) {
+        node.getBoundsInScreen(r)
+        if (r.width() > 0 && r.height() > 0) {
+          val d = Math.hypot((r.exactCenterX() - cx).toDouble(), (r.exactCenterY() - cy).toDouble()).toFloat()
+          if (d < bestD) {
+            bestD = d
+            best = node
+          }
+        }
+      }
+      for (i in 0 until node.childCount) node.getChild(i)?.let { stack.addLast(it) }
+    }
+    val target = best ?: return false
+    val ok = target.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+    NikaDiag.log("call", "viber: click on the round button: " + ok)
+    return ok
   }
 
   private fun trySwipe(service: TalkBackService, dx: Float, dy: Float, step: Int, run: Int) {
