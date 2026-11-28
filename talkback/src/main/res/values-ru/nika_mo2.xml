@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nika_mo_delete">Удалить</string>
+    <string name="nika_mo_restore">Вернуть удалённые пункты</string>
+</resources>

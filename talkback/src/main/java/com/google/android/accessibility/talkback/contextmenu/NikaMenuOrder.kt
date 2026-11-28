@@ -28,6 +28,7 @@ import com.google.android.accessibility.utils.SharedPreferencesUtils
 object NikaMenuOrder {
   const val ORDER_KEY = "nika_menu_order"
   const val HIDDEN_KEY = "nika_menu_hidden"
+  const val DELETED_KEY = "nika_menu_deleted"
   const val TITLES_KEY = "nika_menu_titles"
   const val CUSTOM_KEY = "nika_menu_custom"
   private const val SEP = "\n"
@@ -155,8 +156,11 @@ object NikaMenuOrder {
   fun listForScreen(context: Context): List<Pair<String, String>> {
     val order = load(context, ORDER_KEY)
     val titles = loadTitles(context)
+    val deleted = load(context, DELETED_KEY).toHashSet()
+    if (order.removeAll { deleted.contains(it) }) save(context, ORDER_KEY, order)
     var changed = false
     for ((key, title) in switchedOn(context)) {
+      if (deleted.contains(key)) continue
       if (!order.contains(key)) {
         order.add(key)
         changed = true
@@ -170,6 +174,13 @@ object NikaMenuOrder {
     return order.map { Pair(it, titles[it] ?: it.substringAfter(":")) }
   }
 
+  /** The items that the person deleted from the list, as (key, title). */
+  @JvmStatic
+  fun deletedList(context: Context): List<Pair<String, String>> {
+    val titles = loadTitles(context)
+    return load(context, DELETED_KEY).map { Pair(it, titles[it] ?: it.substringAfter(":")) }
+  }
+
   /**
    * Remembers the items of the menu and, once the person has changed the order, puts the items in
    * that order. Hidden items are removed. Never throws.
@@ -179,6 +190,7 @@ object NikaMenuOrder {
     try {
       val stored = load(context, ORDER_KEY)
       val hidden = load(context, HIDDEN_KEY).toHashSet()
+      hidden.addAll(load(context, DELETED_KEY))
       val keys = items.map { keyOf(context, it) }
       val titles = loadTitles(context)
       var titlesChanged = false
@@ -189,7 +201,7 @@ object NikaMenuOrder {
           titles[k] = t
           titlesChanged = true
         }
-        if (stored.contains(k)) continue
+        if (stored.contains(k) || hidden.contains(k)) continue
         var at = -1
         for (j in i + 1 until keys.size) {
           val idx = stored.indexOf(keys[j])
