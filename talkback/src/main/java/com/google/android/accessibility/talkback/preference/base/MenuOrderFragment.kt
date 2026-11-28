@@ -26,7 +26,11 @@ import androidx.preference.PreferenceViewHolder
 import com.google.android.accessibility.talkback.R
 import com.google.android.accessibility.talkback.contextmenu.NikaMenuOrder
 
-/** Nika: order of the items of the Nika menu: move up, move down, hide or show. */
+/**
+ * Nika: order of the items of the Nika menu. The top section holds the items that are in the menu,
+ * in their order; the bottom section holds the items that can be added. Delete moves an item to
+ * the bottom section; a click there puts it back.
+ */
 class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
   override val collapseSections: Boolean = false
 
@@ -37,49 +41,72 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
     rebuild()
   }
 
+  private fun heading(ctx: android.content.Context, text: String): Preference {
+    val h = NikaHeadingPreference(ctx)
+    h.title = text
+    h.isSelectable = false
+    h.isPersistent = false
+    return h
+  }
+
   private fun rebuild() {
     val ctx = context ?: return
     // An empty group from the XML is removed by the settings filter, so the rows go on the screen itself.
     val group: PreferenceGroup = preferenceScreen ?: return
     group.removeAll()
+    // Items that were only hidden earlier are now simply in the "can be added" section.
+    val oldHidden = NikaMenuOrder.load(ctx, NikaMenuOrder.HIDDEN_KEY)
+    if (oldHidden.isNotEmpty()) {
+      val gone0 = NikaMenuOrder.load(ctx, NikaMenuOrder.DELETED_KEY)
+      for (k in oldHidden) if (!gone0.contains(k)) gone0.add(k)
+      NikaMenuOrder.save(ctx, NikaMenuOrder.DELETED_KEY, gone0)
+      NikaMenuOrder.save(ctx, NikaMenuOrder.HIDDEN_KEY, emptyList())
+      NikaMenuOrder.setCustom(ctx)
+    }
     val list = NikaMenuOrder.listForScreen(ctx)
     val order = list.map { it.first }
-    val hidden = NikaMenuOrder.load(ctx, NikaMenuOrder.HIDDEN_KEY)
+    group.addPreference(heading(ctx, getString(R.string.nika_mo_in)))
     if (order.isEmpty()) {
       val empty = Preference(ctx)
       empty.title = getString(R.string.nika_mo_empty)
       empty.isSelectable = false
+      empty.isPersistent = false
       group.addPreference(empty)
-      return
     }
     for ((i, entry) in list.withIndex()) {
-      val title = entry.first
-      val isHidden = hidden.contains(title)
+      val key = entry.first
       val p = MovePreference(ctx)
       p.title = entry.second
-      p.summary = if (isHidden) getString(R.string.nika_mo_hidden) else null
       p.isPersistent = false
-      p.up = if (i > 0) ({ move(title, -1) }) else null
-      p.down = if (i < order.size - 1) ({ move(title, 1) }) else null
-      p.toggle = { toggleHidden(title) }
-      p.remove = { delete(title) }
-      p.hiddenNow = isHidden
+      p.up = if (i > 0) ({ move(key, -1) }) else null
+      p.down = if (i < order.size - 1) ({ move(key, 1) }) else null
+      p.remove = { delete(key) }
       p.setOnPreferenceClickListener {
-        showMenu(p, title, entry.second, i, order.size, isHidden)
+        showMenu(entry.second, key, i, order.size)
         true
       }
       group.addPreference(p)
     }
     val gone = NikaMenuOrder.deletedList(ctx)
-    if (gone.isNotEmpty()) {
-      val r = Preference(ctx)
-      r.title = getString(R.string.nika_mo_restore)
-      r.isPersistent = false
-      r.setOnPreferenceClickListener {
-        restore(gone)
+    group.addPreference(heading(ctx, getString(R.string.nika_mo_can_add)))
+    if (gone.isEmpty()) {
+      val none = Preference(ctx)
+      none.title = getString(R.string.nika_mo_none)
+      none.isSelectable = false
+      none.isPersistent = false
+      group.addPreference(none)
+    }
+    for (entry in gone) {
+      val key = entry.first
+      val p = AddPreference(ctx)
+      p.title = entry.second
+      p.isPersistent = false
+      p.add = { restore(key) }
+      p.setOnPreferenceClickListener {
+        restore(key)
         true
       }
-      group.addPreference(r)
+      group.addPreference(p)
     }
   }
 
@@ -88,8 +115,6 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
     val order = NikaMenuOrder.load(ctx, NikaMenuOrder.ORDER_KEY)
     order.remove(key)
     NikaMenuOrder.save(ctx, NikaMenuOrder.ORDER_KEY, order)
-    val hidden = NikaMenuOrder.load(ctx, NikaMenuOrder.HIDDEN_KEY)
-    if (hidden.remove(key)) NikaMenuOrder.save(ctx, NikaMenuOrder.HIDDEN_KEY, hidden)
     val gone = NikaMenuOrder.load(ctx, NikaMenuOrder.DELETED_KEY)
     if (!gone.contains(key)) gone.add(key)
     NikaMenuOrder.save(ctx, NikaMenuOrder.DELETED_KEY, gone)
@@ -97,27 +122,19 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
     rebuild()
   }
 
-  private fun restore(gone: List<Pair<String, String>>) {
-    val act = activity ?: return
-    AlertDialog.Builder(act)
-      .setTitle(R.string.nika_mo_restore)
-      .setItems(gone.map { it.second }.toTypedArray()) { _, which ->
-        val ctx = context ?: return@setItems
-        val key = gone[which].first
-        val list = NikaMenuOrder.load(ctx, NikaMenuOrder.DELETED_KEY)
-        list.remove(key)
-        NikaMenuOrder.save(ctx, NikaMenuOrder.DELETED_KEY, list)
-        val order = NikaMenuOrder.load(ctx, NikaMenuOrder.ORDER_KEY)
-        if (!order.contains(key)) order.add(key)
-        NikaMenuOrder.save(ctx, NikaMenuOrder.ORDER_KEY, order)
-        NikaMenuOrder.setCustom(ctx)
-        rebuild()
-      }
-      .setNegativeButton(android.R.string.cancel, null)
-      .show()
+  private fun restore(key: String) {
+    val ctx = context ?: return
+    val gone = NikaMenuOrder.load(ctx, NikaMenuOrder.DELETED_KEY)
+    gone.remove(key)
+    NikaMenuOrder.save(ctx, NikaMenuOrder.DELETED_KEY, gone)
+    val order = NikaMenuOrder.load(ctx, NikaMenuOrder.ORDER_KEY)
+    if (!order.contains(key)) order.add(key)
+    NikaMenuOrder.save(ctx, NikaMenuOrder.ORDER_KEY, order)
+    NikaMenuOrder.setCustom(ctx)
+    rebuild()
   }
 
-  private fun showMenu(p: Preference, key: String, title: String, index: Int, size: Int, isHidden: Boolean) {
+  private fun showMenu(title: String, key: String, index: Int, size: Int) {
     val act = activity ?: return
     val labels = ArrayList<String>()
     val actions = ArrayList<() -> Unit>()
@@ -127,8 +144,6 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
     if (index < size - 1) {
       labels.add(getString(R.string.nika_mo_down)); actions.add { move(key, 1) }
     }
-    labels.add(getString(if (isHidden) R.string.nika_mo_show else R.string.nika_mo_hide))
-    actions.add { toggleHidden(key) }
     labels.add(getString(R.string.nika_mo_delete))
     actions.add { delete(key) }
     AlertDialog.Builder(act)
@@ -138,35 +153,25 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
       .show()
   }
 
-  private fun move(title: String, delta: Int) {
+  private fun move(key: String, delta: Int) {
     val ctx = context ?: return
     NikaMenuOrder.listForScreen(ctx)
     val order = NikaMenuOrder.load(ctx, NikaMenuOrder.ORDER_KEY)
-    val i = order.indexOf(title)
+    val i = order.indexOf(key)
     val j = i + delta
     if (i < 0 || j < 0 || j >= order.size) return
     order.removeAt(i)
-    order.add(j, title)
+    order.add(j, key)
     NikaMenuOrder.save(ctx, NikaMenuOrder.ORDER_KEY, order)
     NikaMenuOrder.setCustom(ctx)
     rebuild()
   }
 
-  private fun toggleHidden(title: String) {
-    val ctx = context ?: return
-    val hidden = NikaMenuOrder.load(ctx, NikaMenuOrder.HIDDEN_KEY)
-    if (!hidden.remove(title)) hidden.add(title)
-    NikaMenuOrder.save(ctx, NikaMenuOrder.HIDDEN_KEY, hidden)
-    rebuild()
-  }
-
-  /** A row with the accessibility actions "move up", "move down" and "hide" or "show". */
+  /** A row of the menu with the accessibility actions "move up", "move down" and "delete". */
   class MovePreference(context: android.content.Context) : Preference(context) {
     var up: (() -> Unit)? = null
     var down: (() -> Unit)? = null
-    var toggle: (() -> Unit)? = null
     var remove: (() -> Unit)? = null
-    var hiddenNow = false
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
       super.onBindViewHolder(holder)
@@ -177,12 +182,20 @@ class MenuOrderFragment : NikaKeysBaseFragment(R.xml.menu_order_preferences) {
       down?.let { f ->
         ViewCompat.addAccessibilityAction(v, context.getString(R.string.nika_mo_down)) { _, _ -> f(); true }
       }
-      toggle?.let { f ->
-        val label = context.getString(if (hiddenNow) R.string.nika_mo_show else R.string.nika_mo_hide)
-        ViewCompat.addAccessibilityAction(v, label) { _, _ -> f(); true }
-      }
       remove?.let { f ->
         ViewCompat.addAccessibilityAction(v, context.getString(R.string.nika_mo_delete)) { _, _ -> f(); true }
+      }
+    }
+  }
+
+  /** A row of the "can be added" section with the accessibility action "add". */
+  class AddPreference(context: android.content.Context) : Preference(context) {
+    var add: (() -> Unit)? = null
+
+    override fun onBindViewHolder(holder: PreferenceViewHolder) {
+      super.onBindViewHolder(holder)
+      add?.let { f ->
+        ViewCompat.addAccessibilityAction(holder.itemView, context.getString(R.string.nika_mo_add)) { _, _ -> f(); true }
       }
     }
   }
