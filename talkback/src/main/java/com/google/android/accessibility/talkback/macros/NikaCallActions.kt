@@ -233,50 +233,10 @@ object NikaCallActions {
   private var swipeRun = 0
 
   private fun viberSwipe(service: TalkBackService, dx: Float, dy: Float): Boolean {
-    val root = viberWindowRoot(service) ?: return false
+    if (viberWindowRoot(service) == null) return false
     swipeRun += 1
-    val run = swipeRun
-    // To answer, a click from the screen reader on the round button comes first: it answers, a touch does not.
-    if (dx > 0f && dy == 0f && viberClickCenter(root)) {
-      handler.postDelayed({ trySwipe(service, dx, dy, 0, run) }, 1500L)
-      return true
-    }
-    trySwipe(service, dx, dy, 0, run)
+    trySwipe(service, dx, dy, 0, swipeRun)
     return true
-  }
-
-  /** The round button of the Viber call screen is a View without a label. Its click answers the call. */
-  private fun viberClickCenter(root: AccessibilityNodeInfo): Boolean {
-    val b = Rect()
-    root.getBoundsInScreen(b)
-    val cx = b.exactCenterX()
-    val cy = b.top + b.height() * 0.605f
-    var best: AccessibilityNodeInfo? = null
-    var bestD = Float.MAX_VALUE
-    val r = Rect()
-    val stack = ArrayDeque<AccessibilityNodeInfo>()
-    stack.addLast(root)
-    var n = 0
-    while (stack.isNotEmpty() && n < 500) {
-      val node = stack.removeFirst()
-      n++
-      if (node.className?.toString() == "android.view.View" && node.isClickable &&
-        node.text.isNullOrEmpty() && node.contentDescription.isNullOrEmpty()) {
-        node.getBoundsInScreen(r)
-        if (r.width() > 0 && r.height() > 0) {
-          val d = Math.hypot((r.exactCenterX() - cx).toDouble(), (r.exactCenterY() - cy).toDouble()).toFloat()
-          if (d < bestD) {
-            bestD = d
-            best = node
-          }
-        }
-      }
-      for (i in 0 until node.childCount) node.getChild(i)?.let { stack.addLast(it) }
-    }
-    val target = best ?: return false
-    val ok = target.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-    NikaDiag.log("call", "viber: click on the round button: " + ok)
-    return ok
   }
 
   private fun trySwipe(service: TalkBackService, dx: Float, dy: Float, step: Int, run: Int) {
@@ -297,8 +257,10 @@ object NikaCallActions {
       val w = b.width().toFloat()
       val h = b.height().toFloat()
       val cx = b.left + w * 0.5f
-      val cy = b.top + h * 0.605f
-      val tx = (cx + dx * w * v[2]).coerceIn(b.left + w * 0.05f, b.left + w * 0.95f)
+      val cy = b.top + h * 0.57f
+      // Sideways the swipe must reach the green or the red icon, which stand about 0.35 of the width from the centre.
+      val reach = if (dx != 0f) v[2] + 0.15f else v[2]
+      val tx = (cx + dx * w * reach).coerceIn(b.left + w * 0.05f, b.left + w * 0.95f)
       val ty = (cy + dy * h * v[2]).coerceIn(b.top + h * 0.05f, b.top + h * 0.95f)
       // The two fingers stand one above the other for a sideways swipe, side by side for a vertical one.
       val ox = if (dx == 0f) v[0] / 2f else 0f
